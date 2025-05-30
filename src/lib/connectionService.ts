@@ -9,13 +9,28 @@ export class ConnectionService {
     userId: string,
     connectionData: Omit<Connection, 'id' | 'user_id' | 'created_at' | 'updated_at'>
   ): Promise<Connection> {
-    // バリデーション
-    if (!connectionData.nickname.trim()) {
+    // 入力値検証とサニタイゼーション
+    if (!connectionData.nickname?.trim()) {
       throw new Error('ニックネームは必須です')
     }
     
-    if (!connectionData.platform.trim()) {
+    if (!connectionData.platform?.trim()) {
       throw new Error('出会った場所は必須です')
+    }
+
+    // XSS対策：文字列の長さ制限
+    if (connectionData.nickname.trim().length > 50) {
+      throw new Error('ニックネームは50文字以内で入力してください')
+    }
+
+    if (connectionData.platform.trim().length > 100) {
+      throw new Error('出会った場所は100文字以内で入力してください')
+    }
+
+    // 危険な文字列パターンのチェック
+    const dangerousPattern = /<script|javascript:|data:|vbscript:/i
+    if (dangerousPattern.test(connectionData.nickname) || dangerousPattern.test(connectionData.platform)) {
+      throw new Error('不正な文字列が含まれています')
     }
 
     const connection = {

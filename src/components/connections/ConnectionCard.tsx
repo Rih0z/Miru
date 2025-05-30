@@ -41,7 +41,7 @@ export function ConnectionCard({
 
   // ステージに応じた色を決定
   const getStageColor = (stage: string) => {
-    const colors = {
+    const colors: Record<string, string> = {
       'マッチング直後': 'bg-blue-100 text-blue-800',
       'メッセージ中': 'bg-green-100 text-green-800',
       'LINE交換済み': 'bg-yellow-100 text-yellow-800',
@@ -56,7 +56,7 @@ export function ConnectionCard({
 
   // プログレスバーの幅を計算
   const getProgressWidth = (stage: string) => {
-    const progress = {
+    const progress: Record<string, number> = {
       'マッチング直後': 14,
       'メッセージ中': 28,
       'LINE交換済み': 42,
