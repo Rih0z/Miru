@@ -9,7 +9,7 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jsdom',
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   testMatch: [
@@ -20,12 +20,6 @@ const customJestConfig = {
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
-  ],
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
-  },
-  transformIgnorePatterns: [
-    'node_modules/(?!(.*\\.mjs$))',
   ],
 }
 
