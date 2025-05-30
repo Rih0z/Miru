@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "format": "prettier --write .",
-    "deploy": "next build && wrangler pages deploy .next"
+    "deploy": "next build && wrangler pages deploy .next --project-name miru --commit-dirty=true"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
