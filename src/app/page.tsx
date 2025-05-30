@@ -1,12 +1,13 @@
+'use client'
+
 import { Dashboard } from '@/components/Dashboard'
 
 export default function Home() {
-  // TODO: 実際の認証システムからuserIdを取得
-  const userId = 'demo-user-123'
-
   return (
-    <div>
-      <Dashboard userId={userId} />
-    </div>
+    <main className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <Dashboard userId="demo-user" />
+      </div>
+    </main>
   )
 }

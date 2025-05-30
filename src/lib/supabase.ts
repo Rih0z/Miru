@@ -1,15 +1,29 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://demo.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'demo-key';
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// デモモードかどうかをチェック
+const isDemoMode = !process.env.NEXT_PUBLIC_SUPABASE_URL || supabaseUrl.includes('dummy') || supabaseUrl.includes('demo');
+
+export const supabase = isDemoMode ? null : createClient(supabaseUrl, supabaseKey);
 
 // データベース操作関数
 export const db = {
   // ユーザー関連
   async getUser(userId: string) {
-    const { data, error } = await supabase
+    // デモモード: サンプルユーザーを返す
+    if (isDemoMode) {
+      return {
+        id: userId,
+        email: 'demo@example.com',
+        name: 'デモユーザー',
+        created_at: '2024-05-29T00:00:00Z',
+        updated_at: '2024-05-29T00:00:00Z'
+      };
+    }
+
+    const { data, error } = await supabase!
       .from('users')
       .select('*')
       .eq('id', userId)
@@ -21,7 +35,37 @@ export const db = {
 
   // 相手情報関連
   async getConnections(userId: string) {
-    const { data, error } = await supabase
+    // デモモード: サンプルデータを返す
+    if (isDemoMode) {
+      return [
+        {
+          id: 'demo-1',
+          user_id: userId,
+          nickname: 'Aさん',
+          platform: 'Pairs',
+          current_stage: 'メッセージ中',
+          basic_info: { age: 25, occupation: 'エンジニア' },
+          communication: { frequency: '毎日' },
+          user_feelings: { expectations: '真剣な交際' },
+          created_at: '2024-05-29T00:00:00Z',
+          updated_at: '2024-05-29T00:00:00Z'
+        },
+        {
+          id: 'demo-2',
+          user_id: userId,
+          nickname: 'Bさん',
+          platform: 'with',
+          current_stage: 'デート前',
+          basic_info: { age: 28, occupation: 'デザイナー' },
+          communication: { frequency: '2日に1回' },
+          user_feelings: { expectations: '楽しい関係' },
+          created_at: '2024-05-29T00:00:00Z',
+          updated_at: '2024-05-29T00:00:00Z'
+        }
+      ];
+    }
+
+    const { data, error } = await supabase!
       .from('connections')
       .select('*')
       .eq('user_id', userId)
@@ -81,7 +125,12 @@ export const db = {
   },
 
   async deleteConnection(id: string) {
-    const { error } = await supabase
+    // デモモード: 何もしない
+    if (isDemoMode) {
+      return;
+    }
+
+    const { error } = await supabase!
       .from('connections')
       .delete()
       .eq('id', id);
