@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Connection, DashboardData, RecommendedAction } from '@/types'
 import { ConnectionService } from '@/lib/connectionService'
 import { ConnectionCard } from './connections/ConnectionCard'
@@ -10,16 +10,223 @@ interface DashboardProps {
 }
 
 export function Dashboard({ userId }: DashboardProps) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [connections, setConnections] = useState<Connection[]>([])
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
+  // Check if we're in demo mode - simplified for static generation
+  const isDemoMode = true // Always use demo mode for static export
   
-  const connectionService = new ConnectionService()
+  const connectionService = useMemo(() => new ConnectionService(), [])
+  
+  // Initialize with demo data immediately for static export
+  const demoConnections = useMemo(() => [
+    {
+      id: 'demo-1',
+      user_id: userId,
+      nickname: 'Aさん',
+      platform: 'Pairs',
+      current_stage: 'メッセージ中' as const,
+      basic_info: { 
+        age: 25, 
+        occupation: 'エンジニア',
+        hobbies: ['映画鑑賞', 'カフェ巡り']
+      },
+      communication: { 
+        frequency: '毎日',
+        lastContact: '2024-05-29',
+        responseTime: '数時間以内'
+      },
+      user_feelings: { 
+        expectations: '真剣な交際',
+        attractivePoints: ['優しい', '話が面白い']
+      },
+      created_at: '2024-05-29T00:00:00Z',
+      updated_at: '2024-05-29T00:00:00Z'
+    },
+    {
+      id: 'demo-2',
+      user_id: userId,
+      nickname: 'Bさん',
+      platform: 'with',
+      current_stage: 'デート前' as const,
+      basic_info: { 
+        age: 28, 
+        occupation: 'デザイナー',
+        hobbies: ['読書', 'ヨガ', '料理']
+      },
+      communication: { 
+        frequency: '2日に1回',
+        lastContact: '2024-05-28',
+        responseTime: '1日以内'
+      },
+      user_feelings: { 
+        expectations: '楽しい関係',
+        attractivePoints: ['センスが良い', '落ち着いている']
+      },
+      created_at: '2024-05-29T00:00:00Z',
+      updated_at: '2024-05-29T00:00:00Z'
+    }
+  ], [userId])
+
+  const initialDashboardData = useMemo(() => {
+    const totalConnections = demoConnections.length
+    const activeConnections = demoConnections.filter(
+      conn => !['終了', '停滞中'].includes(conn.current_stage)
+    ).length
+    
+    const scores = demoConnections.map(conn => 
+      connectionService.calculateRelationshipScore(conn)
+    )
+    const averageScore = scores.length > 0 
+      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+      : 0
+    
+    const recommendedActions = demoConnections
+      .filter(conn => !['終了'].includes(conn.current_stage))
+      .map(conn => connectionService.getRecommendedAction(conn))
+      .sort((a, b) => {
+        const urgencyOrder = { critical: 4, high: 3, medium: 2, low: 1 }
+        return urgencyOrder[b.urgency] - urgencyOrder[a.urgency]
+      })
+      .slice(0, 3)
+
+    const bestConnection = demoConnections.length > 0
+      ? demoConnections.reduce((best, current) => {
+          const currentScore = connectionService.calculateRelationshipScore(current)
+          const bestScore = connectionService.calculateRelationshipScore(best)
+          return currentScore > bestScore ? current : best
+        })
+      : null
+
+    return {
+      connections: demoConnections,
+      totalConnections,
+      activeConnections,
+      recommendedActions,
+      progressSummary: {
+        overall_hope_score: averageScore,
+        weekly_progress: 0,
+        milestones_this_month: 0,
+        best_connection: bestConnection ? {
+          nickname: bestConnection.nickname,
+          score: connectionService.calculateRelationshipScore(bestConnection)
+        } : { nickname: '', score: 0 }
+      }
+    }
+  }, [demoConnections, connectionService])
+  
+  const [isLoading, setIsLoading] = useState(!isDemoMode) // Start loaded if demo mode
+  const [error, setError] = useState<string | null>(null)
+  const [connections, setConnections] = useState<Connection[]>(isDemoMode ? demoConnections : [])
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(isDemoMode ? initialDashboardData : null)
 
   useEffect(() => {
-    loadDashboardData()
-  }, [userId])
+    if (isDemoMode) {
+      // In demo mode, load data immediately without async call
+      loadDemoData()
+    } else {
+      loadDashboardData()
+    }
+  }, [userId, connectionService, isDemoMode])
+
+  const loadDemoData = () => {
+    // Demo data - same as in supabase.ts but loaded synchronously
+    const demoConnections = [
+      {
+        id: 'demo-1',
+        user_id: userId,
+        nickname: 'Aさん',
+        platform: 'Pairs',
+        current_stage: 'メッセージ中' as const,
+        basic_info: { 
+          age: 25, 
+          occupation: 'エンジニア',
+          hobbies: ['映画鑑賞', 'カフェ巡り']
+        },
+        communication: { 
+          frequency: '毎日',
+          lastContact: '2024-05-29',
+          responseTime: '数時間以内'
+        },
+        user_feelings: { 
+          expectations: '真剣な交際',
+          attractivePoints: ['優しい', '話が面白い']
+        },
+        created_at: '2024-05-29T00:00:00Z',
+        updated_at: '2024-05-29T00:00:00Z'
+      },
+      {
+        id: 'demo-2',
+        user_id: userId,
+        nickname: 'Bさん',
+        platform: 'with',
+        current_stage: 'デート前' as const,
+        basic_info: { 
+          age: 28, 
+          occupation: 'デザイナー',
+          hobbies: ['読書', 'ヨガ', '料理']
+        },
+        communication: { 
+          frequency: '2日に1回',
+          lastContact: '2024-05-28',
+          responseTime: '1日以内'
+        },
+        user_feelings: { 
+          expectations: '楽しい関係',
+          attractivePoints: ['センスが良い', '落ち着いている']
+        },
+        created_at: '2024-05-29T00:00:00Z',
+        updated_at: '2024-05-29T00:00:00Z'
+      }
+    ]
+
+    setConnections(demoConnections)
+    
+    // Calculate dashboard data synchronously
+    const totalConnections = demoConnections.length
+    const activeConnections = demoConnections.filter(
+      conn => !['終了', '停滞中'].includes(conn.current_stage)
+    ).length
+    
+    const scores = demoConnections.map(conn => 
+      connectionService.calculateRelationshipScore(conn)
+    )
+    const averageScore = scores.length > 0 
+      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+      : 0
+    
+    const recommendedActions = demoConnections
+      .filter(conn => !['終了'].includes(conn.current_stage))
+      .map(conn => connectionService.getRecommendedAction(conn))
+      .sort((a, b) => {
+        const urgencyOrder = { critical: 4, high: 3, medium: 2, low: 1 }
+        return urgencyOrder[b.urgency] - urgencyOrder[a.urgency]
+      })
+      .slice(0, 3)
+
+    const bestConnection = demoConnections.length > 0
+      ? demoConnections.reduce((best, current) => {
+          const currentScore = connectionService.calculateRelationshipScore(current)
+          const bestScore = connectionService.calculateRelationshipScore(best)
+          return currentScore > bestScore ? current : best
+        })
+      : null
+
+    setDashboardData({
+      connections: demoConnections,
+      totalConnections,
+      activeConnections,
+      recommendedActions,
+      progressSummary: {
+        overall_hope_score: averageScore,
+        weekly_progress: 0,
+        milestones_this_month: 0,
+        best_connection: bestConnection ? {
+          nickname: bestConnection.nickname,
+          score: connectionService.calculateRelationshipScore(bestConnection)
+        } : { nickname: '', score: 0 }
+      }
+    })
+    
+    setIsLoading(false)
+  }
 
   const loadDashboardData = async () => {
     try {
@@ -59,7 +266,7 @@ export function Dashboard({ userId }: DashboardProps) {
           })
         : null
 
-      setDashboardData({
+      const newDashboardData = {
         connections: userConnections,
         totalConnections,
         activeConnections,
@@ -73,7 +280,9 @@ export function Dashboard({ userId }: DashboardProps) {
             score: connectionService.calculateRelationshipScore(bestConnection)
           } : { nickname: '', score: 0 }
         }
-      })
+      }
+      
+      setDashboardData(newDashboardData)
     } catch (err) {
       setError(err instanceof Error ? err.message : '不明なエラーが発生しました')
     } finally {
@@ -82,26 +291,37 @@ export function Dashboard({ userId }: DashboardProps) {
   }
 
   const handleEditConnection = (connection: Connection) => {
-    // TODO: 編集モーダルを開く
+    alert(`${connection.nickname}さんの編集機能（開発中）\n\n現在のステージ: ${connection.current_stage}\nスコア: ${connectionService.calculateRelationshipScore(connection)}点`)
     console.log('Edit connection:', connection)
   }
 
   const handleDeleteConnection = async (connectionId: string) => {
+    const connection = connections.find(c => c.id === connectionId)
+    const confirmDelete = confirm(`${connection?.nickname}さんを削除しますか？`)
+    
+    if (!confirmDelete) return
+
     try {
       await connectionService.deleteConnection(connectionId)
-      await loadDashboardData() // リロード
+      // デモモードでは実際には削除されないので、UIでシミュレート
+      setConnections(prev => prev.filter(c => c.id !== connectionId))
+      alert('削除しました（デモモード）')
     } catch (err) {
       setError('削除に失敗しました')
     }
   }
 
   const handleGeneratePrompt = (connectionId: string) => {
-    // TODO: プロンプト生成画面へ遷移
+    const connection = connections.find(c => c.id === connectionId)
+    if (connection) {
+      const action = connectionService.getRecommendedAction(connection)
+      alert(`AIプロンプト生成（開発中）\n\n${action.title}\n\n${action.description}\n\n実装予定: ${action.prompt_type}`)
+    }
     console.log('Generate prompt for:', connectionId)
   }
 
   const handleAddConnection = () => {
-    // TODO: 新規追加画面へ遷移
+    alert('新しい相手の追加機能（開発中）\n\n実装予定:\n- 相手情報の入力フォーム\n- プロフィール画像のアップロード\n- マッチングアプリ連携')
     console.log('Add new connection')
   }
 

@@ -44,9 +44,20 @@ export const db = {
           nickname: 'Aさん',
           platform: 'Pairs',
           current_stage: 'メッセージ中',
-          basic_info: { age: 25, occupation: 'エンジニア' },
-          communication: { frequency: '毎日' },
-          user_feelings: { expectations: '真剣な交際' },
+          basic_info: { 
+            age: 25, 
+            occupation: 'エンジニア',
+            hobbies: ['映画鑑賞', 'カフェ巡り']
+          },
+          communication: { 
+            frequency: '毎日',
+            lastContact: '2024-05-29',
+            responseTime: '数時間以内'
+          },
+          user_feelings: { 
+            expectations: '真剣な交際',
+            attractivePoints: ['優しい', '話が面白い']
+          },
           created_at: '2024-05-29T00:00:00Z',
           updated_at: '2024-05-29T00:00:00Z'
         },
@@ -56,9 +67,20 @@ export const db = {
           nickname: 'Bさん',
           platform: 'with',
           current_stage: 'デート前',
-          basic_info: { age: 28, occupation: 'デザイナー' },
-          communication: { frequency: '2日に1回' },
-          user_feelings: { expectations: '楽しい関係' },
+          basic_info: { 
+            age: 28, 
+            occupation: 'デザイナー',
+            hobbies: ['読書', 'ヨガ', '料理']
+          },
+          communication: { 
+            frequency: '2日に1回',
+            lastContact: '2024-05-28',
+            responseTime: '1日以内'
+          },
+          user_feelings: { 
+            expectations: '楽しい関係',
+            attractivePoints: ['センスが良い', '落ち着いている']
+          },
           created_at: '2024-05-29T00:00:00Z',
           updated_at: '2024-05-29T00:00:00Z'
         }
@@ -86,7 +108,17 @@ export const db = {
       };
     }
     
-    const { data, error } = await supabase
+    // デモモード: 固定値を返す
+    if (isDemoMode) {
+      return {
+        id: `demo-${Date.now()}`,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        ...connection
+      };
+    }
+    
+    const { data, error } = await supabase!
       .from('connections')
       .insert(connection)
       .select()
@@ -113,7 +145,23 @@ export const db = {
       };
     }
     
-    const { data, error } = await supabase
+    // デモモード: 固定値を返す
+    if (isDemoMode) {
+      return {
+        id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        user_id: 'demo-user',
+        nickname: 'Aさん',
+        platform: 'Pairs',
+        basic_info: {},
+        communication: {},
+        user_feelings: {},
+        ...updates
+      };
+    }
+    
+    const { data, error } = await supabase!
       .from('connections')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
@@ -140,7 +188,12 @@ export const db = {
 
   // 進捗追跡関連
   async getProgress(connectionId: string) {
-    const { data, error } = await supabase
+    // デモモード: 空配列を返す
+    if (isDemoMode) {
+      return [];
+    }
+
+    const { data, error } = await supabase!
       .from('progress_tracking')
       .select('*')
       .eq('connection_id', connectionId)
@@ -151,7 +204,16 @@ export const db = {
   },
 
   async addProgressEntry(progress: any) {
-    const { data, error } = await supabase
+    // デモモード: 固定値を返す
+    if (isDemoMode) {
+      return {
+        id: `demo-progress-${Date.now()}`,
+        created_at: new Date().toISOString(),
+        ...progress
+      };
+    }
+
+    const { data, error } = await supabase!
       .from('progress_tracking')
       .insert(progress)
       .select()
@@ -163,7 +225,12 @@ export const db = {
 
   // アクション履歴関連
   async getActionHistory(connectionId: string) {
-    const { data, error } = await supabase
+    // デモモード: 空配列を返す
+    if (isDemoMode) {
+      return [];
+    }
+
+    const { data, error } = await supabase!
       .from('action_history')
       .select('*')
       .eq('connection_id', connectionId)
@@ -174,7 +241,16 @@ export const db = {
   },
 
   async addActionHistory(action: any) {
-    const { data, error } = await supabase
+    // デモモード: 固定値を返す
+    if (isDemoMode) {
+      return {
+        id: `demo-action-${Date.now()}`,
+        created_at: new Date().toISOString(),
+        ...action
+      };
+    }
+
+    const { data, error } = await supabase!
       .from('action_history')
       .insert(action)
       .select()
@@ -186,7 +262,16 @@ export const db = {
 
   // プロンプト履歴関連
   async savePromptHistory(prompt: any) {
-    const { data, error } = await supabase
+    // デモモード: 固定値を返す
+    if (isDemoMode) {
+      return {
+        id: `demo-prompt-${Date.now()}`,
+        created_at: new Date().toISOString(),
+        ...prompt
+      };
+    }
+
+    const { data, error } = await supabase!
       .from('prompt_history')
       .insert(prompt)
       .select()

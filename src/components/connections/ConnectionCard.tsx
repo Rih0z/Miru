@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Connection } from '@/types'
 import { ConnectionService } from '@/lib/connectionService'
 
@@ -17,17 +17,27 @@ export function ConnectionCard({
   onDelete, 
   onGeneratePrompt 
 }: ConnectionCardProps) {
-  const [score, setScore] = useState<number>(0)
-  const connectionService = new ConnectionService()
+  const connectionService = useMemo(() => new ConnectionService(), [])
+  
+  // Calculate score immediately for static export
+  const calculatedScore = useMemo(() => 
+    connectionService.calculateRelationshipScore(connection), 
+    [connection, connectionService]
+  )
+  
+  const [score, setScore] = useState<number>(calculatedScore)
 
-  // スコアを計算
+  // スコアを計算 (fallback for non-static environments)
   useEffect(() => {
-    const calculatedScore = connectionService.calculateRelationshipScore(connection)
-    setScore(calculatedScore)
-  }, [connection])
+    const newScore = connectionService.calculateRelationshipScore(connection)
+    setScore(newScore)
+  }, [connection, connectionService])
 
   // 推奨アクションを取得
-  const recommendedAction = connectionService.getRecommendedAction(connection)
+  const recommendedAction = useMemo(() => 
+    connectionService.getRecommendedAction(connection), 
+    [connection, connectionService]
+  )
 
   // ステージに応じた色を決定
   const getStageColor = (stage: string) => {
