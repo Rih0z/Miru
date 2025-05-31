@@ -4,6 +4,9 @@ import { useState, useEffect, useMemo } from 'react'
 import { Connection, DashboardData, RecommendedAction } from '@/types'
 import { ConnectionService } from '@/lib/connectionService'
 import { ConnectionCard } from './connections/ConnectionCard'
+import { ConnectionForm } from './connections/ConnectionForm'
+import { PromptExecutor } from './prompts/PromptExecutor'
+import { HopeScoreCalculator } from '@/lib/hopeScoreCalculator'
 
 interface DashboardProps {
   userId: string
@@ -14,6 +17,14 @@ export function Dashboard({ userId }: DashboardProps) {
   const isDemoMode = true // Always use demo mode for static export
   
   const connectionService = useMemo(() => new ConnectionService(), [])
+  const hopeScoreCalculator = useMemo(() => new HopeScoreCalculator(), [])
+  
+  const [showConnectionForm, setShowConnectionForm] = useState(false)
+  const [editingConnection, setEditingConnection] = useState<Connection | null>(null)
+  const [showPromptExecutor, setShowPromptExecutor] = useState<{
+    connection: Connection
+    promptType: string
+  } | null>(null)
   
   // Initialize with demo data immediately for static export
   const demoConnections = useMemo(() => [
@@ -291,8 +302,8 @@ export function Dashboard({ userId }: DashboardProps) {
   }
 
   const handleEditConnection = (connection: Connection) => {
-    alert(`${connection.nickname}さんの編集機能（開発中）\n\n現在のステージ: ${connection.current_stage}\nスコア: ${connectionService.calculateRelationshipScore(connection)}点`)
-    console.log('Edit connection:', connection)
+    setEditingConnection(connection)
+    setShowConnectionForm(true)
   }
 
   const handleDeleteConnection = async (connectionId: string) => {
@@ -315,14 +326,43 @@ export function Dashboard({ userId }: DashboardProps) {
     const connection = connections.find(c => c.id === connectionId)
     if (connection) {
       const action = connectionService.getRecommendedAction(connection)
-      alert(`AIプロンプト生成（開発中）\n\n${action.title}\n\n${action.description}\n\n実装予定: ${action.prompt_type}`)
+      setShowPromptExecutor({
+        connection,
+        promptType: action.prompt_type
+      })
     }
-    console.log('Generate prompt for:', connectionId)
   }
 
   const handleAddConnection = () => {
-    alert('新しい相手の追加機能（開発中）\n\n実装予定:\n- 相手情報の入力フォーム\n- プロフィール画像のアップロード\n- マッチングアプリ連携')
-    console.log('Add new connection')
+    setEditingConnection(null)
+    setShowConnectionForm(true)
+  }
+
+  const handleFormSubmit = async (data: Partial<Connection>) => {
+    try {
+      if (editingConnection) {
+        // 編集モード
+        const updatedConnection = await connectionService.updateConnection(editingConnection.id, data)
+        setConnections(prev => prev.map(c => 
+          c.id === editingConnection.id ? { ...c, ...data } : c
+        ))
+        alert('相手情報を更新しました')
+      } else {
+        // 新規追加モード
+        const newConnection = await connectionService.createConnection(userId, data as any)
+        setConnections(prev => [...prev, newConnection])
+        alert('新しい相手を追加しました')
+      }
+      setShowConnectionForm(false)
+      setEditingConnection(null)
+    } catch (error) {
+      alert('エラーが発生しました: ' + (error as Error).message)
+    }
+  }
+
+  const handleFormCancel = () => {
+    setShowConnectionForm(false)
+    setEditingConnection(null)
   }
 
   if (isLoading) {
@@ -509,6 +549,32 @@ export function Dashboard({ userId }: DashboardProps) {
           ))}
         </div>
       </div>
+
+      {/* モーダル */}
+      {showConnectionForm && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-6">
+                {editingConnection ? `${editingConnection.nickname}さんの情報編集` : '新しい相手を追加'}
+              </h2>
+              <ConnectionForm
+                initialData={editingConnection || undefined}
+                onSubmit={handleFormSubmit}
+                onCancel={handleFormCancel}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPromptExecutor && (
+        <PromptExecutor
+          connection={showPromptExecutor.connection}
+          promptType={showPromptExecutor.promptType}
+          onClose={() => setShowPromptExecutor(null)}
+        />
+      )}
     </div>
   )
 }

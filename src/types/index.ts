@@ -46,7 +46,7 @@ export interface CommunicationInfo {
 
 export interface UserFeelings {
   expectations?: string;
-  concerns?: string;
+  concerns?: string[];
   attractivePoints?: string[];
 }
 

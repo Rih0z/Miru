@@ -42,6 +42,16 @@ export class ConnectionService {
   }
 
   /**
+   * 相手情報を更新
+   */
+  async updateConnection(
+    connectionId: string,
+    updates: Partial<Connection>
+  ): Promise<Connection> {
+    return await db.updateConnection(connectionId, updates)
+  }
+
+  /**
    * 関係ステージを更新
    */
   async updateConnectionStage(

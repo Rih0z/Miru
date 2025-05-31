@@ -265,4 +265,64 @@ ${baseContext}
   getAvailablePromptTypes(): string[] {
     return Object.keys(this.promptTemplates)
   }
+
+  /**
+   * 会話を深めるプロンプト生成
+   */
+  generateConversationPrompt(connection: Connection, aiType: AIType): string {
+    const baseContext = this.formatConnectionContext(connection)
+    
+    const aiSpecificPrompts = {
+      claude: `恋愛関係での会話を深めるアドバイスをお願いします。\n\n${baseContext}\n\n相手との関係性を考慮して、自然で効果的な会話のアプローチを提案してください。`,
+      gpt: `${connection.nickname}さんとの会話をもっと深めたいです！\n\n${baseContext}\n\n楽しくて意味のある会話のアイデアを教えてください。`,
+      gemini: `会話の質を向上させるための戦略的アドバイスをお願いします。\n\n${baseContext}\n\n心理学的観点から効果的な会話術を提案してください。`
+    }
+    
+    return aiSpecificPrompts[aiType]
+  }
+
+  /**
+   * デート準備プロンプト生成
+   */
+  generateDatePrompt(connection: Connection, aiType: AIType): string {
+    const baseContext = this.formatConnectionContext(connection)
+    
+    const aiSpecificPrompts = {
+      claude: `${connection.nickname}さんとのデートの準備について相談です。\n\n${baseContext}\n\n相手の興味や関係性を考慮した、成功するデートプランを提案してください。`,
+      gpt: `素敵なデートを計画したいです！\n\n${baseContext}\n\n創造的で思い出に残るデートアイデアをお願いします。`,
+      gemini: `効果的なデート戦略を教えてください。\n\n${baseContext}\n\n相手の性格と嗜好に基づいた最適なデートプランを提案してください。`
+    }
+    
+    return aiSpecificPrompts[aiType]
+  }
+
+  /**
+   * 関係構築プロンプト生成
+   */
+  generateRelationshipPrompt(connection: Connection, aiType: AIType): string {
+    const baseContext = this.formatConnectionContext(connection)
+    
+    const aiSpecificPrompts = {
+      claude: `${connection.nickname}さんとの関係をより深めるための長期的なアドバイスをお願いします。\n\n${baseContext}\n\n持続的で健全な関係構築のための戦略を提案してください。`,
+      gpt: `${connection.nickname}さんとの関係を次のレベルに進めたいです！\n\n${baseContext}\n\n愛情深い関係を築くためのアイデアを教えてください。`,
+      gemini: `関係性の発展に関する科学的アプローチを教えてください。\n\n${baseContext}\n\n心理学的根拠に基づいた関係強化の方法を提案してください。`
+    }
+    
+    return aiSpecificPrompts[aiType]
+  }
+
+  /**
+   * 汎用プロンプト生成
+   */
+  generateGeneralPrompt(connection: Connection, aiType: AIType): string {
+    const baseContext = this.formatConnectionContext(connection)
+    
+    const aiSpecificPrompts = {
+      claude: `恋愛関係の相談です。以下の情報を踏まえて、アドバイスをお願いします。\n\n${baseContext}\n\n慎重に分析して、具体的で実行可能なアドバイスを提供してください。`,
+      gpt: `恋愛コーチとして相談に乗ってください！\n\n${baseContext}\n\n創造的なアイデアと前向きなアドバイスをお願いします。`,
+      gemini: `データに基づいた恋愛アドバイスをお願いします。\n\n${baseContext}\n\n客観的な分析と実践的な提案をお願いします。`
+    }
+    
+    return aiSpecificPrompts[aiType]
+  }
 }
