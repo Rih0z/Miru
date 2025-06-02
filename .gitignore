@@ -5,6 +5,8 @@ node_modules/
 
 # Testing
 /coverage
+/tests/coverage/
+jest-coverage/
 
 # Next.js
 /.next/
@@ -26,9 +28,36 @@ yarn-error.log*
 # Local env files
 .env*.local
 .env
+.env.production
+.env.staging
+
+# API Keys and Secrets (防止: 機密情報の漏洩)
+*.key
+*.p8
+*.p12
+*.pfx
+secrets.json
+service-account*.json
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+pids
+*.pid
+*.seed
+*.pid.lock
 
 # Vercel
 .vercel
+
+# Cloudflare
+.wrangler/
+wrangler.toml.local
 
 # TypeScript
 *.tsbuildinfo
@@ -37,13 +66,47 @@ next-env.d.ts
 # Supabase
 supabase/.branches
 supabase/.temp
+supabase/config.toml.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-*
 
 # OS
 Thumbs.db
+Desktop.ini
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Build artifacts
+*.map
+*.tgz
+
+# Security
+*.cert
+*.crt
+*.csr
+*.der
+*.jks
+*.p7b
+*.p7c
+*.p7r
+*.p7s
+*.cer
+
+# Backup files
+*.backup
+*.bak
+*.old
 EOF < /dev/null

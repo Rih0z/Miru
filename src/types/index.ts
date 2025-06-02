@@ -90,8 +90,9 @@ export interface DashboardData {
   connections: Connection[];
   totalConnections: number;
   activeConnections: number;
+  averageScore: number;
   recommendedActions: RecommendedAction[];
-  progressSummary: ProgressSummary;
+  bestConnection: Connection | null;
 }
 
 export interface RecommendedAction {

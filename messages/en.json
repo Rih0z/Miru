@@ -1,0 +1,178 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "required": "Required",
+    "optional": "Optional"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "connections": "Connections",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "resetPassword": "Reset Password",
+    "forgotPassword": "Forgot your password?",
+    "alreadyHaveAccount": "Already have an account? Login",
+    "noAccount": "Don't have an account? Sign up",
+    "backToLogin": "Back to Login",
+    "processing": "Processing...",
+    "loginButton": "Login / Sign Up",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordMismatch": "Passwords do not match",
+    "confirmationEmailSent": "Confirmation email sent. Please check your email.",
+    "resetEmailSent": "Password reset email sent.",
+    "unexpectedError": "An unexpected error occurred",
+    "agreementText": "By creating an account, you agree to our Terms of Service and Privacy Policy."
+  },
+  "app": {
+    "title": "Miru - AI Romance Orchestration System",
+    "description": "Visualizing the hope of 'maybe we could date' - A romance support app",
+    "subtitle": "AI supports your love life"
+  },
+  "dashboard": {
+    "title": "Romance Dashboard",
+    "addConnection": "Add New Connection",
+    "totalConnections": "Total Connections",
+    "activeConnections": "Active Relationships",
+    "averageScore": "Average Score",
+    "progressOverview": "This Month's Progress",
+    "mostPromisingRelation": "Most Promising Relationship",
+    "recommendedActions": "Action Items",
+    "execute": "Execute →",
+    "details": "Details",
+    "aiConsult": "Consult AI",
+    "noConnectionsTitle": "No connections registered yet",
+    "noConnectionsMessage": "Add a new connection to start getting romance support!",
+    "urgency": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
+  },
+  "connections": {
+    "nickname": "Nickname",
+    "platform": "Where You Met",
+    "currentStage": "Current Stage",
+    "age": "Age",
+    "occupation": "Occupation",
+    "hobbies": "Hobbies",
+    "location": "Location",
+    "frequency": "Contact Frequency",
+    "lastContact": "Last Contact",
+    "responseTime": "Response Time",
+    "expectations": "Relationship Expectations",
+    "attractivePoints": "Attractive Points",
+    "concerns": "Concerns",
+    "score": "Score",
+    "stages": {
+      "matched": "Just Matched",
+      "messaging": "Messaging",
+      "lineExchanged": "Exchanged Contacts",
+      "beforeDate": "Before Date",
+      "afterDate": "After Date",
+      "dating": "Dating",
+      "stagnant": "Stagnant",
+      "ended": "Ended"
+    },
+    "frequencies": {
+      "daily": "Daily",
+      "everyOtherDay": "Every Other Day",
+      "twiceWeek": "2-3 Times a Week",
+      "weekly": "Weekly",
+      "monthly": "Few Times a Month",
+      "irregular": "Irregular"
+    },
+    "responseTimes": {
+      "immediate": "Immediate",
+      "withinHours": "Within Hours",
+      "withinDay": "Within a Day",
+      "twothreeDays": "2-3 Days",
+      "overWeek": "Over a Week"
+    },
+    "expectations": {
+      "serious": "Serious Relationship",
+      "fun": "Fun Relationship",
+      "friends": "Start as Friends",
+      "unknown": "Not Sure Yet",
+      "casual": "Casual Relationship"
+    }
+  },
+  "forms": {
+    "basicInfo": "Basic Information",
+    "communication": "Communication",
+    "feelings": "Your Feelings",
+    "addConnection": "Add New Connection",
+    "editConnection": "Edit Connection",
+    "placeholders": {
+      "nickname": "e.g. John",
+      "platform": "e.g. Tinder, Bumble, Hinge",
+      "age": "e.g. 25",
+      "occupation": "e.g. Engineer",
+      "hobbies": "e.g. Movies, Cooking",
+      "location": "e.g. New York",
+      "attractivePoints": "e.g. Kind, Funny",
+      "concerns": "e.g. Slow to respond"
+    },
+    "validation": {
+      "nicknameRequired": "Nickname is required",
+      "platformRequired": "Where you met is required",
+      "nicknameMaxLength": "Nickname must be 50 characters or less",
+      "platformMaxLength": "Where you met must be 100 characters or less",
+      "invalidCharacters": "Invalid characters detected"
+    }
+  },
+  "prompts": {
+    "title": "AI Consultation",
+    "selectPromptType": "Select consultation type",
+    "selectAI": "Select AI",
+    "generatePrompt": "Generate Prompt",
+    "copyPrompt": "Copy Prompt",
+    "promptCopied": "Prompt copied to clipboard",
+    "types": {
+      "firstMessage": "First Message",
+      "deepenConversation": "Deepen Conversation",
+      "datePreparation": "Date Preparation",
+      "relationshipBuilding": "Relationship Building",
+      "general": "General Advice"
+    },
+    "aiTypes": {
+      "claude": "Claude",
+      "gpt": "ChatGPT",
+      "gemini": "Gemini"
+    }
+  },
+  "actions": {
+    "deleteConnection": "Delete {nickname}?",
+    "deleteSuccess": "Deleted successfully",
+    "saveSuccess": "Saved successfully",
+    "saveError": "Failed to save",
+    "deleteError": "Failed to delete",
+    "loadError": "Failed to load data"
+  },
+  "language": {
+    "switch": "Switch Language",
+    "japanese": "日本語",
+    "english": "English"
+  }
+}

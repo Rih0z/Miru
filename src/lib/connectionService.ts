@@ -1,4 +1,4 @@
-import { Connection, ConnectionStage, RecommendedAction } from '@/types'
+import { Connection, ConnectionStage, RecommendedAction, DashboardData } from '@/types'
 import { db } from './supabase'
 
 export class ConnectionService {
@@ -10,28 +10,7 @@ export class ConnectionService {
     connectionData: Omit<Connection, 'id' | 'user_id' | 'created_at' | 'updated_at'>
   ): Promise<Connection> {
     // 入力値検証とサニタイゼーション
-    if (!connectionData.nickname?.trim()) {
-      throw new Error('ニックネームは必須です')
-    }
-    
-    if (!connectionData.platform?.trim()) {
-      throw new Error('出会った場所は必須です')
-    }
-
-    // XSS対策：文字列の長さ制限
-    if (connectionData.nickname.trim().length > 50) {
-      throw new Error('ニックネームは50文字以内で入力してください')
-    }
-
-    if (connectionData.platform.trim().length > 100) {
-      throw new Error('出会った場所は100文字以内で入力してください')
-    }
-
-    // 危険な文字列パターンのチェック
-    const dangerousPattern = /<script|javascript:|data:|vbscript:/i
-    if (dangerousPattern.test(connectionData.nickname) || dangerousPattern.test(connectionData.platform)) {
-      throw new Error('不正な文字列が含まれています')
-    }
+    this.validateAndSanitizeInput(connectionData)
 
     const connection = {
       user_id: userId,
@@ -48,35 +27,14 @@ export class ConnectionService {
     connectionId: string,
     updates: Partial<Connection>
   ): Promise<Connection> {
+    // 更新データに文字列フィールドが含まれている場合は検証
+    if (updates.nickname || updates.platform) {
+      this.validateAndSanitizeInput(updates)
+    }
+    
     return await db.updateConnection(connectionId, updates)
   }
 
-  /**
-   * 関係ステージを更新
-   */
-  async updateConnectionStage(
-    connectionId: string,
-    newStage: ConnectionStage
-  ): Promise<Connection> {
-    const validStages: ConnectionStage[] = [
-      'マッチング直後',
-      'メッセージ中',
-      'LINE交換済み',
-      'デート前',
-      'デート後',
-      '交際中',
-      '停滞中',
-      '終了'
-    ]
-
-    if (!validStages.includes(newStage)) {
-      throw new Error('無効なステージです')
-    }
-
-    return await db.updateConnection(connectionId, {
-      current_stage: newStage
-    })
-  }
 
   /**
    * 関係性スコアを計算
@@ -116,75 +74,60 @@ export class ConnectionService {
     return Math.min(score, 100)
   }
 
+
   /**
-   * 推奨アクションを取得
+   * 関係ステージ更新の検証と更新
    */
-  getRecommendedAction(connection: Connection): RecommendedAction {
-    const actions = {
-      'マッチング直後': {
-        title: `${connection.nickname}さんに最初のメッセージを送る`,
-        description: 'プロフィールを参考に自然な挨拶を送りましょう',
-        urgency: 'high' as const,
-        estimated_time: '10分',
-        prompt_type: 'first_message'
-      },
-      'メッセージ中': {
-        title: `${connection.nickname}さんとの会話を深める`,
-        description: '共通の話題を見つけて関係を発展させましょう',
-        urgency: 'medium' as const,
-        estimated_time: '15分',
-        prompt_type: 'deepen_conversation'
-      },
-      'LINE交換済み': {
-        title: `${connection.nickname}さんとLINEでの関係を築く`,
-        description: 'より親密な会話を心がけましょう',
-        urgency: 'medium' as const,
-        estimated_time: '20分',
-        prompt_type: 'build_intimacy'
-      },
-      'デート前': {
-        title: `${connection.nickname}さんとのデート準備`,
-        description: '話題の準備や当日の流れを確認しましょう',
-        urgency: 'high' as const,
-        estimated_time: '30分',
-        prompt_type: 'date_preparation'
-      },
-      'デート後': {
-        title: `${connection.nickname}さんとのデートのフォローアップ`,
-        description: 'お礼のメッセージと次回の提案を考えましょう',
-        urgency: 'high' as const,
-        estimated_time: '15分',
-        prompt_type: 'date_followup'
-      },
-      '交際中': {
-        title: `${connection.nickname}さんとの関係をさらに深める`,
-        description: '長期的な関係構築を目指しましょう',
-        urgency: 'low' as const,
-        estimated_time: '25分',
-        prompt_type: 'relationship_building'
-      },
-      '停滞中': {
-        title: `${connection.nickname}さんとの関係を再活性化`,
-        description: '新しいアプローチで関係を復活させましょう',
-        urgency: 'medium' as const,
-        estimated_time: '20分',
-        prompt_type: 'relationship_revival'
-      },
-      '終了': {
-        title: '次の出会いに向けて準備',
-        description: '経験を活かして新しい関係を始めましょう',
-        urgency: 'low' as const,
-        estimated_time: '10分',
-        prompt_type: 'new_beginning'
-      }
+  async updateConnectionStage(
+    connectionId: string,
+    newStage: ConnectionStage
+  ): Promise<Connection> {
+    const validStages: ConnectionStage[] = [
+      'マッチング直後',
+      'メッセージ中',
+      'LINE交換済み',
+      'デート前',
+      'デート後',
+      '交際中',
+      '停滞中',
+      '終了'
+    ]
+
+    if (!validStages.includes(newStage)) {
+      throw new Error('無効なステージです')
     }
 
-    const action = actions[connection.current_stage]
+    return await db.updateConnection(connectionId, {
+      current_stage: newStage
+    })
+  }
+
+  /**
+   * 入力値の検証とサニタイゼーション
+   */
+  private validateAndSanitizeInput(connectionData: any): void {
+    // 入力値検証とサニタイゼーション
+    if (!connectionData.nickname?.trim()) {
+      throw new Error('ニックネームは必須です')
+    }
     
-    return {
-      id: `action-${connection.id}-${Date.now()}`,
-      connection_id: connection.id,
-      ...action
+    if (!connectionData.platform?.trim()) {
+      throw new Error('出会った場所は必須です')
+    }
+
+    // XSS対策：文字列の長さ制限
+    if (connectionData.nickname.trim().length > 50) {
+      throw new Error('ニックネームは50文字以内で入力してください')
+    }
+
+    if (connectionData.platform.trim().length > 100) {
+      throw new Error('出会った場所は100文字以内で入力してください')
+    }
+
+    // 危険な文字列パターンのチェック
+    const dangerousPattern = /<script|javascript:|data:|vbscript:/i
+    if (dangerousPattern.test(connectionData.nickname) || dangerousPattern.test(connectionData.platform)) {
+      throw new Error('不正な文字列が含まれています')
     }
   }
 
@@ -200,5 +143,147 @@ export class ConnectionService {
    */
   async deleteConnection(connectionId: string): Promise<void> {
     await db.deleteConnection(connectionId)
+  }
+
+  /**
+   * ダッシュボードデータを取得
+   */
+  async getDashboardData(userId: string): Promise<DashboardData> {
+    const connections = await this.getUserConnections(userId)
+    
+    // アクティブな関係（終了以外）を計算
+    const activeConnections = connections.filter(c => c.current_stage !== '終了').length
+    
+    // 平均スコアを計算
+    let averageScore = 0
+    if (connections.length > 0) {
+      const totalScore = connections.reduce((sum, connection) => {
+        return sum + this.calculateRelationshipScore(connection)
+      }, 0)
+      averageScore = Math.round(totalScore / connections.length)
+    }
+    
+    // 最も有望な関係を見つける（スコアが最も高い）
+    let bestConnection: Connection | null = null
+    if (connections.length > 0) {
+      bestConnection = connections.reduce((best, current) => {
+        const currentScore = this.calculateRelationshipScore(current)
+        const bestScore = this.calculateRelationshipScore(best)
+        return currentScore > bestScore ? current : best
+      })
+    }
+    
+    // 推奨アクションを生成（アクティブな関係から、緊急度の高いものを優先）
+    const recommendedActions: RecommendedAction[] = connections
+      .filter(c => c.current_stage !== '終了')
+      .map(connection => this.getRecommendedAction(connection))
+      .sort((a, b) => {
+        // 緊急度でソート（critical > high > medium > low）
+        const urgencyOrder = { critical: 4, high: 3, medium: 2, low: 1 }
+        return urgencyOrder[b.urgency] - urgencyOrder[a.urgency]
+      })
+      .slice(0, 5) // 最大5件まで
+    
+    return {
+      connections,
+      totalConnections: connections.length,
+      activeConnections,
+      averageScore,
+      recommendedActions,
+      bestConnection
+    }
+  }
+
+  /**
+   * 推奨アクションを取得
+   */
+  getRecommendedAction(connection: Connection): RecommendedAction {
+    const baseAction = {
+      id: `action_${connection.id}_${Date.now()}`,
+      connection_id: connection.id,
+      prompt_type: 'general'
+    }
+
+    switch (connection.current_stage) {
+      case 'マッチング直後':
+        return {
+          ...baseAction,
+          type: 'send_message',
+          title: '最初のメッセージを送りましょう',
+          description: 'プロフィールを参考に親しみやすいメッセージを作成',
+          urgency: 'high' as const,
+          prompt_type: 'first_message'
+        }
+
+      case 'メッセージ中':
+        return {
+          ...baseAction,
+          type: 'deepen_conversation',
+          title: '会話を深めましょう',
+          description: '共通の話題や趣味について詳しく聞いてみる',
+          urgency: 'medium' as const,
+          prompt_type: 'deepen_conversation'
+        }
+
+      case 'LINE交換済み':
+        return {
+          ...baseAction,
+          type: 'plan_date',
+          title: 'デートの提案をしましょう',
+          description: '相手の興味に合わせたデートプランを提案',
+          urgency: 'high' as const,
+          prompt_type: 'date_preparation'
+        }
+
+      case 'デート前':
+        return {
+          ...baseAction,
+          type: 'prepare_date',
+          title: 'デートの準備をしましょう',
+          description: '話題の準備や当日の流れを確認',
+          urgency: 'medium' as const,
+          prompt_type: 'date_preparation'
+        }
+
+      case 'デート後':
+        return {
+          ...baseAction,
+          type: 'follow_up',
+          title: 'お礼のメッセージを送りましょう',
+          description: 'デートの感想と次の約束について',
+          urgency: 'high' as const,
+          prompt_type: 'relationship_building'
+        }
+
+      case '交際中':
+        return {
+          ...baseAction,
+          type: 'maintain_relationship',
+          title: '関係を深めましょう',
+          description: '今後の関係性について話し合う',
+          urgency: 'low' as const,
+          prompt_type: 'relationship_building'
+        }
+
+      case '停滞中':
+        return {
+          ...baseAction,
+          type: 'revive_conversation',
+          title: '関係を復活させましょう',
+          description: '新しいアプローチで会話を再開',
+          urgency: 'critical' as const,
+          prompt_type: 'general'
+        }
+
+      default:
+        return {
+          ...baseAction,
+          type: 'general_advice',
+          title: '次のステップを検討',
+          description: '現在の状況を分析して最適なアクションを決定',
+          urgency: 'medium' as const,
+          prompt_type: 'general'
+        }
+    }
   }
 }

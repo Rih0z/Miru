@@ -102,13 +102,18 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">基本情報</h2>
+    <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+      <div className="card hover-glow animate-fadeIn">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
+            <span className="text-lg">👤</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-bold gradient-text">基本情報</h2>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               ニックネーム *
             </label>
             <input
@@ -116,13 +121,13 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
               required
               value={formData.nickname}
               onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
               placeholder="Aさん、B子さん など"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               出会った場所 *
             </label>
             <input
@@ -130,19 +135,19 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
               required
               value={formData.platform}
               onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
               placeholder="Pairs、with、Omiai など"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               現在のステージ *
             </label>
             <select
               value={formData.current_stage}
               onChange={(e) => setFormData({ ...formData, current_stage: e.target.value as ConnectionStage })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300 bg-white"
             >
               {stages.map(stage => (
                 <option key={stage} value={stage}>{stage}</option>
@@ -150,8 +155,8 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               年齢
             </label>
             <input
@@ -161,13 +166,13 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 ...formData,
                 basic_info: { ...formData.basic_info, age: e.target.value ? parseInt(e.target.value) : undefined }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
               placeholder="25"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               職業
             </label>
             <input
@@ -177,13 +182,13 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 ...formData,
                 basic_info: { ...formData.basic_info, occupation: e.target.value }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
               placeholder="エンジニア、デザイナー など"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               居住地
             </label>
             <input
@@ -193,44 +198,44 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 ...formData,
                 basic_info: { ...formData.basic_info, location: e.target.value }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
               placeholder="東京都、大阪府 など"
             />
           </div>
         </div>
 
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="mt-6 sm:mt-8 space-y-4">
+          <label className="block text-sm font-semibold text-gray-700">
             趣味・興味
           </label>
-          <div className="flex gap-2 mb-2">
+          <div className="flex gap-3">
             <input
               type="text"
               value={newHobby}
               onChange={(e) => setNewHobby(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addHobby())}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
               placeholder="映画鑑賞、カフェ巡り など"
             />
             <button
               type="button"
               onClick={addHobby}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="px-6 py-3 gradient-primary text-white rounded-xl font-semibold hover-lift transition-all touch-manipulation whitespace-nowrap shadow-primary"
             >
               追加
             </button>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {formData.basic_info.hobbies.map((hobby, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-gray-100 rounded-full text-sm flex items-center gap-2"
+                className="px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 rounded-full text-sm font-medium border border-purple-200 flex items-center gap-2"
               >
                 {hobby}
                 <button
                   type="button"
                   onClick={() => removeHobby(index)}
-                  className="text-gray-500 hover:text-red-500"
+                  className="text-purple-600 hover:text-red-500 active:text-red-700 touch-manipulation p-1 -m-1 font-bold"
                 >
                   ×
                 </button>
@@ -240,12 +245,17 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">コミュニケーション状況</h2>
+      <div className="card hover-glow animate-fadeIn">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 rounded-lg gradient-secondary flex items-center justify-center">
+            <span className="text-lg">💬</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-bold gradient-text">コミュニケーション状況</h2>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               連絡頻度
             </label>
             <select
@@ -254,7 +264,7 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 ...formData,
                 communication: { ...formData.communication, frequency: e.target.value }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-secondary-400 transition-all text-base hover:border-gray-300 bg-white"
             >
               <option value="">選択してください</option>
               <option value="毎日">毎日</option>
@@ -266,8 +276,8 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               最後の連絡
             </label>
             <input
@@ -277,12 +287,12 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 ...formData,
                 communication: { ...formData.communication, lastContact: e.target.value }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-secondary-400 transition-all text-base hover:border-gray-300"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               返信速度
             </label>
             <select
@@ -291,7 +301,7 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 ...formData,
                 communication: { ...formData.communication, responseTime: e.target.value }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-secondary-400 transition-all text-base hover:border-gray-300 bg-white"
             >
               <option value="">選択してください</option>
               <option value="即レス">即レス</option>
@@ -304,12 +314,17 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">あなたの気持ち</h2>
+      <div className="card hover-glow animate-fadeIn">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 rounded-lg gradient-success flex items-center justify-center">
+            <span className="text-lg">💖</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-bold gradient-text">あなたの気持ち</h2>
+        </div>
         
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="space-y-6 sm:space-y-8">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               関係性への期待
             </label>
             <select
@@ -318,7 +333,7 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 ...formData,
                 user_feelings: { ...formData.user_feelings, expectations: e.target.value }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-success-400 transition-all text-base hover:border-gray-300 bg-white"
             >
               <option value="">選択してください</option>
               <option value="真剣な交際">真剣な交際</option>
@@ -329,34 +344,34 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-4">
+            <label className="block text-sm font-semibold text-gray-700">
               魅力を感じるポイント
             </label>
-            <div className="flex gap-2 mb-2">
+            <div className="flex gap-3">
               <input
                 type="text"
                 value={newAttractivePoint}
                 onChange={(e) => setNewAttractivePoint(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAttractivePoint())}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-success-400 transition-all text-base hover:border-gray-300"
                 placeholder="優しい、話が面白い など"
               />
               <button
                 type="button"
                 onClick={addAttractivePoint}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-6 py-3 gradient-success text-white rounded-xl font-semibold hover-lift transition-all touch-manipulation whitespace-nowrap shadow-success"
               >
                 追加
               </button>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {formData.user_feelings.attractivePoints.map((point, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm flex items-center gap-2"
+                  className="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 rounded-full text-sm font-medium border border-green-200 flex items-center gap-2"
                 >
-                  {point}
+                  ✨ {point}
                   <button
                     type="button"
                     onClick={() => setFormData({
@@ -366,7 +381,7 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                         attractivePoints: formData.user_feelings.attractivePoints.filter((_, i) => i !== index)
                       }
                     })}
-                    className="text-green-600 hover:text-red-500"
+                    className="text-green-600 hover:text-red-500 touch-manipulation p-1 -m-1 font-bold"
                   >
                     ×
                   </button>
@@ -375,34 +390,34 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-4">
+            <label className="block text-sm font-semibold text-gray-700">
               気になる点・不安
             </label>
-            <div className="flex gap-2 mb-2">
+            <div className="flex gap-3">
               <input
                 type="text"
                 value={newConcern}
                 onChange={(e) => setNewConcern(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addConcern())}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-caution transition-all text-base hover:border-gray-300"
                 placeholder="返信が遅い、価値観の違い など"
               />
               <button
                 type="button"
                 onClick={addConcern}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold hover-lift transition-all touch-manipulation whitespace-nowrap"
               >
                 追加
               </button>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {formData.user_feelings.concerns?.map((concern, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm flex items-center gap-2"
+                  className="px-4 py-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-700 rounded-full text-sm font-medium border border-orange-200 flex items-center gap-2"
                 >
-                  {concern}
+                  ⚠️ {concern}
                   <button
                     type="button"
                     onClick={() => setFormData({
@@ -412,7 +427,7 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                         concerns: formData.user_feelings.concerns?.filter((_, i) => i !== index) || []
                       }
                     })}
-                    className="text-yellow-600 hover:text-red-500"
+                    className="text-orange-600 hover:text-red-500 active:text-red-700 touch-manipulation p-1 -m-1 font-bold"
                   >
                     ×
                   </button>
@@ -423,19 +438,19 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
         </div>
       </div>
 
-      <div className="flex justify-end gap-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-4 sm:gap-6 pt-4">
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+          className="px-8 py-3 bg-white border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-700 touch-manipulation order-2 sm:order-1 min-h-[48px] hover-lift"
         >
           キャンセル
         </button>
         <button
           type="submit"
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="px-8 py-3 gradient-primary text-white rounded-xl font-bold hover-lift transition-all touch-manipulation order-1 sm:order-2 min-h-[48px] shadow-primary"
         >
-          {initialData ? '更新する' : '登録する'}
+          {initialData ? '✨ 更新する' : '💫 登録する'}
         </button>
       </div>
     </form>

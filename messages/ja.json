@@ -1,0 +1,178 @@
+{
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "retry": "再試行",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "close": "閉じる",
+    "confirm": "確認",
+    "back": "戻る",
+    "next": "次へ",
+    "submit": "送信",
+    "required": "必須",
+    "optional": "任意"
+  },
+  "navigation": {
+    "dashboard": "ダッシュボード",
+    "connections": "相手一覧",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "logout": "ログアウト"
+  },
+  "auth": {
+    "login": "ログイン",
+    "signup": "アカウント作成",
+    "logout": "ログアウト",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "resetPassword": "パスワードリセット",
+    "forgotPassword": "パスワードを忘れた方はこちら",
+    "alreadyHaveAccount": "既にアカウントをお持ちの方はログイン",
+    "noAccount": "アカウントをお持ちでない方は新規作成",
+    "backToLogin": "ログインに戻る",
+    "processing": "処理中...",
+    "loginButton": "ログイン / アカウント作成",
+    "passwordMinLength": "パスワードは6文字以上で入力してください",
+    "passwordMismatch": "パスワードが一致しません",
+    "confirmationEmailSent": "確認メールを送信しました。メールをご確認ください。",
+    "resetEmailSent": "パスワードリセットメールを送信しました。",
+    "unexpectedError": "予期しないエラーが発生しました",
+    "agreementText": "アカウントを作成することで、利用規約とプライバシーポリシーに同意したものとみなされます。"
+  },
+  "app": {
+    "title": "Miru - AI恋愛オーケストレーションシステム",
+    "description": "「付き合えるかもしれない」希望を可視化する恋愛サポートアプリ",
+    "subtitle": "AIがあなたの恋愛をサポートします"
+  },
+  "dashboard": {
+    "title": "恋愛ダッシュボード",
+    "addConnection": "新しい相手を追加",
+    "totalConnections": "総相手数",
+    "activeConnections": "アクティブな関係",
+    "averageScore": "平均スコア",
+    "progressOverview": "今月の進展",
+    "mostPromisingRelation": "最も有望な関係",
+    "recommendedActions": "今すぐできること",
+    "execute": "実行 →",
+    "details": "詳細",
+    "aiConsult": "AIに相談する",
+    "noConnectionsTitle": "まだ相手が登録されていません",
+    "noConnectionsMessage": "新しい相手を追加して、恋愛のサポートを始めましょう！",
+    "urgency": {
+      "critical": "緊急",
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    }
+  },
+  "connections": {
+    "nickname": "ニックネーム",
+    "platform": "出会った場所",
+    "currentStage": "現在の関係",
+    "age": "年齢",
+    "occupation": "職業",
+    "hobbies": "趣味",
+    "location": "居住地",
+    "frequency": "連絡頻度",
+    "lastContact": "最後の連絡",
+    "responseTime": "返信速度",
+    "expectations": "期待する関係",
+    "attractivePoints": "魅力的な点",
+    "concerns": "不安や懸念",
+    "score": "スコア",
+    "stages": {
+      "matched": "マッチング直後",
+      "messaging": "メッセージ中",
+      "lineExchanged": "LINE交換済み",
+      "beforeDate": "デート前",
+      "afterDate": "デート後",
+      "dating": "交際中",
+      "stagnant": "停滞中",
+      "ended": "終了"
+    },
+    "frequencies": {
+      "daily": "毎日",
+      "everyOtherDay": "2日に1回",
+      "twiceWeek": "週2-3回",
+      "weekly": "週1回",
+      "monthly": "月数回",
+      "irregular": "不定期"
+    },
+    "responseTimes": {
+      "immediate": "即レス",
+      "withinHours": "数時間以内",
+      "withinDay": "1日以内",
+      "twothreeDays": "2-3日",
+      "overWeek": "1週間以上"
+    },
+    "expectations": {
+      "serious": "真剣な交際",
+      "fun": "楽しい関係",
+      "friends": "友達から始めたい",
+      "unknown": "まだわからない",
+      "casual": "カジュアルな関係"
+    }
+  },
+  "forms": {
+    "basicInfo": "基本情報",
+    "communication": "コミュニケーション",
+    "feelings": "あなたの気持ち",
+    "addConnection": "新しい相手を追加",
+    "editConnection": "相手情報を編集",
+    "placeholders": {
+      "nickname": "例: 太郎さん",
+      "platform": "例: Pairs, with, Tinder",
+      "age": "例: 25",
+      "occupation": "例: エンジニア",
+      "hobbies": "例: 映画鑑賞, カフェ巡り",
+      "location": "例: 東京都",
+      "attractivePoints": "例: 優しい, 話が面白い",
+      "concerns": "例: 返信が遅い"
+    },
+    "validation": {
+      "nicknameRequired": "ニックネームは必須です",
+      "platformRequired": "出会った場所は必須です",
+      "nicknameMaxLength": "ニックネームは50文字以内で入力してください",
+      "platformMaxLength": "出会った場所は100文字以内で入力してください",
+      "invalidCharacters": "不正な文字列が含まれています"
+    }
+  },
+  "prompts": {
+    "title": "AI相談",
+    "selectPromptType": "相談内容を選択してください",
+    "selectAI": "AIを選択",
+    "generatePrompt": "プロンプトを生成",
+    "copyPrompt": "プロンプトをコピー",
+    "promptCopied": "プロンプトをクリップボードにコピーしました",
+    "types": {
+      "firstMessage": "最初のメッセージ作成",
+      "deepenConversation": "会話を深める",
+      "datePreparation": "デート準備",
+      "relationshipBuilding": "関係構築",
+      "general": "一般的なアドバイス"
+    },
+    "aiTypes": {
+      "claude": "Claude",
+      "gpt": "ChatGPT",
+      "gemini": "Gemini"
+    }
+  },
+  "actions": {
+    "deleteConnection": "{nickname}さんを削除しますか？",
+    "deleteSuccess": "削除しました",
+    "saveSuccess": "保存しました",
+    "saveError": "保存に失敗しました",
+    "deleteError": "削除に失敗しました",
+    "loadError": "データの読み込みに失敗しました"
+  },
+  "language": {
+    "switch": "言語を切り替え",
+    "japanese": "日本語",
+    "english": "English"
+  }
+}

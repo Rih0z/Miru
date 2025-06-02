@@ -5,7 +5,7 @@ const createJestConfig = nextJest({
   dir: './',
 })
 
-// Add any custom config to be passed to Jest
+// Add any custom config to be passed to Jest  
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jsdom',
@@ -20,6 +20,10 @@ const customJestConfig = {
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
+    '!src/middleware.ts'
+  ],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(next-intl/.*|use-intl/.*|@next/.*)/)'
   ],
 }
 

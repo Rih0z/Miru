@@ -70,18 +70,21 @@ export function ConnectionCard({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+    <div className="card hover-glow group animate-fadeIn">
       {/* ヘッダー部分 */}
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-bold text-gray-900">{connection.nickname}</h3>
-          <p className="text-sm text-gray-600">{connection.platform}</p>
+      <div className="flex justify-between items-start mb-5">
+        <div className="min-w-0 flex-1 mr-3">
+          <h3 className="text-xl font-bold text-gray-900 truncate mb-1">{connection.nickname}</h3>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-400"></span>
+            <p className="text-sm text-gray-600">{connection.platform}</p>
+          </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           <button
             data-testid="edit-button"
             onClick={() => onEdit(connection)}
-            className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-blue-100 text-gray-600 hover:text-blue-600 transition-all flex items-center justify-center touch-manipulation group-hover:scale-110"
             title="編集"
           >
             ✏️
@@ -89,7 +92,7 @@ export function ConnectionCard({
           <button
             data-testid="delete-button"
             onClick={() => onDelete(connection.id)}
-            className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-600 transition-all flex items-center justify-center touch-manipulation group-hover:scale-110"
             title="削除"
           >
             🗑️
@@ -98,56 +101,64 @@ export function ConnectionCard({
       </div>
 
       {/* ステージバッジとスコア */}
-      <div className="flex justify-between items-center mb-4">
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStageColor(connection.current_stage)}`}>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-3">
+        <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStageColor(connection.current_stage)} border shadow-sm`}>
           {connection.current_stage}
         </span>
         <div 
           data-testid="relationship-score"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-full border border-blue-100"
         >
-          <span className="text-sm text-gray-600">スコア</span>
-          <span className="font-bold text-lg text-blue-600">{score}</span>
+          <span className="text-sm text-gray-600">💖 スコア</span>
+          <span className="font-bold text-xl gradient-text">{score}</span>
         </div>
       </div>
 
       {/* プログレス表示 */}
-      <div data-testid="progress-indicator" className="mb-4">
-        <div className="w-full bg-gray-200 rounded-full h-2">
+      <div data-testid="progress-indicator" className="mb-5">
+        <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
           <div 
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            className="gradient-primary h-3 rounded-full transition-all duration-500 shadow-sm"
             style={{ width: `${getProgressWidth(connection.current_stage)}%` }}
           ></div>
+        </div>
+        <div className="flex justify-between mt-2 text-xs text-gray-500">
+          <span>出会い</span>
+          <span>恋愛成就</span>
         </div>
       </div>
 
       {/* 基本情報 */}
-      <div className="mb-4 space-y-2">
+      <div className="mb-5 bg-gray-50 rounded-xl p-4 space-y-3">
         {connection.basic_info.age && (
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">年齢:</span> {connection.basic_info.age}歳
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🎂</span>
+            <span className="text-sm text-gray-600 font-medium">{connection.basic_info.age}歳</span>
+          </div>
         )}
         {connection.basic_info.occupation && (
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">職業:</span> {connection.basic_info.occupation}
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-lg">💼</span>
+            <span className="text-sm text-gray-600 font-medium">{connection.basic_info.occupation}</span>
+          </div>
         )}
         {connection.communication.lastContact && (
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">最後の連絡:</span> {connection.communication.lastContact}
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-lg">💬</span>
+            <span className="text-sm text-gray-600 font-medium">{connection.communication.lastContact}</span>
+          </div>
         )}
       </div>
 
       {/* 趣味タグ */}
       {connection.basic_info.hobbies && connection.basic_info.hobbies.length > 0 && (
-        <div className="mb-4">
+        <div className="mb-5">
+          <h4 className="text-sm font-semibold text-gray-700 mb-3">共通の話題</h4>
           <div className="flex flex-wrap gap-2">
             {connection.basic_info.hobbies.map((hobby, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                className="px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 text-purple-700 rounded-full text-xs font-medium border border-purple-200"
               >
                 {hobby}
               </span>
@@ -157,26 +168,29 @@ export function ConnectionCard({
       )}
 
       {/* 推奨アクション */}
-      <div data-testid="recommended-action" className="mb-4 p-3 bg-blue-50 rounded-lg">
-        <h4 className="text-sm font-medium text-blue-900 mb-1">推奨アクション</h4>
-        <p className="text-sm text-blue-800">{recommendedAction.title}</p>
-        <p className="text-xs text-blue-600 mt-1">{recommendedAction.description}</p>
+      <div data-testid="recommended-action" className="mb-5 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-lg">💡</span>
+          <h4 className="text-sm font-semibold text-blue-900">次のステップ</h4>
+        </div>
+        <p className="text-sm text-blue-800 font-medium mb-1">{recommendedAction.title}</p>
+        <p className="text-xs text-blue-600 line-clamp-2">{recommendedAction.description}</p>
       </div>
 
       {/* アクションボタン */}
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-3">
         <button
           data-testid="generate-prompt-button"
           onClick={() => onGeneratePrompt(connection.id)}
-          className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+          className="flex-1 gradient-primary text-white py-3 px-4 rounded-xl font-semibold hover-lift transition-all touch-manipulation shadow-primary"
         >
-          AIに相談する
+          🤖 AIに相談する
         </button>
         <button
           onClick={() => onEdit(connection)}
-          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+          className="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all font-semibold text-gray-700 touch-manipulation sm:flex-shrink-0"
         >
-          詳細
+          📝 詳細
         </button>
       </div>
     </div>
