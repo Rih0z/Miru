@@ -70,127 +70,135 @@ export function ConnectionCard({
   }
 
   return (
-    <div className="card hover-glow group animate-fadeIn">
+    <div className="card-kawaii hover-kawaii group animate-fadeIn relative overflow-hidden">
+      {/* Kawaii デコレーション */}
+      <div className="absolute top-0 right-0 w-16 h-16 bg-kawaii-soft rounded-bl-3xl opacity-30"></div>
+      <div className="absolute -top-2 -right-2 text-2xl animate-sparkle">✨</div>
+      
       {/* ヘッダー部分 */}
-      <div className="flex justify-between items-start mb-5">
+      <div className="flex justify-between items-start mb-6 relative z-10">
         <div className="min-w-0 flex-1 mr-3">
-          <h3 className="text-xl font-bold text-gray-900 truncate mb-1">{connection.nickname}</h3>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-400"></span>
-            <p className="text-sm text-gray-600">{connection.platform}</p>
+          <h3 className="text-2xl font-bold text-kawaii-gradient truncate mb-2">{connection.nickname}さん 💕</h3>
+          <div className="flex items-center gap-3">
+            <span className="w-3 h-3 rounded-full bg-kawaii-pink animate-kawaii-pulse"></span>
+            <p className="text-sm text-pink-600 font-medium">{connection.platform} ✨</p>
           </div>
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-3 shrink-0">
           <button
             data-testid="edit-button"
             onClick={() => onEdit(connection)}
-            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-blue-100 text-gray-600 hover:text-blue-600 transition-all flex items-center justify-center touch-manipulation group-hover:scale-110"
+            className="w-12 h-12 rounded-2xl bg-kawaii-soft hover:bg-kawaii-pink text-pink-600 hover:text-white transition-all flex items-center justify-center touch-manipulation group-hover:scale-110 hover-bounce"
             title="編集"
           >
-            ✏️
+            <span className="text-lg">✏️</span>
           </button>
           <button
             data-testid="delete-button"
             onClick={() => onDelete(connection.id)}
-            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-600 transition-all flex items-center justify-center touch-manipulation group-hover:scale-110"
+            className="w-12 h-12 rounded-2xl bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-600 transition-all flex items-center justify-center touch-manipulation group-hover:scale-110 hover-bounce"
             title="削除"
           >
-            🗑️
+            <span className="text-lg">🗑️</span>
           </button>
         </div>
       </div>
 
-      {/* ステージバッジとスコア */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-3">
-        <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStageColor(connection.current_stage)} border shadow-sm`}>
-          {connection.current_stage}
+      {/* Kawaii ステージバッジとスコア */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <span className="badge-kawaii-magical text-white font-bold px-6 py-3 text-base">
+          💝 {connection.current_stage}
         </span>
         <div 
           data-testid="relationship-score"
-          className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-full border border-blue-100"
+          className="flex items-center gap-3 bg-kawaii-romantic px-6 py-3 rounded-2xl border-2 border-pink-200 hover-kawaii"
         >
-          <span className="text-sm text-gray-600">💖 スコア</span>
-          <span className="font-bold text-xl gradient-text">{score}</span>
+          <span className="text-sm text-pink-600 font-bold">💖 愛情スコア</span>
+          <span className="font-extrabold text-2xl text-kawaii-gradient animate-heartbeat">{score}</span>
         </div>
       </div>
 
-      {/* プログレス表示 */}
-      <div data-testid="progress-indicator" className="mb-5">
-        <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
+      {/* Kawaii プログレス表示 */}
+      <div data-testid="progress-indicator" className="mb-6">
+        <div className="w-full bg-pink-100 rounded-full h-4 shadow-inner relative overflow-hidden">
           <div 
-            className="gradient-primary h-3 rounded-full transition-all duration-500 shadow-sm"
+            className="gradient-primary h-4 rounded-full transition-all duration-700 shadow-kawaii-glow relative"
             style={{ width: `${getProgressWidth(connection.current_stage)}%` }}
-          ></div>
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse"></div>
+          </div>
         </div>
-        <div className="flex justify-between mt-2 text-xs text-gray-500">
-          <span>出会い</span>
-          <span>恋愛成就</span>
+        <div className="flex justify-between mt-3 text-sm text-pink-500 font-medium">
+          <span>💕 出会い</span>
+          <span>💖 恋愛成就</span>
         </div>
       </div>
 
-      {/* 基本情報 */}
-      <div className="mb-5 bg-gray-50 rounded-xl p-4 space-y-3">
+      {/* Kawaii 基本情報 */}
+      <div className="mb-6 bg-kawaii-soft rounded-2xl p-5 space-y-4 border border-pink-100">
         {connection.basic_info.age && (
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🎂</span>
-            <span className="text-sm text-gray-600 font-medium">{connection.basic_info.age}歳</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xl animate-float">🎂</span>
+            <span className="text-base text-pink-700 font-semibold">{connection.basic_info.age}歳の素敵な人</span>
           </div>
         )}
         {connection.basic_info.occupation && (
-          <div className="flex items-center gap-2">
-            <span className="text-lg">💼</span>
-            <span className="text-sm text-gray-600 font-medium">{connection.basic_info.occupation}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xl animate-float">💼</span>
+            <span className="text-base text-pink-700 font-semibold">{connection.basic_info.occupation}</span>
           </div>
         )}
         {connection.communication.lastContact && (
-          <div className="flex items-center gap-2">
-            <span className="text-lg">💬</span>
-            <span className="text-sm text-gray-600 font-medium">{connection.communication.lastContact}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xl animate-heartbeat">💬</span>
+            <span className="text-base text-pink-700 font-semibold">最後のお話: {connection.communication.lastContact}</span>
           </div>
         )}
       </div>
 
-      {/* 趣味タグ */}
+      {/* Kawaii 趣味タグ */}
       {connection.basic_info.hobbies && connection.basic_info.hobbies.length > 0 && (
-        <div className="mb-5">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">共通の話題</h4>
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-6">
+          <h4 className="text-base font-bold text-kawaii-gradient mb-4">💫 共通の魔法の話題</h4>
+          <div className="flex flex-wrap gap-3">
             {connection.basic_info.hobbies.map((hobby, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 text-purple-700 rounded-full text-xs font-medium border border-purple-200"
+                className="badge-kawaii-soft hover-kawaii px-4 py-2 text-sm animate-bounceIn"
+                style={{animationDelay: `${index * 0.1}s`}}
               >
-                {hobby}
+                ✨ {hobby}
               </span>
             ))}
           </div>
         </div>
       )}
 
-      {/* 推奨アクション */}
-      <div data-testid="recommended-action" className="mb-5 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-lg">💡</span>
-          <h4 className="text-sm font-semibold text-blue-900">次のステップ</h4>
+      {/* Kawaii 推奨アクション */}
+      <div data-testid="recommended-action" className="mb-6 p-5 bg-kawaii-magical rounded-2xl border-2 border-purple-200 hover-kawaii relative overflow-hidden">
+        <div className="absolute top-2 right-2 animate-sparkle text-lg">🌟</div>
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-2xl animate-wiggle">🪄</span>
+          <h4 className="text-base font-bold text-kawaii-gradient">次の魔法のステップ</h4>
         </div>
-        <p className="text-sm text-blue-800 font-medium mb-1">{recommendedAction.title}</p>
-        <p className="text-xs text-blue-600 line-clamp-2">{recommendedAction.description}</p>
+        <p className="text-base text-purple-800 font-bold mb-2">💫 {recommendedAction.title}</p>
+        <p className="text-sm text-purple-700 line-clamp-2 font-medium">{recommendedAction.description}</p>
       </div>
 
-      {/* アクションボタン */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      {/* Kawaii アクションボタン */}
+      <div className="flex flex-col sm:flex-row gap-4">
         <button
           data-testid="generate-prompt-button"
           onClick={() => onGeneratePrompt(connection.id)}
-          className="flex-1 gradient-primary text-white py-3 px-4 rounded-xl font-semibold hover-lift transition-all touch-manipulation shadow-primary"
+          className="flex-1 btn-kawaii hover-sparkle relative py-4 px-6 text-lg"
         >
-          🤖 AIに相談する
+          <span className="animate-heartbeat">🤖</span> AIの魔法で相談する ✨
         </button>
         <button
           onClick={() => onEdit(connection)}
-          className="px-4 py-3 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all font-semibold text-gray-700 touch-manipulation sm:flex-shrink-0"
+          className="px-6 py-4 bg-white border-2 border-pink-200 rounded-2xl hover:border-pink-300 hover:bg-pink-50 transition-all font-bold text-pink-600 touch-manipulation sm:flex-shrink-0 hover-bounce"
         >
-          📝 詳細
+          <span className="animate-float">📝</span> 詳細を見る
         </button>
       </div>
     </div>

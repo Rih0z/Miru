@@ -1,47 +1,59 @@
 /* Miru Design System - Modern CSS Variables and Utilities */
 
 :root {
-  /* === Color Palette === */
-  /* Primary - Love & Connection */
-  --primary-50: #FFF5F5;
-  --primary-100: #FED7D7;
-  --primary-200: #FEB2B2;
-  --primary-300: #FC8181;
-  --primary-400: #F56565;
-  --primary-500: #E53E3E;
-  --primary-600: #C53030;
-  --primary-700: #9B2C2C;
-  --primary-800: #822727;
-  --primary-900: #63171B;
+  /* === Kawaii Color Palette === */
+  /* Primary - Soft Pink & Love */
+  --primary-50: #FFF0F5;
+  --primary-100: #FFE1E6;
+  --primary-200: #FFC2CC;
+  --primary-300: #FF94A3;
+  --primary-400: #FF6B7A;
+  --primary-500: #EB6A7A;
+  --primary-600: #E85A6F;
+  --primary-700: #D63384;
+  --primary-800: #B02A5B;
+  --primary-900: #8B2252;
   
-  /* Gradient for primary actions */
-  --gradient-primary: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
-  --gradient-secondary: linear-gradient(135deg, #667EEA 0%, #A78BFA 100%);
-  --gradient-success: linear-gradient(135deg, #48BB78 0%, #68D391 100%);
+  /* Kawaii Gradients */
+  --gradient-primary: linear-gradient(135deg, #FFB6C1 0%, #FFCCCB 50%, #FFE4E1 100%);
+  --gradient-secondary: linear-gradient(135deg, #E6E6FA 0%, #F8BBD9 50%, #FFB6C1 100%);
+  --gradient-success: linear-gradient(135deg, #98FB98 0%, #90EE90 50%, #F0FFF0 100%);
+  --gradient-kawaii-dream: linear-gradient(135deg, #FFE4E1 0%, #FFCCCB 30%, #FFB6C1 70%, #DDA0DD 100%);
+  --gradient-romantic: linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 30%, #FFCCCB 100%);
+  --gradient-magical: linear-gradient(135deg, #E6E6FA 0%, #DDA0DD 50%, #FFB6C1 100%);
   
-  /* Secondary - Trust & Stability */
-  --secondary-50: #EEF2FF;
-  --secondary-100: #E0E7FF;
-  --secondary-200: #C7D2FE;
-  --secondary-300: #A5B4FC;
-  --secondary-400: #818CF8;
-  --secondary-500: #667EEA;
-  --secondary-600: #4C1D95;
-  --secondary-700: #5B21B6;
-  --secondary-800: #4C1D95;
-  --secondary-900: #2E1065;
+  /* Secondary - Lavender Dreams */
+  --secondary-50: #F8F6FF;
+  --secondary-100: #F0EBFF;
+  --secondary-200: #E6E6FA;
+  --secondary-300: #DDA0DD;
+  --secondary-400: #DA70D6;
+  --secondary-500: #BA55D3;
+  --secondary-600: #9932CC;
+  --secondary-700: #8B008B;
+  --secondary-800: #6A0B83;
+  --secondary-900: #4B0082;
   
-  /* Success - Hope & Growth */
-  --success-50: #F0FDF4;
-  --success-100: #DCFCE7;
-  --success-200: #BBF7D0;
-  --success-300: #86EFAC;
-  --success-400: #4ADE80;
-  --success-500: #48BB78;
-  --success-600: #16A34A;
-  --success-700: #15803D;
-  --success-800: #166534;
-  --success-900: #14532D;
+  /* Success - Mint & Nature */
+  --success-50: #F0FFF0;
+  --success-100: #E0FFE0;
+  --success-200: #C1FFC1;
+  --success-300: #98FB98;
+  --success-400: #90EE90;
+  --success-500: #7FFFD4;
+  --success-600: #48D1CC;
+  --success-700: #20B2AA;
+  --success-800: #008B8B;
+  --success-900: #006666;
+  
+  /* Kawaii Accent Colors */
+  --kawaii-pink: #FFB6C1;
+  --kawaii-peach: #FFCCCB;
+  --kawaii-lavender: #E6E6FA;
+  --kawaii-mint: #F0FFF0;
+  --kawaii-cream: #FFF8DC;
+  --kawaii-sky: #E0F6FF;
+  --kawaii-coral: #FF7F7F;
   
   /* Neutrals */
   --gray-50: #FAFAFA;
@@ -56,11 +68,13 @@
   --gray-900: #18181B;
   --gray-950: #0A0A0B;
   
-  /* Semantic Colors */
-  --hope: #FCD34D;
-  --caution: #F59E0B;
-  --error: #EF4444;
-  --info: #3B82F6;
+  /* Semantic Colors - Kawaii Edition */
+  --hope: #FFD700;
+  --caution: #FFA500;
+  --error: #FF69B4;
+  --info: #87CEEB;
+  --warning: #FFCCCB;
+  --celebration: #FF1493;
   
   /* === Typography === */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
@@ -98,31 +112,34 @@
   --space-16: 4rem;      /* 64px */
   --space-20: 5rem;      /* 80px */
   
-  /* === Border Radius === */
+  /* === Border Radius - Kawaii Round === */
   --radius-none: 0;
-  --radius-sm: 0.125rem;   /* 2px */
-  --radius-base: 0.25rem;  /* 4px */
-  --radius-md: 0.375rem;   /* 6px */
-  --radius-lg: 0.5rem;     /* 8px */
-  --radius-xl: 0.75rem;    /* 12px */
-  --radius-2xl: 1rem;      /* 16px */
-  --radius-3xl: 1.5rem;    /* 24px */
-  --radius-full: 9999px;
+  --radius-sm: 0.25rem;    /* 4px - more rounded */
+  --radius-base: 0.5rem;   /* 8px - soft curves */
+  --radius-md: 0.75rem;    /* 12px - friendly */
+  --radius-lg: 1rem;       /* 16px - cute */
+  --radius-xl: 1.5rem;     /* 24px - very round */
+  --radius-2xl: 2rem;      /* 32px - super kawaii */
+  --radius-3xl: 2.5rem;    /* 40px - extremely cute */
+  --radius-full: 9999px;   /* perfect circles */
   
-  /* === Shadows === */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  /* === Kawaii Soft Shadows === */
+  --shadow-xs: 0 2px 4px 0 rgba(255, 182, 193, 0.15);
+  --shadow-sm: 0 4px 8px 0 rgba(255, 182, 193, 0.2), 0 2px 4px 0 rgba(255, 182, 193, 0.1);
+  --shadow-base: 0 8px 16px -2px rgba(255, 182, 193, 0.25), 0 4px 8px -2px rgba(255, 182, 193, 0.15);
+  --shadow-md: 0 12px 24px -4px rgba(255, 182, 193, 0.3), 0 6px 12px -3px rgba(255, 182, 193, 0.2);
+  --shadow-lg: 0 20px 32px -6px rgba(255, 182, 193, 0.35), 0 12px 20px -6px rgba(255, 182, 193, 0.25);
+  --shadow-xl: 0 32px 48px -12px rgba(255, 182, 193, 0.4);
+  --shadow-2xl: 0 40px 64px -16px rgba(255, 182, 193, 0.45);
+  --shadow-inner: inset 0 4px 8px 0 rgba(255, 182, 193, 0.1);
   
-  /* Colored Shadows */
-  --shadow-primary: 0 10px 40px -10px rgba(255, 107, 107, 0.4);
-  --shadow-secondary: 0 10px 40px -10px rgba(102, 126, 234, 0.4);
-  --shadow-success: 0 10px 40px -10px rgba(72, 187, 120, 0.4);
+  /* Kawaii Colored Shadows */
+  --shadow-primary: 0 12px 32px -8px rgba(255, 182, 193, 0.5);
+  --shadow-secondary: 0 12px 32px -8px rgba(230, 230, 250, 0.6);
+  --shadow-success: 0 12px 32px -8px rgba(152, 251, 152, 0.5);
+  --shadow-kawaii-glow: 0 0 20px rgba(255, 182, 193, 0.3);
+  --shadow-magical: 0 8px 25px rgba(221, 160, 221, 0.4);
+  --shadow-dreamy: 0 10px 30px rgba(255, 204, 203, 0.45);
   
   /* === Transitions === */
   --transition-fast: 150ms ease-in-out;
@@ -275,35 +292,37 @@
   }
 }
 
-/* Animations */
+/* Kawaii Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(25px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
 }
 
-@keyframes pulse {
+@keyframes kawaii-pulse {
   0%, 100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.7;
+    transform: scale(1.02);
   }
 }
 
@@ -312,10 +331,61 @@
     transform: scale(1);
   }
   10%, 30% {
-    transform: scale(1.1);
+    transform: scale(1.15);
   }
   20% {
-    transform: scale(1.05);
+    transform: scale(1.08);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3) translateY(-50px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) translateY(-10px);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(0.98) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
   }
 }
 
@@ -327,12 +397,50 @@
   animation: slideInRight var(--transition-base) ease-out;
 }
 
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-kawaii-pulse {
+  animation: kawaii-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-heartbeat {
   animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-sparkle {
+  animation: sparkle 1s ease-in-out infinite;
+}
+
+.animate-bounceIn {
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Kawaii Hover Effects */
+.hover-kawaii {
+  transition: all var(--transition-base);
+}
+
+.hover-kawaii:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-kawaii-glow);
+}
+
+.hover-bounce:hover {
+  animation: wiggle 0.3s ease-in-out;
+}
+
+.hover-sparkle:hover::after {
+  content: "✨";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  animation: sparkle 0.6s ease-out;
 }
 
 /* Scrollbar Styling */
@@ -386,4 +494,161 @@
 
 .safe-right {
   padding-right: env(safe-area-inset-right);
+}
+
+/* === Kawaii Utility Classes === */
+
+/* Kawaii Backgrounds */
+.bg-kawaii-dream {
+  background: var(--gradient-kawaii-dream);
+}
+
+.bg-kawaii-romantic {
+  background: var(--gradient-romantic);
+}
+
+.bg-kawaii-magical {
+  background: var(--gradient-magical);
+}
+
+.bg-kawaii-soft {
+  background: linear-gradient(135deg, var(--kawaii-cream) 0%, var(--kawaii-pink) 100%);
+}
+
+/* Kawaii Buttons */
+.btn-kawaii {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-4) var(--space-6);
+  font-weight: var(--font-semibold);
+  box-shadow: var(--shadow-primary);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-kawaii:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-kawaii-glow);
+}
+
+.btn-kawaii:active {
+  transform: translateY(0) scale(1.02);
+}
+
+.btn-kawaii-secondary {
+  background: var(--gradient-secondary);
+  box-shadow: var(--shadow-secondary);
+}
+
+.btn-kawaii-success {
+  background: var(--gradient-success);
+  box-shadow: var(--shadow-success);
+  color: var(--gray-800);
+}
+
+/* Kawaii Cards */
+.card-kawaii {
+  background: white;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-kawaii::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+}
+
+.card-kawaii:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-kawaii-magical {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 240, 245, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 182, 193, 0.3);
+}
+
+/* Kawaii Badges */
+.badge-kawaii {
+  background: var(--gradient-primary);
+  color: white;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.badge-kawaii-soft {
+  background: var(--kawaii-pink);
+  color: var(--gray-800);
+}
+
+.badge-kawaii-magical {
+  background: var(--gradient-magical);
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Kawaii Text Effects */
+.text-kawaii-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: var(--font-bold);
+}
+
+.text-kawaii-glow {
+  color: var(--primary-600);
+  text-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+}
+
+/* Kawaii Inputs */
+.input-kawaii {
+  border: 2px solid var(--kawaii-pink);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.8);
+  transition: all var(--transition-base);
+}
+
+.input-kawaii:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.2);
+  transform: scale(1.02);
+}
+
+/* Heart Decorations */
+.heart-decoration::after {
+  content: "💕";
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 1.2em;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+.sparkle-decoration::before {
+  content: "✨";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  animation: sparkle 2s ease-in-out infinite;
 }

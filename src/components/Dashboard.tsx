@@ -121,10 +121,18 @@ export function Dashboard({ userId }: DashboardProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="text-center space-y-4">
-          <div data-testid="loading-spinner" className="mx-auto animate-spin rounded-full h-12 w-12 border-4 border-transparent gradient-primary"></div>
-          <p className="text-gray-600 font-medium">恋愛の可能性を分析中...</p>
+      <div className="min-h-screen bg-kawaii-dream flex items-center justify-center">
+        <div className="text-center space-y-6 animate-bounceIn">
+          <div className="relative">
+            <div data-testid="loading-spinner" className="mx-auto w-20 h-20 rounded-full gradient-primary animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-3xl animate-heartbeat">💕</span>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <p className="text-xl font-bold text-kawaii-gradient animate-kawaii-pulse">恋愛の魔法を分析中...</p>
+            <p className="text-pink-600 font-medium">✨ 素敵な出会いを見つけています ✨</p>
+          </div>
         </div>
       </div>
     )
@@ -132,156 +140,167 @@ export function Dashboard({ userId }: DashboardProps) {
 
   if (error) {
     return (
-      <div data-testid="error-state" className="card max-w-md mx-auto text-center py-12">
-        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
-          <svg className="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z" />
-          </svg>
+      <div className="min-h-screen bg-kawaii-dream flex items-center justify-center p-4">
+        <div data-testid="error-state" className="card-kawaii max-w-md mx-auto text-center py-12 animate-bounceIn">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-kawaii-soft flex items-center justify-center animate-wiggle">
+            <span className="text-4xl">😢</span>
+          </div>
+          <h3 className="text-2xl font-bold text-kawaii-gradient mb-4">ちょっとした問題が起きちゃいました</h3>
+          <p className="text-pink-600 mb-8 leading-relaxed font-medium">{error}</p>
+          <button
+            onClick={() => loadDashboardData()}
+            className="btn-kawaii px-8 py-4 text-lg hover-sparkle"
+          >
+            <span className="animate-heartbeat">💖</span> もう一度試してみる
+          </button>
         </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-3">一時的な問題が発生しています</h3>
-        <p className="text-gray-600 mb-6 leading-relaxed">{error}</p>
-        <button
-          onClick={() => loadDashboardData()}
-          className="px-6 py-3 gradient-primary text-white font-semibold rounded-xl hover-lift transition-all"
-        >
-          再試行
-        </button>
       </div>
     )
   }
 
   if (!dashboardData || connections.length === 0) {
     return (
-      <div data-testid="empty-state" className="card max-w-lg mx-auto text-center py-16">
-        <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-gradient-to-br from-pink-100 to-orange-100 flex items-center justify-center animate-heartbeat">
-          <svg className="h-10 w-10 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
+      <div className="min-h-screen bg-kawaii-dream flex items-center justify-center p-4">
+        <div data-testid="empty-state" className="card-kawaii-magical max-w-2xl mx-auto text-center py-16 animate-bounceIn relative overflow-hidden">
+          <div className="absolute top-4 right-4 animate-sparkle text-3xl">✨</div>
+          <div className="absolute top-8 left-8 animate-float text-2xl">🌸</div>
+          
+          <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-kawaii-romantic flex items-center justify-center animate-heartbeat relative">
+            <span className="text-6xl">💕</span>
+            <div className="absolute inset-0 rounded-full border-4 border-pink-200 animate-pulse"></div>
+          </div>
+          
+          <h3 className="text-4xl font-bold text-kawaii-gradient mb-6 animate-float">
+            新しい恋愛の魔法を始めましょう ✨
+          </h3>
+          
+          <div className="space-y-4 mb-10">
+            <p className="text-pink-700 text-xl leading-relaxed font-medium">
+              🌟 Miruと一緒に素敵な恋愛ストーリーを紡いでいきましょう 🌟
+            </p>
+            <p className="text-pink-600 text-lg leading-relaxed">
+              気になる運命の人の情報を追加して、<br />
+              愛に満ちた成功への魔法の道筋を見つけましょう！
+            </p>
+          </div>
+          
+          <button
+            onClick={handleAddConnection}
+            className="btn-kawaii px-12 py-6 text-xl hover-sparkle relative animate-kawaii-pulse"
+          >
+            <span className="animate-heartbeat">💖</span> 最初の運命の人を追加する <span className="animate-sparkle">✨</span>
+          </button>
         </div>
-        <h3 className="text-2xl font-bold gradient-text mb-4">新しい恋愛ストーリーを始めましょう</h3>
-        <p className="text-gray-600 mb-8 leading-relaxed text-lg">
-          Miruと一緒に素敵な出会いをサポートしていきます。<br />
-          気になる相手の情報を追加して、成功への道筋を見つけましょう！
-        </p>
-        <button
-          onClick={handleAddConnection}
-          className="px-8 py-4 gradient-primary text-white font-semibold rounded-xl hover-lift transition-all shadow-primary text-lg"
-        >
-          ✨ 最初の相手を追加する
-        </button>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-kawaii-dream">
       <div className="container space-y-8 py-8">
-        {/* ヘッダー */}
+        {/* Kawaii ヘッダー */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div className="space-y-2">
-            <h1 className="text-3xl sm:text-4xl font-extrabold gradient-text">💕 恋愛ダッシュボード</h1>
-            <p className="text-gray-600 text-lg">あなたの恋愛を成功に導くMiruのインサイト</p>
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-kawaii-gradient animate-float">
+              🌸💕 恋愛ダッシュボード ✨
+            </h1>
+            <p className="text-gray-700 text-lg font-medium">
+              あなたの素敵な恋愛を応援するMiruの魔法のインサイト 🪄
+            </p>
           </div>
           <button
             data-testid="add-connection-button"
             onClick={handleAddConnection}
-            className="gradient-primary text-white px-6 py-3 rounded-xl hover-lift transition-all flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center font-semibold shadow-primary"
+            className="btn-kawaii flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
           >
-            <span className="text-xl">+</span>
-            <span className="hidden sm:inline">新しい相手を追加</span>
+            <span className="text-xl animate-heartbeat">💖</span>
+            <span className="hidden sm:inline">新しい運命の人を追加</span>
             <span className="sm:hidden">追加</span>
           </button>
         </div>
 
-        {/* サマリー統計 */}
+        {/* Kawaii サマリー統計 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="card hover-glow group">
+          <div className="card-kawaii hover-kawaii group animate-bounceIn">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                <div className="w-16 h-16 rounded-3xl bg-kawaii-romantic flex items-center justify-center group-hover:scale-110 transition-transform animate-float heart-decoration">
+                  <span className="text-3xl animate-kawaii-pulse">👥</span>
                 </div>
               </div>
               <div className="ml-5 flex-1">
-                <p className="text-sm font-medium text-gray-600">総相手数</p>
+                <p className="text-sm font-semibold text-kawaii-gradient">出会った運命の人</p>
                 <div className="flex items-baseline">
-                  <p data-testid="total-connections" className="text-3xl font-bold text-gray-900">
+                  <p data-testid="total-connections" className="text-4xl font-extrabold text-kawaii-glow">
                     {dashboardData.totalConnections}
                   </p>
-                  <p className="ml-2 text-sm text-gray-500">人</p>
+                  <p className="ml-2 text-sm text-pink-400 font-medium">人 💕</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="card hover-glow group">
+          <div className="card-kawaii hover-kawaii group animate-bounceIn" style={{animationDelay: '0.1s'}}>
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="w-16 h-16 rounded-3xl bg-kawaii-magical flex items-center justify-center group-hover:scale-110 transition-transform animate-float sparkle-decoration">
+                  <span className="text-3xl animate-kawaii-pulse">🌟</span>
                 </div>
               </div>
               <div className="ml-5 flex-1">
-                <p className="text-sm font-medium text-gray-600">アクティブな関係</p>
+                <p className="text-sm font-semibold text-kawaii-gradient">進展中の関係</p>
                 <div className="flex items-baseline">
-                  <p data-testid="active-connections" className="text-3xl font-bold text-gray-900">
+                  <p data-testid="active-connections" className="text-4xl font-extrabold text-kawaii-glow">
                     {dashboardData.activeConnections}
                   </p>
-                  <p className="ml-2 text-sm text-gray-500">進行中</p>
+                  <p className="ml-2 text-sm text-purple-400 font-medium">進行中 ✨</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="card hover-glow group sm:col-span-2 lg:col-span-1">
+          <div className="card-kawaii hover-kawaii group sm:col-span-2 lg:col-span-1 animate-bounceIn" style={{animationDelay: '0.2s'}}>
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
+                <div className="w-16 h-16 rounded-3xl bg-kawaii-soft flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
+                  <span className="text-3xl animate-heartbeat">💖</span>
                 </div>
               </div>
               <div className="ml-5 flex-1">
-                <p className="text-sm font-medium text-gray-600">平均スコア</p>
+                <p className="text-sm font-semibold text-kawaii-gradient">愛情スコア平均</p>
                 <div className="flex items-baseline">
-                  <p data-testid="average-score" className="text-3xl font-bold text-gray-900">
+                  <p data-testid="average-score" className="text-4xl font-extrabold text-kawaii-glow">
                     {dashboardData.averageScore || 0}
                   </p>
-                  <p className="ml-2 text-sm text-gray-500">点</p>
+                  <p className="ml-2 text-sm text-pink-400 font-medium">点 💕</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* プログレス概要 */}
-        <div data-testid="progress-overview" className="card">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
+        {/* Kawaii プログレス概要 */}
+        <div data-testid="progress-overview" className="card-kawaii-magical animate-fadeIn">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-kawaii-magical flex items-center justify-center animate-float">
+              <span className="text-2xl animate-sparkle">📈</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">今月の進展</h2>
+            <h2 className="text-3xl font-bold text-kawaii-gradient">今月の魔法の進展 ✨</h2>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-8">
             {dashboardData.bestConnection && (
-              <div className="p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+              <div className="p-6 bg-kawaii-romantic rounded-3xl border-2 border-pink-200 relative overflow-hidden hover-kawaii">
+                <div className="absolute top-2 right-2 animate-sparkle text-2xl">✨</div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-purple-600 font-medium mb-2">🏆 最も有望な関係</p>
-                    <p className="text-xl font-bold text-gray-900">{dashboardData.bestConnection.nickname}さん</p>
+                    <p className="text-pink-600 font-bold mb-3 text-lg">👑 最も輝いている関係</p>
+                    <p className="text-2xl font-extrabold text-kawaii-gradient">{dashboardData.bestConnection.nickname}さん 💕</p>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-extrabold gradient-text">
+                    <div className="text-5xl font-extrabold text-kawaii-glow animate-heartbeat">
                       {connectionService.calculateRelationshipScore(dashboardData.bestConnection)}
                     </div>
-                    <p className="text-sm text-gray-600">スコア</p>
+                    <p className="text-sm text-pink-500 font-semibold">愛情スコア 💖</p>
                   </div>
                 </div>
               </div>
@@ -289,43 +308,47 @@ export function Dashboard({ userId }: DashboardProps) {
           </div>
         </div>
 
-        {/* 推奨アクション */}
-        <div data-testid="recommended-actions" className="card">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
+        {/* Kawaii 推奨アクション */}
+        <div data-testid="recommended-actions" className="card-kawaii animate-fadeIn">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-kawaii-soft flex items-center justify-center animate-wiggle">
+              <span className="text-2xl">🪄</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">今すぐできること</h2>
+            <h2 className="text-3xl font-bold text-kawaii-gradient">今すぐできる魔法のアクション ✨</h2>
           </div>
-          <div className="space-y-4">
-            {dashboardData.recommendedActions.map((action) => (
+          <div className="space-y-6">
+            {dashboardData.recommendedActions.map((action, index) => (
               <div
                 key={action.id}
-                className="p-5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200 hover:shadow-md transition-all"
+                className="p-6 bg-kawaii-romantic rounded-2xl border-2 border-pink-100 hover-kawaii relative overflow-hidden animate-slideInRight"
+                style={{animationDelay: `${index * 0.1}s`}}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="absolute top-2 right-2 animate-sparkle text-lg">
+                  {action.urgency === 'critical' ? '🚨' :
+                   action.urgency === 'high' ? '⚡' :
+                   action.urgency === 'medium' ? '⭐' : '✨'}
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 text-lg mb-2">{action.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{action.description}</p>
+                    <h3 className="font-bold text-kawaii-gradient text-xl mb-3">{action.title}</h3>
+                    <p className="text-gray-700 leading-relaxed font-medium">{action.description}</p>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      action.urgency === 'critical' ? 'bg-red-100 text-red-700 border border-red-200' :
-                      action.urgency === 'high' ? 'bg-orange-100 text-orange-700 border border-orange-200' :
-                      action.urgency === 'medium' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
-                      'bg-green-100 text-green-700 border border-green-200'
+                  <div className="flex items-center gap-4 shrink-0">
+                    <span className={`badge-kawaii ${
+                      action.urgency === 'critical' ? 'bg-gradient-to-r from-red-400 to-pink-400' :
+                      action.urgency === 'high' ? 'bg-gradient-to-r from-orange-400 to-pink-400' :
+                      action.urgency === 'medium' ? 'bg-gradient-to-r from-yellow-400 to-orange-400' :
+                      'bg-gradient-to-r from-green-400 to-mint-400'
                     }`}>
-                      {action.urgency === 'critical' ? '🚨 緊急' :
-                       action.urgency === 'high' ? '⚡ 高' :
-                       action.urgency === 'medium' ? '⭐ 中' : '✅ 低'}
+                      {action.urgency === 'critical' ? '💝 超緊急' :
+                       action.urgency === 'high' ? '💖 高優先' :
+                       action.urgency === 'medium' ? '💕 中優先' : '🤍 低優先'}
                     </span>
                     <button
                       onClick={() => handleGeneratePrompt(action.connection_id)}
-                      className="gradient-primary text-white px-4 py-2 rounded-lg font-medium hover-lift transition-all touch-manipulation"
+                      className="btn-kawaii-secondary hover-sparkle relative"
                     >
-                      実行 →
+                      <span className="animate-heartbeat">💫</span> 実行する
                     </button>
                   </div>
                 </div>
@@ -334,25 +357,28 @@ export function Dashboard({ userId }: DashboardProps) {
           </div>
         </div>
 
-        {/* 相手一覧 */}
+        {/* Kawaii 相手一覧 */}
         <div>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-kawaii-dream flex items-center justify-center animate-float heart-decoration">
+              <span className="text-2xl animate-heartbeat">💕</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">💖 あなたの恋愛相手</h2>
+            <h2 className="text-3xl font-bold text-kawaii-gradient">💖 あなたの運命の人たち ✨</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {connections.map((connection) => (
-              <ConnectionCard
-                key={connection.id}
-                connection={connection}
-                onEdit={handleEditConnection}
-                onDelete={handleDeleteConnection}
-                onGeneratePrompt={handleGeneratePrompt}
-              />
+            {connections.map((connection, index) => (
+              <div 
+                key={connection.id} 
+                className="animate-bounceIn" 
+                style={{animationDelay: `${index * 0.1}s`}}
+              >
+                <ConnectionCard
+                  connection={connection}
+                  onEdit={handleEditConnection}
+                  onDelete={handleDeleteConnection}
+                  onGeneratePrompt={handleGeneratePrompt}
+                />
+              </div>
             ))}
           </div>
         </div>
