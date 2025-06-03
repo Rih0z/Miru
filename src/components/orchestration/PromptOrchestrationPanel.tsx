@@ -109,7 +109,7 @@ export function PromptOrchestrationPanel({
     }
   }
 
-  const provideFeedback = async (rating: number, effectiveness: ActionResult['feedback']['effectiveness'], notes: string) => {
+  const provideFeedback = async (rating: number, effectiveness: "poor" | "average" | "good" | "excellent", notes: string) => {
     if (!result) return
 
     try {

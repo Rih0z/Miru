@@ -195,10 +195,10 @@ export class PromptOrchestrator implements IPromptOrchestrator {
         prompt.userId,
         prompt.metadata.promptType,
         prompt.aiProvider,
-        feedback.effectiveness === 'excellent' ? 1 : 
-        feedback.effectiveness === 'good' ? 0.8 :
-        feedback.effectiveness === 'average' ? 0.6 : 0.3,
-        feedback.notes || ''
+        feedback && feedback.effectiveness === 'excellent' ? 1 : 
+        feedback && feedback.effectiveness === 'good' ? 0.8 :
+        feedback && feedback.effectiveness === 'average' ? 0.6 : 0.3,
+        feedback?.notes || ''
       )
     }
   }

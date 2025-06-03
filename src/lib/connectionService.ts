@@ -208,81 +208,81 @@ export class ConnectionService {
       case 'マッチング直後':
         return {
           ...baseAction,
-          type: 'send_message',
           title: '最初のメッセージを送りましょう',
           description: 'プロフィールを参考に親しみやすいメッセージを作成',
           urgency: 'high' as const,
-          prompt_type: 'first_message'
+          prompt_type: 'first_message',
+          estimated_time: '5-10分'
         }
 
       case 'メッセージ中':
         return {
           ...baseAction,
-          type: 'deepen_conversation',
           title: '会話を深めましょう',
           description: '共通の話題や趣味について詳しく聞いてみる',
           urgency: 'medium' as const,
-          prompt_type: 'deepen_conversation'
+          prompt_type: 'deepen_conversation',
+          estimated_time: '10-15分'
         }
 
       case 'LINE交換済み':
         return {
           ...baseAction,
-          type: 'plan_date',
           title: 'デートの提案をしましょう',
           description: '相手の興味に合わせたデートプランを提案',
           urgency: 'high' as const,
-          prompt_type: 'date_preparation'
+          prompt_type: 'date_preparation',
+          estimated_time: '15-20分'
         }
 
       case 'デート前':
         return {
           ...baseAction,
-          type: 'prepare_date',
           title: 'デートの準備をしましょう',
           description: '話題の準備や当日の流れを確認',
           urgency: 'medium' as const,
-          prompt_type: 'date_preparation'
+          prompt_type: 'date_preparation',
+          estimated_time: '20-30分'
         }
 
       case 'デート後':
         return {
           ...baseAction,
-          type: 'follow_up',
           title: 'お礼のメッセージを送りましょう',
           description: 'デートの感想と次の約束について',
           urgency: 'high' as const,
-          prompt_type: 'relationship_building'
+          prompt_type: 'relationship_building',
+          estimated_time: '5-10分'
         }
 
       case '交際中':
         return {
           ...baseAction,
-          type: 'maintain_relationship',
           title: '関係を深めましょう',
           description: '今後の関係性について話し合う',
           urgency: 'low' as const,
-          prompt_type: 'relationship_building'
+          prompt_type: 'relationship_building',
+          estimated_time: '15-20分'
         }
 
       case '停滞中':
         return {
           ...baseAction,
-          type: 'revive_conversation',
           title: '関係を復活させましょう',
           description: '新しいアプローチで会話を再開',
           urgency: 'critical' as const,
-          prompt_type: 'general'
+          prompt_type: 'general',
+          estimated_time: '10-15分'
         }
 
       default:
         return {
           ...baseAction,
-          type: 'general_advice',
           title: '次のステップを検討',
           description: '現在の状況を分析して最適なアクションを決定',
           urgency: 'medium' as const,
-          prompt_type: 'general'
+          prompt_type: 'general',
+          estimated_time: '10-15分'
         }
     }
   }

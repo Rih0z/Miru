@@ -243,7 +243,7 @@ export class ScreenshotProcessor implements IScreenshotProcessor {
       `
     }
 
-    return appSpecificInstructions[app] || appSpecificInstructions.other
+    return appSpecificInstructions[app as keyof typeof appSpecificInstructions] || appSpecificInstructions.other
   }
 
   private parseExtractedContent(
