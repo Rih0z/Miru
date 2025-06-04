@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslations } from 'next-intl'
+import { FiX, FiAlertTriangle, FiEye, FiEyeOff } from 'react-icons/fi'
 
 interface AuthModalProps {
   isOpen: boolean
@@ -213,7 +214,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 active:text-gray-800 touch-manipulation p-2 -m-2"
           >
-            ✕
+            <FiX />
           </button>
         </div>
 
@@ -221,7 +222,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
             <div className="flex items-start">
               <div className="flex-shrink-0">
-                <span className="text-red-500 text-base">⚠️</span>
+                <FiAlertTriangle className="text-red-500 text-base" />
               </div>
               <div className="ml-3">
                 <h4 className="font-medium text-red-800 mb-1">
@@ -285,7 +286,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 active:text-gray-800 touch-manipulation"
                 >
-                  {showPassword ? '🙈' : '👁️'}
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
             </div>

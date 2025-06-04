@@ -6,6 +6,20 @@ import { DIContainer } from '@/lib/infrastructure/container/DIContainer'
 import { ConnectionCard } from './connections/ConnectionCard'
 import { ConnectionForm } from './connections/ConnectionForm'
 import { PromptExecutor } from './prompts/PromptExecutor'
+import { DataImportModal } from './data-import/DataImportModal'
+import { 
+  FiHeart, 
+  FiStar, 
+  FiAlertCircle, 
+  FiSun, 
+  FiUsers, 
+  FiTrendingUp, 
+  FiAlertTriangle, 
+  FiZap,
+  FiPlus,
+  FiDownload
+} from 'react-icons/fi'
+import { LuCrown } from 'react-icons/lu'
 
 interface DashboardProps {
   userId: string
@@ -25,6 +39,7 @@ export function Dashboard({ userId }: DashboardProps) {
     connection: Connection
     promptType: string
   } | null>(null)
+  const [showDataImportModal, setShowDataImportModal] = useState(false)
 
   useEffect(() => {
     loadDashboardData()
@@ -119,6 +134,24 @@ export function Dashboard({ userId }: DashboardProps) {
     setEditingConnection(null)
   }
 
+  const handleDataImportComplete = async (importedConnections: Connection[]) => {
+    try {
+      // インポートされたコネクションを既存のものと結合
+      const updatedConnections = [...connections, ...importedConnections]
+      setConnections(updatedConnections)
+      
+      // ダッシュボードデータを再計算
+      await loadDashboardData()
+      
+      setShowDataImportModal(false)
+      
+      alert(`${importedConnections.length}件のコネクションがインポートされました！`)
+    } catch (error) {
+      console.error('インポート完了処理エラー:', error)
+      alert('インポート完了処理でエラーが発生しました')
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-kawaii-dream flex items-center justify-center">
@@ -126,12 +159,14 @@ export function Dashboard({ userId }: DashboardProps) {
           <div className="relative">
             <div data-testid="loading-spinner" className="mx-auto w-20 h-20 rounded-full gradient-primary animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-3xl animate-heartbeat">💕</span>
+              <FiHeart className="text-3xl animate-heartbeat" />
             </div>
           </div>
           <div className="space-y-2">
             <p className="text-xl font-bold text-kawaii-gradient animate-kawaii-pulse">恋愛の魔法を分析中...</p>
-            <p className="text-pink-600 font-medium">✨ 素敵な出会いを見つけています ✨</p>
+            <p className="text-pink-600 font-medium flex items-center justify-center gap-2">
+              <FiStar /> 素敵な出会いを見つけています <FiStar />
+            </p>
           </div>
         </div>
       </div>
@@ -143,7 +178,7 @@ export function Dashboard({ userId }: DashboardProps) {
       <div className="min-h-screen bg-kawaii-dream flex items-center justify-center p-4">
         <div data-testid="error-state" className="card-kawaii max-w-md mx-auto text-center py-12 animate-bounceIn">
           <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-kawaii-soft flex items-center justify-center animate-wiggle">
-            <span className="text-4xl">😢</span>
+            <FiAlertCircle className="text-4xl" />
           </div>
           <h3 className="text-2xl font-bold text-kawaii-gradient mb-4">ちょっとした問題が起きちゃいました</h3>
           <p className="text-pink-600 mb-8 leading-relaxed font-medium">{error}</p>
@@ -151,7 +186,7 @@ export function Dashboard({ userId }: DashboardProps) {
             onClick={() => loadDashboardData()}
             className="btn-kawaii px-8 py-4 text-lg hover-sparkle"
           >
-            <span className="animate-heartbeat">💖</span> もう一度試してみる
+            <FiHeart className="animate-heartbeat inline mr-2" /> もう一度試してみる
           </button>
         </div>
       </div>
@@ -184,12 +219,24 @@ export function Dashboard({ userId }: DashboardProps) {
             </p>
           </div>
           
-          <button
-            onClick={handleAddConnection}
-            className="btn-kawaii px-12 py-6 text-xl hover-sparkle relative animate-kawaii-pulse"
-          >
-            <span className="animate-heartbeat">💖</span> 最初の運命の人を追加する <span className="animate-sparkle">✨</span>
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={handleAddConnection}
+              className="btn-kawaii px-8 py-4 text-lg hover-sparkle relative animate-kawaii-pulse"
+            >
+              <FiPlus className="inline mr-2" /> 手動で追加する
+            </button>
+            <button
+              onClick={() => setShowDataImportModal(true)}
+              className="btn-kawaii-secondary px-8 py-4 text-lg hover-sparkle relative animate-kawaii-pulse"
+            >
+              <FiDownload className="inline mr-2" /> AIで一括インポート
+            </button>
+          </div>
+          
+          <div className="text-center text-sm text-pink-600 mt-4">
+            <p>💡 AIインポートなら、既存の恋愛アプリの状況を簡単に取り込めます</p>
+          </div>
         </div>
       </div>
     )
@@ -208,15 +255,25 @@ export function Dashboard({ userId }: DashboardProps) {
               あなたの素敵な恋愛を応援するMiruの魔法のインサイト 🪄
             </p>
           </div>
-          <button
-            data-testid="add-connection-button"
-            onClick={handleAddConnection}
-            className="btn-kawaii flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
-          >
-            <span className="text-xl animate-heartbeat">💖</span>
-            <span className="hidden sm:inline">新しい運命の人を追加</span>
-            <span className="sm:hidden">追加</span>
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <button
+              data-testid="add-connection-button"
+              onClick={handleAddConnection}
+              className="btn-kawaii flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
+            >
+              <FiPlus className="text-lg" />
+              <span className="hidden sm:inline">手動で追加</span>
+              <span className="sm:hidden">追加</span>
+            </button>
+            <button
+              onClick={() => setShowDataImportModal(true)}
+              className="btn-kawaii-secondary flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
+            >
+              <FiDownload className="text-lg" />
+              <span className="hidden sm:inline">AIインポート</span>
+              <span className="sm:hidden">インポート</span>
+            </button>
+          </div>
         </div>
 
         {/* Kawaii サマリー統計 */}
@@ -414,6 +471,15 @@ export function Dashboard({ userId }: DashboardProps) {
           connection={showPromptExecutor.connection}
           promptType={showPromptExecutor.promptType}
           onClose={() => setShowPromptExecutor(null)}
+        />
+      )}
+
+      {showDataImportModal && (
+        <DataImportModal
+          isOpen={showDataImportModal}
+          onClose={() => setShowDataImportModal(false)}
+          onImportComplete={handleDataImportComplete}
+          userId={userId}
         />
       )}
     </div>

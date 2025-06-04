@@ -3,7 +3,11 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-export const supabaseAuth = (supabaseUrl && supabaseAnonKey) ? createClient(supabaseUrl, supabaseAnonKey) : null
+// デモモード判定（実際のSupabaseプロジェクトかどうかをチェック）
+const isValidSupabaseUrl = supabaseUrl.includes('.supabase.co') && supabaseUrl !== 'https://xyzxyzxyzxyzxyzxyz.supabase.co'
+const isValidSupabaseKey = supabaseAnonKey.startsWith('eyJ') && !supabaseAnonKey.includes('demo')
+
+export const supabaseAuth = (isValidSupabaseUrl && isValidSupabaseKey) ? createClient(supabaseUrl, supabaseAnonKey) : null
 
 export interface AuthUser {
   id: string
@@ -19,7 +23,44 @@ export class AuthService {
   async signUp(email: string, password: string): Promise<{ user: AuthUser | null, error: string | null }> {
     try {
       if (!supabaseAuth) {
-        return { user: null, error: 'Authentication service is not configured' }
+        // デモモード: ローカルストレージを使用
+        if (typeof window !== 'undefined') {
+          // 入力検証
+          if (!email || !password) {
+            return { user: null, error: 'メールアドレスとパスワードを入力してください' }
+          }
+          
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+          if (!emailRegex.test(email)) {
+            return { user: null, error: 'メールアドレスの形式が正しくありません' }
+          }
+          
+          const existingUsers = JSON.parse(localStorage.getItem('demo-users') || '[]')
+          
+          // メールアドレスの重複チェック
+          if (existingUsers.find((u: any) => u.email === email)) {
+            return { user: null, error: 'このメールアドレスは既に登録されています' }
+          }
+          
+          // パスワードの検証
+          if (password.length < 6) {
+            return { user: null, error: 'パスワードは6文字以上で入力してください' }
+          }
+          
+          const newUser: AuthUser = {
+            id: 'demo-' + Date.now(),
+            email: email,
+            created_at: new Date().toISOString()
+          }
+          
+          existingUsers.push({ ...newUser, password })
+          localStorage.setItem('demo-users', JSON.stringify(existingUsers))
+          localStorage.setItem('demo-current-user', JSON.stringify(newUser))
+          
+          console.log('デモモード: ユーザー登録完了', newUser)
+          return { user: newUser, error: null }
+        }
+        return { user: null, error: 'ブラウザ環境が必要です' }
       }
       const { data, error } = await supabaseAuth.auth.signUp({
         email,
@@ -45,8 +86,9 @@ export class AuthService {
       }
 
       return { user: null, error: 'アカウント作成に失敗しました' }
-    } catch (err) {
-      return { user: null, error: 'ネットワークエラーが発生しました' }
+    } catch (err: any) {
+      console.error('SignUp error:', err)
+      return { user: null, error: `エラーが発生しました: ${err.message || 'ネットワークエラー'}` }
     }
   }
 
@@ -56,6 +98,24 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<{ user: AuthUser | null, error: string | null }> {
     try {
       if (!supabaseAuth) {
+        // デモモード: ローカルストレージを使用
+        if (typeof window !== 'undefined') {
+          const existingUsers = JSON.parse(localStorage.getItem('demo-users') || '[]')
+          const user = existingUsers.find((u: any) => u.email === email && u.password === password)
+          
+          if (!user) {
+            return { user: null, error: 'メールアドレスまたはパスワードが間違っています' }
+          }
+          
+          const authUser: AuthUser = {
+            id: user.id,
+            email: user.email,
+            created_at: user.created_at
+          }
+          
+          localStorage.setItem('demo-current-user', JSON.stringify(authUser))
+          return { user: authUser, error: null }
+        }
         return { user: null, error: 'Authentication service is not configured' }
       }
       const { data, error } = await supabaseAuth.auth.signInWithPassword({
@@ -90,6 +150,11 @@ export class AuthService {
   async signOut(): Promise<{ error: string | null }> {
     try {
       if (!supabaseAuth) {
+        // デモモード: ローカルストレージをクリア
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('demo-current-user')
+          return { error: null }
+        }
         return { error: 'Authentication service is not configured' }
       }
       const { error } = await supabaseAuth.auth.signOut()
@@ -108,6 +173,11 @@ export class AuthService {
   async getCurrentUser(): Promise<AuthUser | null> {
     try {
       if (!supabaseAuth) {
+        // デモモード: ローカルストレージから取得
+        if (typeof window !== 'undefined') {
+          const currentUser = localStorage.getItem('demo-current-user')
+          return currentUser ? JSON.parse(currentUser) : null
+        }
         return null
       }
       const { data: { user } } = await supabaseAuth.auth.getUser()
@@ -131,6 +201,11 @@ export class AuthService {
    */
   onAuthStateChange(callback: (user: AuthUser | null) => void) {
     if (!supabaseAuth) {
+      // デモモード: 初期状態を確認
+      if (typeof window !== 'undefined') {
+        const currentUser = localStorage.getItem('demo-current-user')
+        callback(currentUser ? JSON.parse(currentUser) : null)
+      }
       // Return a no-op unsubscribe function
       return { data: { subscription: { unsubscribe: () => {} } } }
     }

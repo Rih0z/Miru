@@ -137,6 +137,17 @@ input:focus, textarea:focus, select:focus {
   transform: translateY(-2px);
 }
 
+/* === Kawaii Button Styles === */
+.btn-kawaii-secondary {
+  @apply bg-gray-100 text-gray-700 border border-gray-300 rounded-lg px-4 py-2 font-medium 
+         hover:bg-gray-200 hover:border-gray-400 active:bg-gray-300 
+         transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95;
+}
+
+.btn-kawaii-secondary:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 /* === Mobile Optimizations === */
 @media (max-width: 768px) {
   html {
