@@ -43,7 +43,7 @@ describe('ConnectionCard', () => {
   it('should render connection basic information', () => {
     render(<ConnectionCard {...mockProps} />)
     
-    expect(screen.getByText('Aさん')).toBeInTheDocument()
+    expect(screen.getByText(/Aさん/)).toBeInTheDocument()
     expect(screen.getByText('Pairs')).toBeInTheDocument()
     expect(screen.getByText('メッセージ中')).toBeInTheDocument()
     expect(screen.getByText('エンジニア')).toBeInTheDocument()
@@ -118,7 +118,7 @@ describe('ConnectionCard', () => {
     
     render(<ConnectionCard connection={connectionWithoutHobbies} {...mockProps} />)
     
-    expect(screen.getByText('Aさん')).toBeInTheDocument()
+    expect(screen.getByText(/Aさん/)).toBeInTheDocument()
     // ホビーがなくてもエラーにならないことを確認
   })
 })

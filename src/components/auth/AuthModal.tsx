@@ -48,6 +48,68 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
     return emailRegex.test(email)
   }
 
+  // ログインエラーメッセージの翻訳
+  const translateLoginError = (error: string): string => {
+    if (error.includes('メールアドレスまたはパスワードが間違っています') || 
+        error.includes('Invalid login credentials')) {
+      return t('auth.errors.invalidCredentials')
+    }
+    if (error.includes('User not found') || error.includes('ユーザーが見つかりません')) {
+      return t('auth.errors.userNotFound')
+    }
+    if (error.includes('Wrong password') || error.includes('パスワードが間違っています')) {
+      return t('auth.errors.wrongPassword')
+    }
+    if (error.includes('Too many requests') || error.includes('リクエストが多すぎます')) {
+      return t('auth.errors.tooManyRequests')
+    }
+    if (error.includes('Email not confirmed') || error.includes('メールアドレスが確認されていません')) {
+      return 'メールアドレスが確認されていません。受信メールボックスをご確認ください'
+    }
+    if (error.includes('Network') || error.includes('ネットワーク')) {
+      return t('auth.errors.networkError')
+    }
+    // デフォルトのログインエラーメッセージ
+    return t('auth.errors.invalidCredentials')
+  }
+
+  // サインアップエラーメッセージの翻訳
+  const translateSignupError = (error: string): string => {
+    if (error.includes('User already registered') || error.includes('既に登録されています')) {
+      return t('auth.errors.emailAlreadyExists')
+    }
+    if (error.includes('Password should be at least') || error.includes('パスワードは6文字以上')) {
+      return t('auth.errors.weakPassword')
+    }
+    if (error.includes('Email rate limit') || error.includes('メール送信の制限')) {
+      return t('auth.errors.tooManyRequests')
+    }
+    if (error.includes('Invalid email') || error.includes('メールアドレスの形式')) {
+      return t('auth.validation.invalidEmail')
+    }
+    if (error.includes('Network') || error.includes('ネットワーク')) {
+      return t('auth.errors.networkError')
+    }
+    return error
+  }
+
+  // パスワードリセットエラーメッセージの翻訳
+  const translateResetError = (error: string): string => {
+    if (error.includes('User not found') || error.includes('ユーザーが見つかりません')) {
+      return t('auth.errors.userNotFound')
+    }
+    if (error.includes('Email rate limit') || error.includes('メール送信の制限')) {
+      return t('auth.errors.tooManyRequests')
+    }
+    if (error.includes('Invalid email') || error.includes('メールアドレスの形式')) {
+      return t('auth.validation.invalidEmail')
+    }
+    if (error.includes('Network') || error.includes('ネットワーク')) {
+      return t('auth.errors.networkError')
+    }
+    return error
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -77,7 +139,8 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
       if (mode === 'login') {
         const { user, error } = await signIn(email, password)
         if (error) {
-          setError(error)
+          // より具体的なエラーメッセージを表示
+          setError(translateLoginError(error))
         } else if (user) {
           onAuthSuccess()
           onClose()
@@ -85,7 +148,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
       } else if (mode === 'signup') {
         const { user, error } = await signUp(email, password)
         if (error) {
-          setError(error)
+          setError(translateSignupError(error))
         } else {
           setMessage(t('auth.confirmationEmailSent'))
           setMode('login')
@@ -93,14 +156,14 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
       } else if (mode === 'reset') {
         const { error } = await resetPassword(email)
         if (error) {
-          setError(error)
+          setError(translateResetError(error))
         } else {
           setMessage(t('auth.resetEmailSent'))
           setMode('login')
         }
       }
     } catch (err) {
-      setError(t('auth.unexpectedError'))
+      setError(t('auth.errors.networkError'))
     }
 
     setIsLoading(false)
@@ -155,8 +218,27 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-            {error}
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <span className="text-red-500 text-base">⚠️</span>
+              </div>
+              <div className="ml-3">
+                <h4 className="font-medium text-red-800 mb-1">
+                  {mode === 'login' ? 'ログインエラー' : 
+                   mode === 'signup' ? 'アカウント作成エラー' : 
+                   'パスワードリセットエラー'}
+                </h4>
+                <p className="text-red-700">{error}</p>
+                {mode === 'login' && error.includes('メールアドレスまたはパスワードが正しくありません') && (
+                  <div className="mt-2 text-xs text-red-600">
+                    <p>• メールアドレスに間違いがないか確認してください</p>
+                    <p>• パスワードの大文字・小文字をご確認ください</p>
+                    <p>• パスワードを忘れた場合は「パスワードを忘れた方はこちら」をクリックしてください</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 

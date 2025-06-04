@@ -206,4 +206,53 @@ describe('SupabaseConnectionRepository', () => {
         .rejects.toThrow('データベースエラー: Deletion failed')
     })
   })
+
+  describe('Supabase configuration errors', () => {
+    let originalSupabase: any
+
+    beforeEach(() => {
+      // Store the original mock and replace it with null
+      const supabaseMock = require('@/lib/supabase')
+      originalSupabase = supabaseMock.supabase
+      supabaseMock.supabase = null
+    })
+
+    afterEach(() => {
+      // Restore the original mock
+      const supabaseMock = require('@/lib/supabase')
+      supabaseMock.supabase = originalSupabase
+    })
+
+    it('should throw error when supabase not configured in findByUserId', async () => {
+      await expect(repository.findByUserId('user-123'))
+        .rejects.toThrow('Supabase is not configured')
+    })
+
+    it('should throw error when supabase not configured in findById', async () => {
+      await expect(repository.findById('1'))
+        .rejects.toThrow('Supabase is not configured')
+    })
+
+    it('should throw error when supabase not configured in create', async () => {
+      await expect(repository.create({
+        user_id: 'user-123',
+        nickname: 'Test',
+        platform: 'TestApp',
+        current_stage: 'メッセージ中',
+        basic_info: {},
+        communication: {},
+        user_feelings: {}
+      })).rejects.toThrow('Supabase is not configured')
+    })
+
+    it('should throw error when supabase not configured in update', async () => {
+      await expect(repository.update('1', { nickname: 'Test' }))
+        .rejects.toThrow('Supabase is not configured')
+    })
+
+    it('should throw error when supabase not configured in delete', async () => {
+      await expect(repository.delete('1'))
+        .rejects.toThrow('Supabase is not configured')
+    })
+  })
 })

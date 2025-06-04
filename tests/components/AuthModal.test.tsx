@@ -32,7 +32,15 @@ jest.mock('next-intl', () => ({
       'auth.validation.passwordMismatch': 'パスワードが一致しません',
       'auth.resetEmailSent': 'リセットメールを送信しました',
       'auth.confirmationEmailSent': '確認メールを送信しました',
-      'auth.unexpectedError': '予期しないエラーが発生しました'
+      'auth.unexpectedError': '予期しないエラーが発生しました',
+      'auth.errors.invalidCredentials': 'メールアドレスまたはパスワードが正しくありません',
+      'auth.errors.userNotFound': 'このメールアドレスは登録されていません',
+      'auth.errors.wrongPassword': 'パスワードが正しくありません',
+      'auth.errors.emailAlreadyExists': 'このメールアドレスは既に登録されています',
+      'auth.errors.weakPassword': 'パスワードが弱すぎます',
+      'auth.errors.tooManyRequests': 'ログイン試行回数が上限に達しました',
+      'auth.errors.networkError': 'ネットワークエラーが発生しました',
+      'auth.errors.serverError': 'サーバーエラーが発生しました'
     }
     return translations[key] || key
   }
@@ -171,7 +179,7 @@ describe('AuthModal', () => {
       fireEvent.click(screen.getByText('ログインする'))
 
       await waitFor(() => {
-        expect(screen.getByText('Invalid credentials')).toBeInTheDocument()
+        expect(screen.getByText('メールアドレスまたはパスワードが正しくありません')).toBeInTheDocument()
       })
     })
 
@@ -265,7 +273,7 @@ describe('AuthModal', () => {
     it('should handle signup error', async () => {
       mockAuthContext.signUp.mockResolvedValue({
         user: null,
-        error: 'Email already registered'
+        error: 'User already registered'
       })
 
       render(
@@ -291,7 +299,7 @@ describe('AuthModal', () => {
       fireEvent.click(screen.getByText('サインアップする'))
 
       await waitFor(() => {
-        expect(screen.getByText('Email already registered')).toBeInTheDocument()
+        expect(screen.getByText('このメールアドレスは既に登録されています')).toBeInTheDocument()
       })
     })
   })
@@ -346,7 +354,7 @@ describe('AuthModal', () => {
       fireEvent.click(screen.getByText('リセットメール送信'))
 
       await waitFor(() => {
-        expect(screen.getByText('User not found')).toBeInTheDocument()
+        expect(screen.getByText('このメールアドレスは登録されていません')).toBeInTheDocument()
       })
     })
   })
@@ -527,6 +535,194 @@ describe('AuthModal', () => {
       fireEvent.keyDown(document, { key: 'Escape' })
 
       expect(mockOnClose).toHaveBeenCalled()
+    })
+  })
+
+  describe('Error Message Translation', () => {
+    it('should display translated login error message for invalid credentials', async () => {
+      mockAuthContext.signIn.mockResolvedValue({
+        user: null,
+        error: 'Invalid login credentials'
+      })
+
+      render(
+        <AuthModal 
+          isOpen={true} 
+          onClose={mockOnClose} 
+          onAuthSuccess={mockOnAuthSuccess} 
+        />
+      )
+
+      fireEvent.change(screen.getByPlaceholderText('メールアドレス'), {
+        target: { value: 'test@example.com' }
+      })
+      fireEvent.change(screen.getByPlaceholderText('パスワード'), {
+        target: { value: 'wrongpassword' }
+      })
+
+      fireEvent.click(screen.getByText('ログインする'))
+
+      await waitFor(() => {
+        expect(screen.getByText('メールアドレスまたはパスワードが正しくありません')).toBeInTheDocument()
+        expect(screen.getByText('ログインエラー')).toBeInTheDocument()
+      })
+    })
+
+    it('should display error UI with warning icon and helpful tips', async () => {
+      mockAuthContext.signIn.mockResolvedValue({
+        user: null,
+        error: 'Invalid login credentials'
+      })
+
+      render(
+        <AuthModal 
+          isOpen={true} 
+          onClose={mockOnClose} 
+          onAuthSuccess={mockOnAuthSuccess} 
+        />
+      )
+
+      fireEvent.change(screen.getByPlaceholderText('メールアドレス'), {
+        target: { value: 'test@example.com' }
+      })
+      fireEvent.change(screen.getByPlaceholderText('パスワード'), {
+        target: { value: 'wrongpassword' }
+      })
+
+      fireEvent.click(screen.getByText('ログインする'))
+
+      await waitFor(() => {
+        expect(screen.getByText('⚠️')).toBeInTheDocument()
+        expect(screen.getByText('• メールアドレスに間違いがないか確認してください')).toBeInTheDocument()
+      })
+    })
+
+    it('should display translated signup error message for email already exists', async () => {
+      mockAuthContext.signUp.mockResolvedValue({
+        user: null,
+        error: 'User already registered'
+      })
+
+      render(
+        <AuthModal 
+          isOpen={true} 
+          onClose={mockOnClose} 
+          onAuthSuccess={mockOnAuthSuccess} 
+        />
+      )
+
+      fireEvent.click(screen.getByText('サインアップ'))
+
+      fireEvent.change(screen.getByPlaceholderText('メールアドレス'), {
+        target: { value: 'existing@example.com' }
+      })
+      fireEvent.change(screen.getByPlaceholderText('パスワード'), {
+        target: { value: 'password123' }
+      })
+      fireEvent.change(screen.getByPlaceholderText('パスワード確認'), {
+        target: { value: 'password123' }
+      })
+
+      fireEvent.click(screen.getByText('サインアップする'))
+
+      await waitFor(() => {
+        expect(screen.getByText('このメールアドレスは既に登録されています')).toBeInTheDocument()
+        expect(screen.getByText('アカウント作成エラー')).toBeInTheDocument()
+      })
+    })
+
+    it('should display different error headers for different modes', async () => {
+      // Test password reset error header
+      mockAuthContext.resetPassword.mockResolvedValue({
+        error: 'Email rate limit exceeded'
+      })
+
+      render(
+        <AuthModal 
+          isOpen={true} 
+          onClose={mockOnClose} 
+          onAuthSuccess={mockOnAuthSuccess} 
+        />
+      )
+
+      fireEvent.click(screen.getByText('パスワードを忘れた方'))
+
+      fireEvent.change(screen.getByPlaceholderText('メールアドレス'), {
+        target: { value: 'test@example.com' }
+      })
+
+      fireEvent.click(screen.getByText('リセットメール送信'))
+
+      await waitFor(() => {
+        expect(screen.getByText('パスワードリセットエラー')).toBeInTheDocument()
+      })
+    })
+
+    it('should handle email not confirmed error message', async () => {
+      mockAuthContext.signIn.mockResolvedValue({
+        user: null,
+        error: 'Email not confirmed'
+      })
+
+      render(
+        <AuthModal 
+          isOpen={true} 
+          onClose={mockOnClose} 
+          onAuthSuccess={mockOnAuthSuccess} 
+        />
+      )
+
+      fireEvent.change(screen.getByPlaceholderText('メールアドレス'), {
+        target: { value: 'test@example.com' }
+      })
+      fireEvent.change(screen.getByPlaceholderText('パスワード'), {
+        target: { value: 'password123' }
+      })
+
+      fireEvent.click(screen.getByText('ログインする'))
+
+      await waitFor(() => {
+        expect(screen.getByText('メールアドレスが確認されていません。受信メールボックスをご確認ください')).toBeInTheDocument()
+      })
+    })
+
+    it('should translate various authentication error types', async () => {
+      const errorTests = [
+        { error: 'User not found', expected: 'このメールアドレスは登録されていません' },
+        { error: 'Wrong password', expected: 'パスワードが正しくありません' },
+        { error: 'Too many requests', expected: 'ログイン試行回数が上限に達しました' },
+        { error: 'Network error', expected: 'ネットワークエラーが発生しました' }
+      ]
+
+      for (const { error, expected } of errorTests) {
+        mockAuthContext.signIn.mockResolvedValue({
+          user: null,
+          error
+        })
+
+        const { unmount } = render(
+          <AuthModal 
+            isOpen={true} 
+            onClose={mockOnClose} 
+            onAuthSuccess={mockOnAuthSuccess} 
+          />
+        )
+
+        fireEvent.change(screen.getByPlaceholderText('メールアドレス'), {
+          target: { value: 'test@example.com' }
+        })
+        fireEvent.change(screen.getByPlaceholderText('パスワード'), {
+          target: { value: 'password123' }
+        })
+
+        fireEvent.click(screen.getByText('ログインする'))
+
+        await waitFor(() => {
+          expect(screen.getByText(expected)).toBeInTheDocument()
+        })
+
+        unmount()
+      }
     })
   })
 })

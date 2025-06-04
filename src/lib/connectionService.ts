@@ -212,7 +212,8 @@ export class ConnectionService {
           description: 'プロフィールを参考に親しみやすいメッセージを作成',
           urgency: 'high' as const,
           prompt_type: 'first_message',
-          estimated_time: '5-10分'
+          estimated_time: '5-10分',
+          type: 'send_message'
         }
 
       case 'メッセージ中':
@@ -222,7 +223,8 @@ export class ConnectionService {
           description: '共通の話題や趣味について詳しく聞いてみる',
           urgency: 'medium' as const,
           prompt_type: 'deepen_conversation',
-          estimated_time: '10-15分'
+          estimated_time: '10-15分',
+          type: 'deepen_conversation'
         }
 
       case 'LINE交換済み':
@@ -232,7 +234,8 @@ export class ConnectionService {
           description: '相手の興味に合わせたデートプランを提案',
           urgency: 'high' as const,
           prompt_type: 'date_preparation',
-          estimated_time: '15-20分'
+          estimated_time: '15-20分',
+          type: 'plan_date'
         }
 
       case 'デート前':
@@ -242,7 +245,8 @@ export class ConnectionService {
           description: '話題の準備や当日の流れを確認',
           urgency: 'medium' as const,
           prompt_type: 'date_preparation',
-          estimated_time: '20-30分'
+          estimated_time: '20-30分',
+          type: 'prepare_date'
         }
 
       case 'デート後':
@@ -252,7 +256,8 @@ export class ConnectionService {
           description: 'デートの感想と次の約束について',
           urgency: 'high' as const,
           prompt_type: 'relationship_building',
-          estimated_time: '5-10分'
+          estimated_time: '5-10分',
+          type: 'follow_up'
         }
 
       case '交際中':
@@ -262,7 +267,8 @@ export class ConnectionService {
           description: '今後の関係性について話し合う',
           urgency: 'low' as const,
           prompt_type: 'relationship_building',
-          estimated_time: '15-20分'
+          estimated_time: '15-20分',
+          type: 'maintain_relationship'
         }
 
       case '停滞中':
@@ -272,7 +278,8 @@ export class ConnectionService {
           description: '新しいアプローチで会話を再開',
           urgency: 'critical' as const,
           prompt_type: 'general',
-          estimated_time: '10-15分'
+          estimated_time: '10-15分',
+          type: 'revive_conversation'
         }
 
       default:
@@ -282,7 +289,8 @@ export class ConnectionService {
           description: '現在の状況を分析して最適なアクションを決定',
           urgency: 'medium' as const,
           prompt_type: 'general',
-          estimated_time: '10-15分'
+          estimated_time: '10-15分',
+          type: 'general_advice'
         }
     }
   }

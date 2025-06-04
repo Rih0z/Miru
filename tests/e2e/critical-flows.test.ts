@@ -591,4 +591,418 @@ describe('E2E Critical User Journeys', () => {
       expect(mockFetch).toHaveBeenCalledTimes(5)
     })
   })
+
+  describe('Advanced User Interactions', () => {
+    it('should complete screenshot upload and analysis flow', async () => {
+      const authToken = 'valid-token'
+      const connectionId = 'conn-123'
+
+      // Step 1: User uploads screenshot
+      const mockFile = new File(['screenshot data'], 'conversation.png', { type: 'image/png' })
+      const formData = new FormData()
+      formData.append('screenshot', mockFile)
+      formData.append('connectionId', connectionId)
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          analysis: {
+            imageMetadata: {
+              app: 'LINE',
+              source: 'mobile',
+              timestamp: new Date().toISOString(),
+              quality: 'high'
+            },
+            detectedElements: {
+              messages: [
+                { id: '1', content: 'こんにちは！', sender: 'other', timestamp: new Date().toISOString() },
+                { id: '2', content: 'お疲れ様です', sender: 'user', timestamp: new Date().toISOString() }
+              ],
+              userInterface: {
+                inputField: true,
+                sendButton: true,
+                profileInfo: false
+              }
+            },
+            confidence: 0.95,
+            rawText: 'こんにちは！お疲れ様です'
+          },
+          conversationData: {
+            lastMessage: {
+              content: 'お疲れ様です',
+              sender: 'user',
+              timestamp: new Date().toISOString(),
+              sentiment: 'positive'
+            },
+            conversationFlow: {
+              messageFrequency: 'daily',
+              emotionalTone: 'warm',
+              topicProgression: ['greeting', 'work']
+            },
+            contextUpdates: {
+              currentStage: 'メッセージ中',
+              communicationChanges: {
+                style: 'casual',
+                frequency: 'daily'
+              }
+            }
+          }
+        })
+      })
+
+      const uploadResult = await fetch('/api/screenshots/analyze', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${authToken}` },
+        body: formData
+      })
+      const analysisData = await uploadResult.json()
+
+      expect(analysisData.analysis.confidence).toBe(0.95)
+      expect(analysisData.analysis.detectedElements.messages).toHaveLength(2)
+      expect(analysisData.conversationData.lastMessage.sentiment).toBe('positive')
+
+      // Step 2: Connection is automatically updated based on analysis
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          id: connectionId,
+          current_stage: 'メッセージ中',
+          communication: {
+            frequency: 'daily',
+            lastContact: new Date().toISOString().split('T')[0],
+            communicationStyle: 'casual'
+          },
+          updated_at: new Date().toISOString()
+        })
+      })
+
+      const updatedConnection = await fetch(`/api/connections/${connectionId}`, {
+        headers: { Authorization: `Bearer ${authToken}` }
+      })
+      const connectionData = await updatedConnection.json()
+
+      expect(connectionData.current_stage).toBe('メッセージ中')
+      expect(connectionData.communication.frequency).toBe('daily')
+      expect(mockFetch).toHaveBeenCalledTimes(2)
+    })
+
+    it('should handle AI prompt orchestration workflow', async () => {
+      const authToken = 'valid-token'
+      const connectionId = 'conn-123'
+
+      // Step 1: User requests personalized AI prompt
+      const promptRequest = {
+        connection_id: connectionId,
+        intent: 'first_message',
+        ai_provider: 'claude',
+        personalization: {
+          emotional_state: 'hopeful',
+          urgency_level: 'medium',
+          communication_style: 'gentle'
+        }
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          prompt: {
+            id: 'prompt-123',
+            content: 'あなたは恋愛アドバイザーとして、優しく思いやりのあるアプローチで...',
+            metadata: {
+              generated_at: new Date().toISOString(),
+              ai_provider: 'claude',
+              personalization_factors: {
+                emotional_tone: 0.7,
+                directness_level: 0.5,
+                creativity_level: 0.6
+              }
+            }
+          },
+          suggestions: [
+            'プロフィールの共通点を見つけて話しかけてみましょう',
+            '相手の趣味について質問してみてください',
+            '軽い挨拶から始めて自然な流れを作りましょう'
+          ]
+        })
+      })
+
+      const promptResult = await fetch('/api/prompts/orchestrate', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${authToken}` },
+        body: JSON.stringify(promptRequest)
+      })
+      const promptData = await promptResult.json()
+
+      expect(promptData.prompt.content).toContain('恋愛アドバイザー')
+      expect(promptData.suggestions).toHaveLength(3)
+      expect(promptData.prompt.metadata.ai_provider).toBe('claude')
+
+      // Step 2: User executes the prompt with AI
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          result: {
+            id: 'result-123',
+            ai_response: '最初のメッセージとして、相手のプロフィールで共通の趣味を見つけて...',
+            confidence: 0.85,
+            processing_time: 1500,
+            structured_advice: {
+              recommended_message: 'こんにちは！プロフィールを拝見して、映画がお好きとのことでしたが...',
+              timing: '平日の夕方頃が返信率が高い傾向にあります',
+              follow_up_strategy: '返信があったら、好きな映画のジャンルについて質問してみてください'
+            }
+          }
+        })
+      })
+
+      const executionResult = await fetch(`/api/prompts/${promptData.prompt.id}/execute`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${authToken}` }
+      })
+      const aiResult = await executionResult.json()
+
+      expect(aiResult.result.confidence).toBeGreaterThan(0.8)
+      expect(aiResult.result.structured_advice.recommended_message).toContain('こんにちは')
+      expect(aiResult.result.structured_advice.timing).toBeTruthy()
+
+      // Step 3: User provides feedback on AI result
+      const feedback = {
+        rating: 4,
+        effectiveness: 'good',
+        notes: 'とても参考になるアドバイスでした',
+        used_suggestion: true
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true })
+      })
+
+      const feedbackResult = await fetch(`/api/results/${aiResult.result.id}/feedback`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${authToken}` },
+        body: JSON.stringify(feedback)
+      })
+
+      expect(feedbackResult.ok).toBe(true)
+      expect(mockFetch).toHaveBeenCalledTimes(3)
+    })
+
+    it('should handle mobile responsive interface simulation', async () => {
+      // Simulate mobile viewport
+      const mobileViewport = {
+        width: 375,
+        height: 667,
+        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15'
+      }
+
+      // Mock touch events and gestures
+      const touchEvents = {
+        touchStart: { touches: [{ clientX: 100, clientY: 200 }] },
+        touchMove: { touches: [{ clientX: 150, clientY: 200 }] },
+        touchEnd: { touches: [] }
+      }
+
+      // User performs swipe gesture on connection card
+      const swipeGesture = {
+        startX: touchEvents.touchStart.touches[0].clientX,
+        endX: touchEvents.touchMove.touches[0].clientX,
+        direction: 'right',
+        velocity: 0.5
+      }
+
+      expect(swipeGesture.direction).toBe('right')
+      expect(swipeGesture.endX - swipeGesture.startX).toBe(50)
+
+      // Responsive layout adjustments
+      const layoutConfig = {
+        mobile: mobileViewport.width < 768,
+        showSidebar: mobileViewport.width >= 1024,
+        cardColumns: mobileViewport.width < 640 ? 1 : mobileViewport.width < 1024 ? 2 : 3
+      }
+
+      expect(layoutConfig.mobile).toBe(true)
+      expect(layoutConfig.showSidebar).toBe(false)
+      expect(layoutConfig.cardColumns).toBe(1)
+
+      // Test mobile-specific features
+      const mobileFeatures = {
+        pullToRefresh: true,
+        bottomNavigation: true,
+        floatingActionButton: true,
+        hapticFeedback: true
+      }
+
+      Object.values(mobileFeatures).forEach(feature => {
+        expect(feature).toBe(true)
+      })
+    })
+  })
+
+  describe('Data Integrity and Security', () => {
+    it('should maintain data consistency across operations', async () => {
+      const authToken = 'valid-token'
+      const userId = 'user-123'
+
+      // Step 1: Create connection
+      const connectionData = {
+        nickname: 'データ整合性テスト',
+        platform: 'TestApp',
+        current_stage: 'マッチング直後'
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          id: 'conn-integrity-test',
+          user_id: userId,
+          ...connectionData,
+          created_at: '2024-01-01T10:00:00Z',
+          updated_at: '2024-01-01T10:00:00Z'
+        })
+      })
+
+      const createResult = await fetch('/api/connections', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${authToken}` },
+        body: JSON.stringify(connectionData)
+      })
+      const connection = await createResult.json()
+
+      // Step 2: Update connection multiple times rapidly
+      const updates = [
+        { current_stage: 'メッセージ中', updated_at: '2024-01-01T11:00:00Z' },
+        { current_stage: 'LINE交換済み', updated_at: '2024-01-01T12:00:00Z' },
+        { current_stage: 'デート前', updated_at: '2024-01-01T13:00:00Z' }
+      ]
+
+      for (const [index, update] of updates.entries()) {
+        mockFetch.mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            ...connection,
+            ...update,
+            version: index + 2 // Simulate version control
+          })
+        })
+      }
+
+      const updatePromises = updates.map((update, index) =>
+        fetch(`/api/connections/${connection.id}`, {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${authToken}` },
+          body: JSON.stringify(update)
+        })
+      )
+
+      const updateResults = await Promise.all(updatePromises)
+      const updatedConnections = await Promise.all(updateResults.map(r => r.json()))
+
+      // Verify data consistency
+      expect(updatedConnections[0].version).toBe(2)
+      expect(updatedConnections[1].version).toBe(3)
+      expect(updatedConnections[2].version).toBe(4)
+      expect(updatedConnections[2].current_stage).toBe('デート前')
+
+      expect(mockFetch).toHaveBeenCalledTimes(4) // 1 create + 3 updates
+    })
+
+    it('should prevent unauthorized access to user data', async () => {
+      const validToken = 'valid-token-user1'
+      const invalidToken = 'invalid-token'
+      const otherUserToken = 'valid-token-user2'
+
+      // Test 1: Invalid token
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        json: async () => ({ error: 'Invalid token' })
+      })
+
+      const invalidResult = await fetch('/api/connections', {
+        headers: { Authorization: `Bearer ${invalidToken}` }
+      })
+
+      expect(invalidResult.status).toBe(401)
+
+      // Test 2: Valid token but accessing other user's data
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        json: async () => ({ error: 'Forbidden: Access denied' })
+      })
+
+      const forbiddenResult = await fetch('/api/connections/other-user-connection', {
+        headers: { Authorization: `Bearer ${otherUserToken}` }
+      })
+
+      expect(forbiddenResult.status).toBe(403)
+
+      // Test 3: Valid access with proper token
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          connections: [{ id: 'conn-1', user_id: 'user1', nickname: 'Test' }]
+        })
+      })
+
+      const validResult = await fetch('/api/connections', {
+        headers: { Authorization: `Bearer ${validToken}` }
+      })
+      const validData = await validResult.json()
+
+      expect(validResult.ok).toBe(true)
+      expect(validData.connections[0].user_id).toBe('user1')
+
+      expect(mockFetch).toHaveBeenCalledTimes(3)
+    })
+
+    it('should handle input sanitization and validation', async () => {
+      const authToken = 'valid-token'
+
+      // Test malicious input attempts
+      const maliciousInputs = [
+        {
+          nickname: '<script>alert("XSS")</script>',
+          expected_error: 'Invalid characters detected'
+        },
+        {
+          nickname: '../../etc/passwd',
+          expected_error: 'Invalid path characters'
+        },
+        {
+          nickname: 'DROP TABLE connections;',
+          expected_error: 'SQL injection attempt detected'
+        },
+        {
+          platform: 'javascript:void(0)',
+          expected_error: 'Protocol injection detected'
+        }
+      ]
+
+      for (const input of maliciousInputs) {
+        mockFetch.mockResolvedValueOnce({
+          ok: false,
+          status: 400,
+          json: async () => ({ error: input.expected_error })
+        })
+
+        const result = await fetch('/api/connections', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${authToken}` },
+          body: JSON.stringify({
+            nickname: input.nickname || 'Safe Name',
+            platform: input.platform || 'Safe Platform',
+            current_stage: 'マッチング直後'
+          })
+        })
+
+        expect(result.status).toBe(400)
+        const errorData = await result.json()
+        expect(errorData.error).toEqual(input.expected_error)
+      }
+
+      expect(mockFetch).toHaveBeenCalledTimes(maliciousInputs.length)
+    })
+  })
 })

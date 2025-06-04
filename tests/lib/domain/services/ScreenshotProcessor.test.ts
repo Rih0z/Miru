@@ -348,6 +348,45 @@ describe('ScreenshotProcessor', () => {
       })
     })
 
+    describe('parseTextContent', () => {
+      it('should parse text content with message patterns', () => {
+        const text = 'You: Hello there!\nThem: Hi back!\nButton: Send Message\nInput: Type here'
+        const metadata = { source: 'ios', app: 'line', resolution: { width: 375, height: 812 } }
+
+        const result = (processor as any).parseTextContent(text, metadata)
+
+        expect(result.messages).toHaveLength(2)
+        expect(result.messages[0].sender).toBe('user')
+        expect(result.messages[0].content).toBe('Hello there!')
+        expect(result.messages[1].sender).toBe('other')
+        expect(result.messages[1].content).toBe('Hi back!')
+        expect(result.uiElements).toHaveLength(2)
+        expect(result.uiElements[0].type).toBe('button')
+        expect(result.uiElements[1].type).toBe('input')
+      })
+
+      it('should handle empty lines and filter them out', () => {
+        const text = '\n\nYou: Message\n\n\nThem: Reply\n\n'
+        const metadata = { source: 'ios', app: 'line', resolution: { width: 375, height: 812 } }
+
+        const result = (processor as any).parseTextContent(text, metadata)
+
+        expect(result.messages).toHaveLength(2)
+      })
+
+      it('should parse UI elements correctly', () => {
+        const text = 'Send Button: Click here\nText Input: Enter message\nOther Button: Cancel'
+        const metadata = { source: 'ios', app: 'line', resolution: { width: 375, height: 812 } }
+
+        const result = (processor as any).parseTextContent(text, metadata)
+
+        expect(result.uiElements).toHaveLength(3)
+        expect(result.uiElements[0].type).toBe('button')
+        expect(result.uiElements[1].type).toBe('input')
+        expect(result.uiElements[2].type).toBe('button')
+      })
+    })
+
     describe('analyzeConversationFlow', () => {
       it('should analyze conversation patterns', () => {
         const messages = [
@@ -371,6 +410,52 @@ describe('ScreenshotProcessor', () => {
         expect(result.messageFrequency).toBe('stable')
         expect(result.topicProgression).toEqual([])
         expect(result.emotionalTone).toBe('neutral')
+      })
+    })
+
+    describe('analyzeEmotionalTone', () => {
+      it('should return negative for negative content', () => {
+        const messages = [
+          { sender: 'user', content: 'This is terrible and awful 😢', type: 'text' },
+          { sender: 'other', content: 'I hate this so much 😞', type: 'text' }
+        ]
+
+        const result = (processor as any).analyzeEmotionalTone(messages)
+
+        expect(result).toBe('negative')
+      })
+
+      it('should return neutral for balanced content', () => {
+        const messages = [
+          { sender: 'user', content: 'This is okay I guess', type: 'text' },
+          { sender: 'other', content: 'Just a normal conversation', type: 'text' }
+        ]
+
+        const result = (processor as any).analyzeEmotionalTone(messages)
+
+        expect(result).toBe('neutral')
+      })
+    })
+
+    describe('parseTimestamp', () => {
+      it('should handle invalid timestamp strings', () => {
+        const result = (processor as any).parseTimestamp('invalid-date-string')
+
+        expect(result).toBeInstanceOf(Date)
+      })
+
+      it('should handle undefined timestamp', () => {
+        const result = (processor as any).parseTimestamp(undefined)
+
+        expect(result).toBeInstanceOf(Date)
+      })
+
+      it('should parse valid timestamps', () => {
+        const validTimestamp = '2024-01-01T10:00:00Z'
+        const result = (processor as any).parseTimestamp(validTimestamp)
+
+        expect(result).toBeInstanceOf(Date)
+        expect(result.getFullYear()).toBe(2024)
       })
     })
 

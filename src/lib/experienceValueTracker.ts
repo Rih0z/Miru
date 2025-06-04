@@ -36,6 +36,7 @@ export interface HopeEvent {
 }
 
 export class ExperienceValueTracker {
+  private static counter = 0
   
   /**
    * 毎日の希望体験を記録
@@ -46,7 +47,7 @@ export class ExperienceValueTracker {
     experienceData: Partial<DailyHopeExperience>
   ): Promise<DailyHopeExperience> {
     const experience: DailyHopeExperience = {
-      id: `exp_${Date.now()}`,
+      id: `exp_${Date.now()}_${++ExperienceValueTracker.counter}`,
       userId,
       connectionId,
       date: new Date().toISOString().split('T')[0],
@@ -76,7 +77,7 @@ export class ExperienceValueTracker {
     event: Omit<HopeEvent, 'id' | 'timestamp'>
   ): Promise<HopeEvent> {
     const hopeEvent: HopeEvent = {
-      id: `event_${Date.now()}`,
+      id: `event_${Date.now()}_${++ExperienceValueTracker.counter}`,
       timestamp: new Date().toISOString(),
       ...event
     }

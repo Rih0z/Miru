@@ -518,5 +518,196 @@ describe('PromptOrchestrator', () => {
       await expect(orchestrator.executePrompt(prompt, aiConfig))
         .rejects.toThrow('Failed to execute prompt')
     })
+
+    it('should handle result not found in recordFeedback', async () => {
+      const feedback = {
+        userRating: 4,
+        effectiveness: 'good' as const,
+        notes: 'Very helpful advice'
+      }
+
+      await expect(orchestrator.recordFeedback('nonexistent-result', feedback))
+        .rejects.toThrow('Result nonexistent-result not found')
+    })
+
+    it('should handle invalid JSON response gracefully', async () => {
+      const invalidJsonResponse = 'invalid json {'
+      
+      const result = await orchestrator.processAIResponse(invalidJsonResponse, 'json')
+
+      expect(result).toEqual({
+        error: 'Invalid JSON response',
+        originalText: 'invalid json {'
+      })
+    })
+  })
+
+  describe('structured data processing', () => {
+    it('should process structured data when expected format is not text', async () => {
+      const prompt: OrchestratedPrompt = {
+        id: 'prompt-123',
+        userId: 'user-123',
+        connectionId: 'conn-123',
+        aiProvider: 'claude',
+        prompt: 'Test prompt',
+        metadata: {
+          generatedAt: new Date(),
+          contextHash: 'hash123',
+          promptType: 'first_message',
+          urgency: 'medium',
+          expectedOutputFormat: 'structured'
+        },
+        personalizationFactors: {
+          emotionalTone: 0.7,
+          directnessLevel: 0.5,
+          creativityLevel: 0.6,
+          detailLevel: 0.8
+        }
+      }
+
+      const aiConfig: AIServiceConfig = {
+        provider: 'claude',
+        model: 'claude-3-sonnet',
+        maxTokens: 4000,
+        temperature: 0.7,
+        customParameters: {}
+      }
+
+      // Mock the private callAIService method
+      jest.spyOn(orchestrator as any, 'callAIService').mockResolvedValue('advice: Be yourself\naction: Send message\ntiming: Today')
+
+      const result = await orchestrator.executePrompt(prompt, aiConfig)
+
+      expect(result.structuredData).toBeDefined()
+      expect(result.structuredData?.advice).toContain('Be yourself')
+      expect(result.structuredData?.recommendedAction).toContain('Send message')
+    })
+  })
+
+  describe('optimizeForUser', () => {
+    it('should optimize user preferences based on patterns', async () => {
+      mockContextManager.analyzeUserPatterns.mockResolvedValue({
+        preferredPromptTypes: ['first_message'],
+        optimalTiming: [{ hour: 10, dayOfWeek: 1 }],
+        effectiveAIProviders: ['claude', 'gpt'],
+        communicationPreferences: { urgency: 0.5, detail: 0.8 }
+      })
+      mockContextManager.updateUserContext.mockResolvedValue()
+
+      const result = await orchestrator.optimizeForUser('user-123')
+
+      expect(mockContextManager.analyzeUserPatterns).toHaveBeenCalledWith('user-123')
+      expect(mockContextManager.updateUserContext).toHaveBeenCalledWith('user-123', {
+        learningPreferences: {
+          preferredAIStyle: 'analytical',
+          feedbackSensitivity: 'medium',
+          detailLevel: 'comprehensive'
+        }
+      })
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('base prompt fallbacks', () => {
+    it('should handle conversation_deepening without connection', async () => {
+      const sessionContext: SessionContext = {
+        sessionId: 'session-123',
+        timestamp: new Date(),
+        userIntent: 'conversation_deepening',
+        emotionalState: 'positive',
+        urgencyLevel: 'medium',
+        contextTags: [],
+        previousActions: []
+      }
+
+      mockContextManager.getUserContext.mockResolvedValue(mockUserContext)
+      mockContextManager.getOptimalAIProvider.mockResolvedValue('claude')
+      mockContextManager.analyzeUserPatterns.mockResolvedValue({
+        preferredPromptTypes: ['conversation_deepening'],
+        optimalTiming: [],
+        effectiveAIProviders: ['claude'],
+        communicationPreferences: { urgency: 0.5, detail: 0.5 }
+      })
+
+      const result = await orchestrator.generatePrompt(sessionContext)
+
+      expect(result.prompt).toContain('Please provide advice on deepening conversations in relationships.')
+    })
+
+    it('should handle date_planning without connection', async () => {
+      const sessionContext: SessionContext = {
+        sessionId: 'session-123',
+        timestamp: new Date(),
+        userIntent: 'date_planning',
+        emotionalState: 'positive',
+        urgencyLevel: 'medium',
+        contextTags: [],
+        previousActions: []
+      }
+
+      mockContextManager.getUserContext.mockResolvedValue(mockUserContext)
+      mockContextManager.getOptimalAIProvider.mockResolvedValue('claude')
+
+      const result = await orchestrator.generatePrompt(sessionContext)
+
+      expect(result.prompt).toContain('Please provide advice on planning a date.')
+    })
+
+    it('should handle relationship_advice without connection', async () => {
+      const sessionContext: SessionContext = {
+        sessionId: 'session-123',
+        timestamp: new Date(),
+        userIntent: 'relationship_advice',
+        emotionalState: 'positive',
+        urgencyLevel: 'medium',
+        contextTags: [],
+        previousActions: []
+      }
+
+      mockContextManager.getUserContext.mockResolvedValue(mockUserContext)
+      mockContextManager.getOptimalAIProvider.mockResolvedValue('claude')
+
+      const result = await orchestrator.generatePrompt(sessionContext)
+
+      expect(result.prompt).toContain('Please provide general relationship advice.')
+    })
+
+    it('should handle default case without connection', async () => {
+      const sessionContext: SessionContext = {
+        sessionId: 'session-123',
+        timestamp: new Date(),
+        userIntent: 'unknown_intent' as any,
+        emotionalState: 'positive',
+        urgencyLevel: 'medium',
+        contextTags: [],
+        previousActions: []
+      }
+
+      mockContextManager.getUserContext.mockResolvedValue(mockUserContext)
+      mockContextManager.getOptimalAIProvider.mockResolvedValue('claude')
+
+      const result = await orchestrator.generatePrompt(sessionContext)
+
+      expect(result.prompt).toContain('Please provide helpful relationship guidance.')
+    })
+  })
+
+  describe('private helper methods', () => {
+    it('should map providers to style correctly', () => {
+      const mapProvidersToStyle = (orchestrator as any).mapProvidersToStyle
+
+      expect(mapProvidersToStyle(['claude', 'gpt'])).toBe('analytical')
+      expect(mapProvidersToStyle(['gpt', 'gemini'])).toBe('creative')
+      expect(mapProvidersToStyle(['gemini'])).toBe('balanced')
+    })
+
+    it('should infer detail preference correctly', () => {
+      const inferDetailPreference = (orchestrator as any).inferDetailPreference
+
+      expect(inferDetailPreference({ detail: 0.8 })).toBe('comprehensive')
+      expect(inferDetailPreference({ detail: 0.2 })).toBe('brief')
+      expect(inferDetailPreference({ detail: 0.5 })).toBe('detailed')
+      expect(inferDetailPreference({})).toBe('detailed')
+    })
   })
 })

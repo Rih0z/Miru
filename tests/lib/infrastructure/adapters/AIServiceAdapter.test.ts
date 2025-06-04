@@ -30,11 +30,22 @@ describe('AIServiceAdapter', () => {
       adapter = new ClaudeServiceAdapter(config)
     })
 
+    it('should return correct provider name', () => {
+      expect(adapter.getProviderName()).toBe('claude')
+    })
+
     it('should validate configuration correctly', () => {
       expect(adapter.validateConfig()).toBe(true)
       
       const invalidAdapter = new ClaudeServiceAdapter({ ...config, apiKey: undefined })
       expect(invalidAdapter.validateConfig()).toBe(false)
+    })
+
+    it('should throw error when configuration is invalid', async () => {
+      const invalidAdapter = new ClaudeServiceAdapter({ ...config, apiKey: undefined })
+      
+      await expect(invalidAdapter.generateResponse('Test prompt'))
+        .rejects.toThrow('Claude API key or model not configured')
     })
 
     it('should generate response successfully', async () => {
@@ -130,6 +141,44 @@ describe('AIServiceAdapter', () => {
       adapter = new OpenAIServiceAdapter(config)
     })
 
+    it('should return correct provider name', () => {
+      expect(adapter.getProviderName()).toBe('gpt')
+    })
+
+    it('should validate configuration correctly', () => {
+      expect(adapter.validateConfig()).toBe(true)
+      
+      const invalidAdapter = new OpenAIServiceAdapter({ ...config, apiKey: undefined })
+      expect(invalidAdapter.validateConfig()).toBe(false)
+    })
+
+    it('should throw error when configuration is invalid', async () => {
+      const invalidAdapter = new OpenAIServiceAdapter({ ...config, apiKey: undefined })
+      
+      await expect(invalidAdapter.generateResponse('Test prompt'))
+        .rejects.toThrow('OpenAI API key or model not configured')
+    })
+
+    it('should handle API errors', async () => {
+      const mockResponse = {
+        ok: false,
+        status: 401,
+        statusText: 'Unauthorized'
+      }
+      
+      ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+
+      await expect(adapter.generateResponse('Test prompt'))
+        .rejects.toThrow('OpenAI API error: 401 Unauthorized')
+    })
+
+    it('should handle network errors', async () => {
+      ;(global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'))
+
+      await expect(adapter.generateResponse('Test prompt'))
+        .rejects.toThrow('Failed to generate OpenAI response: Error: Network error')
+    })
+
     it('should generate response successfully', async () => {
       const mockResponse = {
         ok: true,
@@ -203,6 +252,44 @@ describe('AIServiceAdapter', () => {
         customParameters: {}
       }
       adapter = new GeminiServiceAdapter(config)
+    })
+
+    it('should return correct provider name', () => {
+      expect(adapter.getProviderName()).toBe('gemini')
+    })
+
+    it('should validate configuration correctly', () => {
+      expect(adapter.validateConfig()).toBe(true)
+      
+      const invalidAdapter = new GeminiServiceAdapter({ ...config, apiKey: undefined })
+      expect(invalidAdapter.validateConfig()).toBe(false)
+    })
+
+    it('should throw error when configuration is invalid', async () => {
+      const invalidAdapter = new GeminiServiceAdapter({ ...config, apiKey: undefined })
+      
+      await expect(invalidAdapter.generateResponse('Test prompt'))
+        .rejects.toThrow('Gemini API key or model not configured')
+    })
+
+    it('should handle API errors', async () => {
+      const mockResponse = {
+        ok: false,
+        status: 403,
+        statusText: 'Forbidden'
+      }
+      
+      ;(global.fetch as jest.Mock).mockResolvedValue(mockResponse)
+
+      await expect(adapter.generateResponse('Test prompt'))
+        .rejects.toThrow('Gemini API error: 403 Forbidden')
+    })
+
+    it('should handle network errors', async () => {
+      ;(global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'))
+
+      await expect(adapter.generateResponse('Test prompt'))
+        .rejects.toThrow('Failed to generate Gemini response: Error: Network error')
     })
 
     it('should generate response successfully', async () => {
@@ -440,6 +527,33 @@ describe('AIServiceAdapter', () => {
       expect(isHealthy).toBe(true)
     })
 
+    it('should handle connection test failure', async () => {
+      const config: AIServiceConfig = {
+        provider: 'claude',
+        model: 'claude-3-sonnet-20240229',
+        apiKey: 'test-key',
+        maxTokens: 4000,
+        temperature: 0.7,
+        customParameters: {}
+      }
+
+      manager.registerAdapter('claude', config)
+
+      // Mock console.error to suppress error output during test
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+
+      ;(global.fetch as jest.Mock).mockRejectedValue(new Error('Connection failed'))
+
+      const isHealthy = await manager.testConnection('claude')
+      expect(isHealthy).toBe(false)
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Connection test failed for claude:',
+        expect.any(Error)
+      )
+
+      consoleErrorSpy.mockRestore()
+    })
+
     it('should return provider health status', async () => {
       const config: AIServiceConfig = {
         provider: 'claude',
@@ -471,6 +585,56 @@ describe('AIServiceAdapter', () => {
       expect(health).toHaveProperty('claude')
       expect(health.claude.available).toBe(true)
       expect(health.claude.latency).toBeGreaterThanOrEqual(0)
+    })
+
+    it('should handle provider health check errors', async () => {
+      const config: AIServiceConfig = {
+        provider: 'claude',
+        model: 'claude-3-sonnet-20240229',
+        apiKey: 'test-key',
+        maxTokens: 4000,
+        temperature: 0.7,
+        customParameters: {}
+      }
+
+      manager.registerAdapter('claude', config)
+
+      // Mock console.error to suppress error output during test
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+
+      // Mock fetch to reject with an error
+      ;(global.fetch as jest.Mock).mockRejectedValue(new Error('Health check failed'))
+
+      const health = await manager.getProviderHealth()
+      
+      expect(health).toHaveProperty('claude')
+      expect(health.claude.available).toBe(false)
+      expect(health.claude.latency).toBeGreaterThanOrEqual(0)
+      expect(health.claude.error).toBeUndefined() // testConnection catches the error and returns false
+
+      consoleErrorSpy.mockRestore()
+    })
+
+    it('should handle errors in provider health check', async () => {
+      const config: AIServiceConfig = {
+        provider: 'claude',
+        model: 'claude-3-sonnet-20240229',
+        apiKey: 'test-key',
+        maxTokens: 4000,
+        temperature: 0.7,
+        customParameters: {}
+      }
+
+      manager.registerAdapter('claude', config)
+
+      // Mock testConnection to throw an error directly
+      jest.spyOn(manager, 'testConnection').mockRejectedValue(new Error('Direct health error'))
+
+      const health = await manager.getProviderHealth()
+      
+      expect(health).toHaveProperty('claude')
+      expect(health.claude.available).toBe(false)
+      expect(health.claude.error).toBe('Direct health error')
     })
   })
 })

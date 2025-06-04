@@ -42,7 +42,24 @@
     "confirmationEmailSent": "Confirmation email sent. Please check your email.",
     "resetEmailSent": "Password reset email sent.",
     "unexpectedError": "An unexpected error occurred",
-    "agreementText": "By creating an account, you agree to our Terms of Service and Privacy Policy."
+    "agreementText": "By creating an account, you agree to our Terms of Service and Privacy Policy.",
+    "errors": {
+      "invalidCredentials": "Invalid email address or password",
+      "userNotFound": "This email address is not registered",
+      "wrongPassword": "Incorrect password",
+      "emailAlreadyExists": "This email address is already registered",
+      "weakPassword": "Password is too weak. Please set a stronger password",
+      "tooManyRequests": "Too many login attempts. Please try again later",
+      "networkError": "Network error occurred. Please check your internet connection",
+      "serverError": "Server error occurred. Please try again later"
+    },
+    "validation": {
+      "invalidEmail": "Please enter a valid email address",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match",
+      "emailRequired": "Email address is required",
+      "passwordRequired": "Password is required"
+    }
   },
   "app": {
     "title": "Miru - AI Romance Orchestration System",

@@ -103,6 +103,7 @@ export interface RecommendedAction {
   urgency: 'low' | 'medium' | 'high' | 'critical';
   estimated_time: string;
   prompt_type: string;
+  type: string;
 }
 
 export interface ProgressSummary {

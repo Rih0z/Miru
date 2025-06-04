@@ -221,6 +221,17 @@ describe('ConnectionValidator', () => {
       expect(sanitized.platform).toBe('TestApp')
     })
 
+    it('should handle empty and falsy string values', () => {
+      const data = {
+        nickname: '',
+        platform: null as any
+      }
+
+      const sanitized = validator.sanitizeInput(data)
+      expect(sanitized.nickname).toBe('')
+      expect(sanitized.platform).toBe(null)
+    })
+
     it('should not modify non-string fields', () => {
       const data = {
         nickname: '  テスト  ',

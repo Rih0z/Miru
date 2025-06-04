@@ -42,7 +42,24 @@
     "confirmationEmailSent": "確認メールを送信しました。メールをご確認ください。",
     "resetEmailSent": "パスワードリセットメールを送信しました。",
     "unexpectedError": "予期しないエラーが発生しました",
-    "agreementText": "アカウントを作成することで、利用規約とプライバシーポリシーに同意したものとみなされます。"
+    "agreementText": "アカウントを作成することで、利用規約とプライバシーポリシーに同意したものとみなされます。",
+    "errors": {
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+      "userNotFound": "このメールアドレスは登録されていません",
+      "wrongPassword": "パスワードが正しくありません",
+      "emailAlreadyExists": "このメールアドレスは既に登録されています",
+      "weakPassword": "パスワードが弱すぎます。より強力なパスワードを設定してください",
+      "tooManyRequests": "ログイン試行回数が上限に達しました。しばらく時間をおいてから再度お試しください",
+      "networkError": "ネットワークエラーが発生しました。インターネット接続を確認してください",
+      "serverError": "サーバーエラーが発生しました。しばらく時間をおいてから再度お試しください"
+    },
+    "validation": {
+      "invalidEmail": "有効なメールアドレスを入力してください",
+      "passwordTooShort": "パスワードは6文字以上で入力してください",
+      "passwordMismatch": "パスワードが一致しません",
+      "emailRequired": "メールアドレスは必須です",
+      "passwordRequired": "パスワードは必須です"
+    }
   },
   "app": {
     "title": "Miru - AI恋愛オーケストレーションシステム",

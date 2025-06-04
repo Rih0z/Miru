@@ -66,7 +66,7 @@ describe('ExperienceValueTracker', () => {
     it('should record daily experience with provided data', async () => {
       const result = await tracker.recordDailyExperience('user-123', 'conn-1', mockDailyExperience)
       
-      expect(result.id).toMatch(/^exp_\d+$/)
+      expect(result.id).toMatch(/^exp_\d+_\d+$/)
       expect(result.userId).toBe('user-123')
       expect(result.connectionId).toBe('conn-1')
       expect(result.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
@@ -113,7 +113,7 @@ describe('ExperienceValueTracker', () => {
     it('should record hope event with auto-generated id and timestamp', async () => {
       const result = await tracker.recordHopeEvent('user-123', 'conn-1', mockHopeEvent)
       
-      expect(result.id).toMatch(/^event_\d+$/)
+      expect(result.id).toMatch(/^event_\d+_\d+$/)
       expect(result.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
       expect(result.type).toBe('message_received')
       expect(result.intensity).toBe(8)
@@ -305,8 +305,8 @@ describe('ExperienceValueTracker', () => {
       const report = await tracker.generateWeeklyHopeReport('user-123')
       
       expect(dailyExp.totalHopePoints).toBe(210)
-      expect(event1.id).toMatch(/^event_\d+$/)
-      expect(event2.id).toMatch(/^event_\d+$/)
+      expect(event1.id).toMatch(/^event_\d+_\d+$/)
+      expect(event2.id).toMatch(/^event_\d+_\d+$/)
       expect(his).toBeGreaterThanOrEqual(0)
       expect(report.overallHIS).toBe(65) // Mock value from implementation
     })

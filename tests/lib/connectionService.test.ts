@@ -235,6 +235,55 @@ describe('ConnectionService', () => {
 
       expect(lateScore).toBeGreaterThan(earlyScore)
     })
+
+    it('should add frequency bonus for 数日に1回', () => {
+      const connection = { 
+        ...mockConnection, 
+        communication: { ...mockConnection.communication, frequency: '数日に1回' }
+      }
+      
+      const score = service.calculateRelationshipScore(connection)
+      expect(score).toBeGreaterThan(0)
+    })
+
+    it('should add frequency bonus for 週1回', () => {
+      const connection = { 
+        ...mockConnection, 
+        communication: { ...mockConnection.communication, frequency: '週1回' }
+      }
+      
+      const score = service.calculateRelationshipScore(connection)
+      expect(score).toBeGreaterThan(0)
+    })
+
+    it('should handle other frequency values', () => {
+      const connection = { 
+        ...mockConnection, 
+        communication: { ...mockConnection.communication, frequency: '月1回' }
+      }
+      
+      const score = service.calculateRelationshipScore(connection)
+      expect(score).toBeGreaterThan(0)
+    })
+  })
+
+  describe('updateConnectionStage', () => {
+    it('should update connection stage successfully', async () => {
+      const updatedConnection = { ...mockConnection, current_stage: 'デート前' as const }
+      ;(db.updateConnection as jest.Mock).mockResolvedValueOnce(updatedConnection)
+
+      const result = await service.updateConnectionStage('test-1', 'デート前')
+
+      expect(db.updateConnection).toHaveBeenCalledWith('test-1', {
+        current_stage: 'デート前'
+      })
+      expect(result).toEqual(updatedConnection)
+    })
+
+    it('should throw error for invalid stage', async () => {
+      await expect(service.updateConnectionStage('test-1', '無効なステージ' as any))
+        .rejects.toThrow('無効なステージです')
+    })
   })
 
   describe('getRecommendedAction', () => {
