@@ -80,6 +80,12 @@ src/
 2. TypeScriptで型安全性を確保
 3. コンポーネントは再利用可能に設計
 4. ビジネスロジックはlib/に集約
+5. SOLID原則の遵守
+   - Single Responsibility Principle: 各クラス・モジュールは単一の責任を持つ
+   - Open/Closed Principle: 拡張に対して開いており、修正に対して閉じている
+   - Liskov Substitution Principle: 派生型は基底型と置換可能
+   - Interface Segregation Principle: クライアントは不要なインターフェースに依存しない
+   - Dependency Inversion Principle: 抽象に依存し、具体に依存しない
 
 ## リポジトリ
 https://github.com/Rih0z/Miru.git
