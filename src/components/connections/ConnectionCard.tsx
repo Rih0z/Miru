@@ -1,8 +1,20 @@
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Connection } from '@/types'
 import { ConnectionService } from '@/lib/connectionService'
+import { 
+  Calendar, 
+  AlertCircle, 
+  ChevronRight, 
+  Zap, 
+  Target,
+  Clock,
+  CheckCircle2,
+  Edit2,
+  Trash2,
+  Lightbulb
+} from 'lucide-react'
 
 interface ConnectionCardProps {
   connection: Connection
@@ -18,51 +30,10 @@ export function ConnectionCard({
   onGeneratePrompt 
 }: ConnectionCardProps) {
   const connectionService = useMemo(() => new ConnectionService(), [])
-  
-  const calculatedScore = useMemo(() => 
-    connectionService.calculateRelationshipScore(connection), 
-    [connection, connectionService]
-  )
-  
-  const [score, setScore] = useState<number>(calculatedScore)
+  const score = useMemo(() => connectionService.calculateRelationshipScore(connection), [connection, connectionService])
+  const recommendedAction = useMemo(() => connectionService.getRecommendedAction(connection), [connection, connectionService])
 
-  useEffect(() => {
-    const newScore = connectionService.calculateRelationshipScore(connection)
-    setScore(newScore)
-  }, [connection, connectionService])
-
-  const recommendedAction = useMemo(() => 
-    connectionService.getRecommendedAction(connection), 
-    [connection, connectionService]
-  )
-
-  // 温度スコア計算
-  const getTemperatureClass = (score: number) => {
-    if (score >= 75) return 'badge-hot'
-    if (score >= 40) return 'badge-warm'
-    return 'badge-cool'
-  }
-
-  const getTemperatureEmoji = (score: number) => {
-    if (score >= 75) return '🔥'
-    if (score >= 40) return '🌟'
-    return '❄️'
-  }
-
-  const getStageEmoji = (stage: string) => {
-    const stageEmojis: Record<string, string> = {
-      'マッチング直後': '✨',
-      'メッセージ中': '💬',
-      'LINE交換済み': '📱',
-      'デート前': '💕',
-      'デート後': '💖',
-      '交際中': '💝',
-      '停滞中': '⏸️',
-      '終了': '💔'
-    }
-    return stageEmojis[stage] || '💫'
-  }
-
+  // ステージプログレス計算
   const getProgressWidth = (stage: string) => {
     const progress: Record<string, number> = {
       'マッチング直後': 14,
@@ -77,104 +48,119 @@ export function ConnectionCard({
     return progress[stage] || 0
   }
 
+  // ステージカラー
+  const getStageColor = (stage: string) => {
+    const colors: Record<string, string> = {
+      'マッチング直後': 'purple',
+      'メッセージ中': 'blue',
+      'LINE交換済み': 'green',
+      'デート前': 'yellow',
+      'デート後': 'pink',
+      '交際中': 'pink',
+      '停滞中': 'gray',
+      '終了': 'gray'
+    }
+    return colors[stage] || 'gray'
+  }
+
+  const stageColor = getStageColor(connection.current_stage)
+
   return (
-    <div className="card-kawaii hover-kawaii animate-kawaii-fade-in relative overflow-hidden">
-      {/* 装飾要素 */}
-      <div className="absolute top-4 right-4 animate-kawaii-sparkle text-2xl">✨</div>
-      <div className="absolute -top-2 -right-2 w-16 h-16 bg-gradient-romantic rounded-full opacity-30"></div>
-      
-      {/* ヘッダー部分 */}
-      <div className="flex justify-between items-start mb-6 relative z-10">
-        <div className="min-w-0 flex-1 mr-3">
-          <h3 className="title-kawaii text-2xl mb-2 animate-kawaii-float">{connection.nickname}さん</h3>
-          <div className="flex items-center gap-3">
-            <span className="w-3 h-3 rounded-full bg-gradient-dreamy animate-kawaii-heartbeat"></span>
-            <p className="kawaii-text text-sm font-medium">{connection.platform}</p>
+    <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      {/* ヘッダー */}
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold">
+            {connection.nickname[0]}
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-gray-800">{connection.nickname}さん</h3>
+            <p className="text-sm text-gray-600">{connection.platform}</p>
           </div>
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2">
           <button
             onClick={() => onEdit(connection)}
-            className="w-12 h-12 rounded-kawaii bg-gradient-romantic hover:bg-gradient-magical transition-all flex items-center justify-center hover-kawaii"
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
             title="編集"
           >
-            <span className="text-lg">✏️</span>
+            <Edit2 size={18} />
           </button>
           <button
             onClick={() => onDelete(connection.id)}
-            className="w-12 h-12 rounded-kawaii bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-600 transition-all flex items-center justify-center hover-kawaii"
+            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
             title="削除"
           >
-            <span className="text-lg">🗑️</span>
+            <Trash2 size={18} />
           </button>
         </div>
       </div>
 
       {/* ステージとスコア */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <span className="badge-kawaii flex items-center gap-2 px-4 py-2">
-          <span className="animate-kawaii-float">{getStageEmoji(connection.current_stage)}</span>
+      <div className="flex items-center justify-between mb-4">
+        <span className={`px-3 py-1 rounded-full text-sm font-medium bg-${stageColor}-100 text-${stageColor}-700`}>
           {connection.current_stage}
         </span>
-        <div className={`badge-kawaii ${getTemperatureClass(score)} flex items-center gap-2 px-4 py-2`}>
-          <span className="animate-kawaii-heartbeat">{getTemperatureEmoji(score)}</span>
-          愛情度: {score}点
+        <div className="flex items-center gap-2">
+          <Target className="text-purple-500" size={16} />
+          <span className="text-sm font-semibold text-gray-700">愛情度: {score}点</span>
         </div>
       </div>
 
-      {/* プログレス表示 */}
-      <div className="mb-6">
-        <div className="progress-kawaii">
-          <div 
-            className="h-full bg-gradient-dreamy rounded-full transition-all duration-700 relative"
-            style={{ width: `${getProgressWidth(connection.current_stage)}%` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-kawaii-float"></div>
+      {/* プログレスバー */}
+      <div className="mb-4">
+        <div className="relative">
+          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-pink-400 to-purple-400 rounded-full transition-all duration-500"
+              style={{ width: `${getProgressWidth(connection.current_stage)}%` }}
+            />
+          </div>
+          {/* 目盛り */}
+          <div className="absolute top-0 left-0 w-full h-3 flex justify-between px-1">
+            {[20, 40, 60, 80].map(mark => (
+              <div key={mark} className="w-0.5 h-full bg-white" style={{ marginLeft: `${mark}%` }} />
+            ))}
           </div>
         </div>
-        <div className="flex justify-between mt-3 text-sm kawaii-text">
-          <span>💕 出会い</span>
-          <span>💖 恋愛成就</span>
+        <div className="flex justify-between mt-2 text-xs text-gray-500">
+          <span>出会い</span>
+          <span>恋愛成就</span>
         </div>
       </div>
 
       {/* 基本情報 */}
-      <div className="mb-6 p-4 bg-gradient-romantic rounded-kawaii-xl space-y-3">
+      <div className="space-y-2 mb-4">
         {connection.basic_info.age && (
-          <div className="flex items-center gap-3">
-            <span className="text-xl animate-kawaii-float">🎂</span>
-            <span className="kawaii-text font-semibold">{connection.basic_info.age}歳の素敵な人</span>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Calendar size={14} className="text-gray-400" />
+            <span>{connection.basic_info.age}歳</span>
           </div>
         )}
         {connection.basic_info.occupation && (
-          <div className="flex items-center gap-3">
-            <span className="text-xl animate-kawaii-float">💼</span>
-            <span className="kawaii-text font-semibold">{connection.basic_info.occupation}</span>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Target size={14} className="text-gray-400" />
+            <span>{connection.basic_info.occupation}</span>
           </div>
         )}
         {connection.communication.lastContact && (
-          <div className="flex items-center gap-3">
-            <span className="text-xl animate-kawaii-heartbeat">💬</span>
-            <span className="kawaii-text font-semibold">最後のお話: {connection.communication.lastContact}</span>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Clock size={14} className="text-gray-400" />
+            <span>最終連絡: {connection.communication.lastContact}</span>
           </div>
         )}
       </div>
 
       {/* 趣味タグ */}
       {connection.basic_info.hobbies && connection.basic_info.hobbies.length > 0 && (
-        <div className="mb-6">
-          <h4 className="kawaii-subtitle text-base mb-3 flex items-center gap-2">
-            <span className="animate-kawaii-sparkle">💫</span>
-            共通の魔法の話題
-          </h4>
+        <div className="mb-4">
           <div className="flex flex-wrap gap-2">
             {connection.basic_info.hobbies.map((hobby, index) => (
               <span
                 key={index}
-                className="badge-kawaii text-xs px-3 py-1 animate-kawaii-bounce"
-                style={{animationDelay: `${index * 0.1}s`}}
+                className="px-2 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium"
               >
-                ✨ {hobby}
+                {hobby}
               </span>
             ))}
           </div>
@@ -182,40 +168,34 @@ export function ConnectionCard({
       )}
 
       {/* 推奨アクション */}
-      <div className="mb-6 p-4 bg-gradient-magical rounded-kawaii-xl hover-kawaii relative overflow-hidden">
-        <div className="absolute top-2 right-2 animate-kawaii-sparkle text-lg">🌟</div>
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-2xl animate-kawaii-float">🪄</span>
-          <h4 className="kawaii-subtitle text-base">次の魔法のステップ</h4>
+      <div className="mb-4">
+        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="text-purple-500" size={20} />
+            <div>
+              <p className="text-sm font-medium text-gray-800">{recommendedAction.title}</p>
+              <p className="text-xs text-gray-600">{recommendedAction.description}</p>
+            </div>
+          </div>
+          <ChevronRight className="text-purple-600" size={20} />
         </div>
-        <p className="kawaii-text font-bold mb-2 flex items-center gap-2">
-          <span className="animate-kawaii-sparkle">💫</span>
-          {recommendedAction.title}
-        </p>
-        <p className="kawaii-text text-sm line-clamp-2">{recommendedAction.description}</p>
       </div>
 
       {/* アクションボタン */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex gap-3">
         <button
           onClick={() => onGeneratePrompt(connection.id)}
-          className="flex-1 btn-kawaii hover-kawaii"
+          className="flex-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
         >
-          <span className="animate-kawaii-heartbeat">🤖</span> 
-          AIの魔法で相談する
+          <Lightbulb size={16} />
+          AIプロンプト生成
         </button>
         <button
           onClick={() => onEdit(connection)}
-          className="btn-kawaii bg-temp-warm hover-kawaii"
+          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium transition-all duration-300 hover:bg-gray-200"
         >
-          <span className="animate-kawaii-float">📝</span> 
           詳細
         </button>
-      </div>
-
-      {/* 装飾ハート */}
-      <div className="absolute -bottom-4 -left-4 text-6xl opacity-10 animate-kawaii-heartbeat pointer-events-none">
-        💕
       </div>
     </div>
   )
