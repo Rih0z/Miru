@@ -181,10 +181,20 @@ export class ConnectionService {
   }
 
   /**
-   * すべての相手を取得
+   * すべての相手を取得（デモモード対応）
    */
   async getUserConnections(userId: string): Promise<Connection[]> {
-    return await db.getConnections(userId)
+    // デモユーザーの場合はデモデータを返す
+    if (userId === 'demo-user-001') {
+      return this.getDemoConnections()
+    }
+    
+    try {
+      return await db.getConnections(userId)
+    } catch (error) {
+      console.warn('データベース接続エラー、デモデータを使用:', error)
+      return this.getDemoConnections()
+    }
   }
 
   /**

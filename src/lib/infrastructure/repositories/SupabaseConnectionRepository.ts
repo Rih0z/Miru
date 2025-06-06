@@ -9,21 +9,34 @@ import { supabase } from '@/lib/supabase'
 export class SupabaseConnectionRepository implements IConnectionRepository {
   
   async findByUserId(userId: string): Promise<Connection[]> {
+    // デモユーザーの場合は空配列を返す（ConnectionServiceでデモデータが提供される）
+    if (userId === 'demo-user-001') {
+      return []
+    }
+    
     if (!supabase) {
-      throw new Error('Supabase is not configured')
+      console.warn('Supabase is not configured - returning empty array')
+      return []
     }
     
-    const { data, error } = await supabase
-      .from('connections')
-      .select('*')
-      .eq('user_id', userId)
-      .order('updated_at', { ascending: false })
+    try {
+      const { data, error } = await supabase
+        .from('connections')
+        .select('*')
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false })
 
-    if (error) {
-      throw new Error(`データベースエラー: ${error.message}`)
+      if (error) {
+        console.error('Supabase error:', error)
+        throw new Error(`データベースエラー: ${error.message}`)
+      }
+      
+      return data || []
+    } catch (error) {
+      console.error('Failed to fetch from Supabase:', error)
+      // デモモードとして空配列を返す
+      return []
     }
-    
-    return data || []
   }
 
   async findById(id: string): Promise<Connection | null> {

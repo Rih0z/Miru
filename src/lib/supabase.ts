@@ -3,14 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-// Check if we're in a runtime environment where supabase is needed
-const isSupabaseRequired = typeof window !== 'undefined' || process.env.NODE_ENV !== 'development';
+// Supabaseクライアントの作成（設定されていない場合はnull）
+export const supabase = (supabaseUrl && supabaseKey) 
+  ? createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false
+      }
+    }) 
+  : null;
 
-if (isSupabaseRequired && (!supabaseUrl || !supabaseKey)) {
-  console.warn('Supabase環境変数が設定されていません。NEXT_PUBLIC_SUPABASE_URLとNEXT_PUBLIC_SUPABASE_ANON_KEYを設定してください。');
+// デモモードの判定
+export const isDemoMode = !supabase;
+
+if (isDemoMode && typeof window !== 'undefined') {
+  console.info('🎯 Miruはデモモードで動作しています。Supabaseを設定するとフル機能が利用できます。');
 }
-
-export const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 // データベース操作関数
 export const db = {
