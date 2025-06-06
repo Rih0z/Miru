@@ -1,12 +1,20 @@
-# Miru 恋愛サポートAI - セットアップガイド
+# Miru 恋愛サポートAI - セットアップガイド ✨
 
-このガイドでは、Miruアプリケーションをローカル環境またはプロダクション環境で実行するためのセットアップ手順を説明します。
+このガイドでは、Miru v2.0（Kawaiiデザインシステム対応）アプリケーションをローカル環境またはプロダクション環境で実行するためのセットアップ手順を説明します。
+
+## 💕 v2.0の新機能
+
+- **Kawaiiデザインシステム**: 絵文字アイコン、アニメーション、温度カラー
+- **AIデータインポート**: スクリーンショット分析による恋愛状況自動取得
+- **プロンプトオーケストレーション**: AI連携強化システム
+- **温度スコアリング**: Hot/Warm/Cool による関係性可視化
 
 ## 前提条件
 
 - Node.js 18以上
 - npm または yarn
 - Supabase アカウント（プロダクション用）
+- 対応ブラウザ: Chrome 90+, Firefox 88+, Safari 14+
 
 ## 1. プロジェクトのクローンとインストール
 
@@ -139,36 +147,52 @@ npm run type-check
 npm run lint
 ```
 
-## 9. 開発者向け情報
+## 9. 開発者向け情報（v2.0）
+
+### 技術スタック詳細
+
+- **Frontend**: Next.js 14.2.29 + React 18 + TypeScript 5.0+
+- **Styling**: Tailwind CSS 3.4.0 + Kawaii Design System v2.0
+- **State Management**: Zustand 4.4.7
+- **Icons**: 絵文字アイコンシステム（react-icons完全廃止）
 
 ### テストの実行
 
 ```bash
-# 単体テスト
+# 単体テスト（Jest + React Testing Library）
 npm run test
 
-# E2Eテスト
+# E2Eテスト（Playwright）
 npm run test:e2e
 
 # テストカバレッジ
 npm run test:coverage
+
+# 実際の通信テスト
+npm run test:real-communication
 ```
 
-### 型チェック
+### 品質チェック
 
 ```bash
-npm run type-check
-```
+# TypeScript型チェック
+npm run typecheck
 
-### コードフォーマット
-
-```bash
-# フォーマット確認
+# ESLintチェック
 npm run lint
 
 # 自動フォーマット
 npm run lint:fix
 ```
+
+### Kawaiiデザインシステム
+
+v2.0では、以下のデザイン要素が含まれます：
+
+- **カラーパレット**: 温度カラー（Hot: #FF5864, Warm: #FFB548, Cool: #4FC3F7）
+- **アニメーション**: heartbeat, float, sparkle, bounceIn, kawaii-pulse
+- **アイコン**: 絵文字アイコンシステム（✨、💕、🤖、📊など）
+- **レスポンシブ**: Touch Target 44px以上、Safe Area対応
 
 ## 10. サポート
 

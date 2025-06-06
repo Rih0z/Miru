@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { FiX, FiDownload, FiUpload, FiCopy, FiCheck, FiAlertTriangle, FiExternalLink, FiTarget, FiSettings, FiZap } from 'react-icons/fi'
+// v2.0 では絵文字アイコンを使用するため、react-icons は不要
 import { DataImportPromptGenerator } from '@/lib/domain/services/DataImportPromptGenerator'
 import { DataImportProcessor } from '@/lib/domain/services/DataImportProcessor'
 import { DataImportPromptConfig, ImportedUserData } from '@/types/data-import'
@@ -100,7 +100,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
   const renderConfigStep = () => (
     <div className="space-y-6">
       <div className="flex items-center space-x-3 mb-6">
-        <FiSettings className="text-2xl text-pink-600" />
+        <span className="text-2xl">⚙️</span>
         <h3 className="text-xl font-bold text-gray-800">データインポート設定</h3>
       </div>
 
@@ -182,7 +182,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
         onClick={handleGeneratePrompt}
         className="w-full bg-pink-600 text-white py-3 px-4 rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center space-x-2"
       >
-        <FiTarget />
+        <span>🎯</span>
         <span>プロンプトを生成する</span>
       </button>
     </div>
@@ -191,13 +191,13 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
   const renderPromptStep = () => (
     <div className="space-y-6">
       <div className="flex items-center space-x-3 mb-6">
-        <FiDownload className="text-2xl text-pink-600" />
+        <span className="text-2xl text-pink-600">📥</span>
         <h3 className="text-xl font-bold text-gray-800">プロンプトの使用方法</h3>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-medium text-blue-800 mb-2 flex items-center space-x-2">
-          <FiExternalLink />
+          <span>🔗</span>
           <span>手順</span>
         </h4>
         <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
@@ -225,7 +225,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
           className="absolute top-8 right-2 p-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           title="プロンプトをコピー"
         >
-          {copiedPrompt ? <FiCheck className="text-green-600" /> : <FiCopy className="text-gray-600" />}
+          {copiedPrompt ? <span className="text-green-600">✅</span> : <span className="text-gray-600">📋</span>}
         </button>
       </div>
 
@@ -240,7 +240,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
           onClick={handleProceedToImport}
           className="flex-1 bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-pink-700 transition-colors flex items-center justify-center space-x-2"
         >
-          <FiUpload />
+          <span>📤</span>
           <span>JSONを入力する</span>
         </button>
       </div>
@@ -250,13 +250,13 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
   const renderImportStep = () => (
     <div className="space-y-6">
       <div className="flex items-center space-x-3 mb-6">
-        <FiUpload className="text-2xl text-pink-600" />
+        <span className="text-2xl text-pink-600">📤</span>
         <h3 className="text-xl font-bold text-gray-800">JSONデータの入力</h3>
       </div>
 
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
         <h4 className="font-medium text-yellow-800 mb-2 flex items-center space-x-2">
-          <FiAlertTriangle />
+          <span>⚠️</span>
           <span>注意事項</span>
         </h4>
         <ul className="text-sm text-yellow-700 space-y-1 list-disc list-inside">
@@ -331,7 +331,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
             </>
           ) : (
             <>
-              <FiZap />
+              <span>⚡</span>
               <span>データを処理する</span>
             </>
           )}
@@ -343,7 +343,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
   const renderReviewStep = () => (
     <div className="space-y-6">
       <div className="flex items-center space-x-3 mb-6">
-        <FiCheck className="text-2xl text-pink-600" />
+        <span className="text-2xl text-pink-600">✅</span>
         <h3 className="text-xl font-bold text-gray-800">インポート内容の確認</h3>
       </div>
 
@@ -401,7 +401,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
             </>
           ) : (
             <>
-              <FiCheck />
+              <span>✅</span>
               <span>インポートを確定する</span>
             </>
           )}
@@ -413,7 +413,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
   const renderCompleteStep = () => (
     <div className="text-center space-y-6">
       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-        <FiCheck className="text-3xl text-green-600" />
+        <span className="text-3xl text-green-600">✅</span>
       </div>
       
       <div>
@@ -442,7 +442,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <FiX className="text-2xl" />
+            <span className="text-2xl">✕</span>
           </button>
         </div>
 

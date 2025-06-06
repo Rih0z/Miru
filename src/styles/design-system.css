@@ -1,14 +1,30 @@
 /* Miru Design System - Modern CSS Variables and Utilities */
 
 :root {
-  /* === Kawaii Color Palette === */
-  /* Primary - Soft Pink & Love */
-  --primary-50: #FFF0F5;
+  /* === 基本カラーパレット v2.0 === */
+  --primary: #FF5864;           /* メインピンク */
+  --primary-light: #FF7A82;     /* ライトピンク */
+  --primary-soft: #FFE0E6;      /* ソフトピンク */
+  --primary-bg: #FFF5F5;        /* 背景ピンク */
+  
+  /* === 温度カラー === */
+  --temp-hot: #FF5864;          /* 高温（75-100%）*/
+  --temp-warm: #FFB548;         /* 中温（40-74%）*/
+  --temp-cool: #4FC3F7;         /* 低温（0-39%）*/
+  
+  /* === レイアウト === */
+  --bottom-bar-height: 56px;
+  --app-max-width: 430px;
+  --safe-area-top: env(safe-area-inset-top);
+  --safe-area-bottom: env(safe-area-inset-bottom);
+  
+  /* Primary - Soft Pink & Love v2.0 */
+  --primary-50: #FFF5F5;
   --primary-100: #FFE1E6;
   --primary-200: #FFC2CC;
   --primary-300: #FF94A3;
   --primary-400: #FF6B7A;
-  --primary-500: #EB6A7A;
+  --primary-500: #FF5864;
   --primary-600: #E85A6F;
   --primary-700: #D63384;
   --primary-800: #B02A5B;
@@ -46,14 +62,16 @@
   --success-800: #008B8B;
   --success-900: #006666;
   
-  /* Kawaii Accent Colors */
-  --kawaii-pink: #FFB6C1;
-  --kawaii-peach: #FFCCCB;
-  --kawaii-lavender: #E6E6FA;
-  --kawaii-mint: #F0FFF0;
-  --kawaii-cream: #FFF8DC;
-  --kawaii-sky: #E0F6FF;
-  --kawaii-coral: #FF7F7F;
+  /* === Kawaiiアクセント v2.0 === */
+  --kawaii-pink: #FFB6C1;       /* カワイイピンク */
+  --kawaii-peach: #FFCCCB;      /* ピーチ */
+  --kawaii-lavender: #E6E6FA;   /* ラベンダー */
+  --kawaii-mint: #F0FFF0;       /* ミント */
+  --kawaii-cream: #FFF8DC;      /* クリーム */
+  --kawaii-sky: #E0F6FF;        /* スカイ */
+  --kawaii-coral: #FF7F7F;      /* コーラル */
+  --kawaii-soft: #FFE4E1;       /* ソフト */
+  --kawaii-romantic: #FFF0F5;   /* ロマンティック */
   
   /* Neutrals */
   --gray-50: #FAFAFA;
@@ -651,4 +669,135 @@
   top: -8px;
   left: -8px;
   animation: sparkle 2s ease-in-out infinite;
+}
+
+/* === Additional v2.0 Utility Classes === */
+
+/* Kawaii Button Styles v2.0 */
+.btn-kawaii {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-4) var(--space-6);
+  font-weight: var(--font-semibold);
+  box-shadow: var(--shadow-primary);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  touch-action: manipulation;
+  min-height: 44px;
+}
+
+.btn-kawaii:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-kawaii-glow);
+}
+
+.btn-kawaii:active {
+  transform: translateY(0) scale(1.02);
+}
+
+.btn-kawaii-secondary {
+  background: var(--gradient-secondary);
+  box-shadow: var(--shadow-secondary);
+}
+
+.btn-kawaii-success {
+  background: var(--gradient-success);
+  box-shadow: var(--shadow-success);
+  color: var(--gray-800);
+}
+
+/* Kawaii Cards v2.0 */
+.card-kawaii {
+  background: white;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-6);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-kawaii::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+}
+
+.card-kawaii:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-kawaii-magical {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 240, 245, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 182, 193, 0.3);
+}
+
+/* Kawaii Badges v2.0 */
+.badge-kawaii {
+  background: var(--gradient-primary);
+  color: white;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.badge-kawaii-soft {
+  background: var(--kawaii-pink);
+  color: var(--gray-800);
+}
+
+.badge-kawaii-magical {
+  background: var(--gradient-magical);
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive Touch Targets */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+@media (max-width: 640px) {
+  .mobile-stack {
+    flex-direction: column;
+    gap: var(--space-base);
+  }
+  
+  .mobile-full {
+    width: 100%;
+  }
+  
+  .mobile-text-center {
+    text-align: center;
+  }
+}
+
+/* Safe Area Utilities */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right);
 }

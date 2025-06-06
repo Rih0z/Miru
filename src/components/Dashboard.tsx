@@ -7,19 +7,7 @@ import { ConnectionCard } from './connections/ConnectionCard'
 import { ConnectionForm } from './connections/ConnectionForm'
 import { PromptExecutor } from './prompts/PromptExecutor'
 import { DataImportModal } from './data-import/DataImportModal'
-import { 
-  FiHeart, 
-  FiStar, 
-  FiAlertCircle, 
-  FiSun, 
-  FiUsers, 
-  FiTrendingUp, 
-  FiAlertTriangle, 
-  FiZap,
-  FiPlus,
-  FiDownload
-} from 'react-icons/fi'
-import { LuCrown } from 'react-icons/lu'
+// v2.0 では絵文字アイコンを使用するため、react-icons は不要
 
 interface DashboardProps {
   userId: string
@@ -159,13 +147,13 @@ export function Dashboard({ userId }: DashboardProps) {
           <div className="relative">
             <div data-testid="loading-spinner" className="mx-auto w-20 h-20 rounded-full gradient-primary animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <FiHeart className="text-3xl animate-heartbeat" />
+              <span className="text-3xl animate-heartbeat">💕</span>
             </div>
           </div>
           <div className="space-y-2">
             <p className="text-xl font-bold text-kawaii-gradient animate-kawaii-pulse">恋愛の魔法を分析中...</p>
             <p className="text-pink-600 font-medium flex items-center justify-center gap-2">
-              <FiStar /> 素敵な出会いを見つけています <FiStar />
+              <span>🌟</span> 素敵な出会いを見つけています <span>🌟</span>
             </p>
           </div>
         </div>
@@ -178,7 +166,7 @@ export function Dashboard({ userId }: DashboardProps) {
       <div className="min-h-screen bg-kawaii-dream flex items-center justify-center p-4">
         <div data-testid="error-state" className="card-kawaii max-w-md mx-auto text-center py-12 animate-bounceIn">
           <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-kawaii-soft flex items-center justify-center animate-wiggle">
-            <FiAlertCircle className="text-4xl" />
+            <span className="text-4xl">😢</span>
           </div>
           <h3 className="text-2xl font-bold text-kawaii-gradient mb-4">ちょっとした問題が起きちゃいました</h3>
           <p className="text-pink-600 mb-8 leading-relaxed font-medium">{error}</p>
@@ -186,7 +174,7 @@ export function Dashboard({ userId }: DashboardProps) {
             onClick={() => loadDashboardData()}
             className="btn-kawaii px-8 py-4 text-lg hover-sparkle"
           >
-            <FiHeart className="animate-heartbeat inline mr-2" /> もう一度試してみる
+            <span className="animate-heartbeat inline mr-2">💕</span> もう一度試してみる
           </button>
         </div>
       </div>
@@ -224,13 +212,13 @@ export function Dashboard({ userId }: DashboardProps) {
               onClick={handleAddConnection}
               className="btn-kawaii px-8 py-4 text-lg hover-sparkle relative animate-kawaii-pulse"
             >
-              <FiPlus className="inline mr-2" /> 手動で追加する
+              <span className="inline mr-2">➕</span> 手動で追加する
             </button>
             <button
               onClick={() => setShowDataImportModal(true)}
               className="btn-kawaii-secondary px-8 py-4 text-lg hover-sparkle relative animate-kawaii-pulse"
             >
-              <FiDownload className="inline mr-2" /> AIで一括インポート
+              <span className="inline mr-2">📥</span> AIで一括インポート
             </button>
           </div>
           
@@ -261,7 +249,7 @@ export function Dashboard({ userId }: DashboardProps) {
               onClick={handleAddConnection}
               className="btn-kawaii flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
             >
-              <FiPlus className="text-lg" />
+              <span className="text-lg">➕</span>
               <span className="hidden sm:inline">手動で追加</span>
               <span className="sm:hidden">追加</span>
             </button>
@@ -269,7 +257,7 @@ export function Dashboard({ userId }: DashboardProps) {
               onClick={() => setShowDataImportModal(true)}
               className="btn-kawaii-secondary flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
             >
-              <FiDownload className="text-lg" />
+              <span className="text-lg">📥</span>
               <span className="hidden sm:inline">AIインポート</span>
               <span className="sm:hidden">インポート</span>
             </button>
