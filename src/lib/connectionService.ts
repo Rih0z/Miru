@@ -57,6 +57,7 @@ export class ConnectionService {
         current_stage: 'メッセージ中' as ConnectionStage,
         basic_info: {},
         communication: {},
+        user_feelings: {},
         ...updates
       } as Connection
       
@@ -77,6 +78,7 @@ export class ConnectionService {
         current_stage: 'メッセージ中' as ConnectionStage,
         basic_info: {},
         communication: {},
+        user_feelings: {},
         ...updates
       } as Connection
     }
@@ -282,7 +284,12 @@ export class ConnectionService {
         communication: {
           frequency: '毎日',
           lastContact: '昨日の夜',
-          tone: '親しみやすい'
+          communicationStyle: '親しみやすい'
+        },
+        user_feelings: {
+          expectations: '楽しくお話ししたい',
+          concerns: [],
+          attractivePoints: ['優しそう', 'センスが良い']
         },
         created_at: '2024-01-15T10:00:00Z',
         updated_at: '2024-01-20T18:30:00Z'
@@ -301,7 +308,12 @@ export class ConnectionService {
         communication: {
           frequency: '数日に1回',
           lastContact: '3日前',
-          tone: '丁寧'
+          communicationStyle: '丁寧'
+        },
+        user_feelings: {
+          expectations: 'デートしてみたい',
+          concerns: [],
+          attractivePoints: ['仕事熱心', '思いやりがある']
         },
         created_at: '2024-01-10T14:20:00Z',
         updated_at: '2024-01-18T20:15:00Z'
@@ -320,7 +332,12 @@ export class ConnectionService {
         communication: {
           frequency: '週1回',
           lastContact: '1週間前',
-          tone: 'カジュアル'
+          communicationStyle: 'カジュアル'
+        },
+        user_feelings: {
+          expectations: '共通の趣味で盛り上がりたい',
+          concerns: [],
+          attractivePoints: ['アクティブ', '感性が豊か']
         },
         created_at: '2024-01-05T09:45:00Z',
         updated_at: '2024-01-14T16:22:00Z'
