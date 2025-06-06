@@ -1,13 +1,12 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { Connection, DashboardData, RecommendedAction } from '@/types'
+import { Connection, DashboardData } from '@/types'
 import { DIContainer } from '@/lib/infrastructure/container/DIContainer'
 import { ConnectionCard } from './connections/ConnectionCard'
 import { ConnectionForm } from './connections/ConnectionForm'
 import { PromptExecutor } from './prompts/PromptExecutor'
 import { DataImportModal } from './data-import/DataImportModal'
-// v2.0 では絵文字アイコンを使用するため、react-icons は不要
 
 interface DashboardProps {
   userId: string
@@ -15,7 +14,6 @@ interface DashboardProps {
 
 export function Dashboard({ userId }: DashboardProps) {
   const connectionService = useMemo(() => DIContainer.getInstance().getConnectionService(), [])
-  const hopeScoreCalculator = useMemo(() => DIContainer.getInstance().getHopeScoreCalculator(), [])
   
   const [connections, setConnections] = useState<Connection[]>([])
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
@@ -43,7 +41,6 @@ export function Dashboard({ userId }: DashboardProps) {
     } catch (error) {
       console.error('ダッシュボードデータの読み込みに失敗:', error)
       setError('ダッシュボードデータの読み込みに失敗しました')
-      // エラー時は空のデータで初期化
       setConnections([])
       setDashboardData({
         connections: [],
@@ -72,7 +69,6 @@ export function Dashboard({ userId }: DashboardProps) {
     try {
       await connectionService.deleteConnection(connectionId)
       setConnections(prev => prev.filter(c => c.id !== connectionId))
-      // データを再読み込み
       await loadDashboardData()
     } catch (err) {
       setError('削除に失敗しました')
@@ -98,17 +94,15 @@ export function Dashboard({ userId }: DashboardProps) {
   const handleFormSubmit = async (data: Partial<Connection>) => {
     try {
       if (editingConnection) {
-        // 編集モード
-        const updatedConnection = await connectionService.updateConnection(editingConnection.id, data)
+        await connectionService.updateConnection(editingConnection.id, data)
         setConnections(prev => prev.map(c => 
           c.id === editingConnection.id ? { ...c, ...data } : c
         ))
-        alert('相手情報を更新しました')
+        alert('相手情報を更新しました ✨')
       } else {
-        // 新規追加モード
         const newConnection = await connectionService.createConnection(userId, data as any)
         setConnections(prev => [...prev, newConnection])
-        alert('新しい相手を追加しました')
+        alert('新しい相手を追加しました 💕')
       }
       setShowConnectionForm(false)
       setEditingConnection(null)
@@ -124,37 +118,46 @@ export function Dashboard({ userId }: DashboardProps) {
 
   const handleDataImportComplete = async (importedConnections: Connection[]) => {
     try {
-      // インポートされたコネクションを既存のものと結合
       const updatedConnections = [...connections, ...importedConnections]
       setConnections(updatedConnections)
-      
-      // ダッシュボードデータを再計算
       await loadDashboardData()
-      
       setShowDataImportModal(false)
-      
-      alert(`${importedConnections.length}件のコネクションがインポートされました！`)
+      alert(`${importedConnections.length}件のコネクションがインポートされました！✨`)
     } catch (error) {
       console.error('インポート完了処理エラー:', error)
       alert('インポート完了処理でエラーが発生しました')
     }
   }
 
+  // 温度スコア計算
+  const getTemperatureClass = (score: number) => {
+    if (score >= 75) return 'badge-hot'
+    if (score >= 40) return 'badge-warm'
+    return 'badge-cool'
+  }
+
+  const getTemperatureEmoji = (score: number) => {
+    if (score >= 75) return '🔥'
+    if (score >= 40) return '🌟'
+    return '❄️'
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-kawaii-dream flex items-center justify-center">
-        <div className="text-center space-y-6 animate-bounceIn">
-          <div className="relative">
-            <div data-testid="loading-spinner" className="mx-auto w-20 h-20 rounded-full gradient-primary animate-spin"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-3xl animate-heartbeat">💕</span>
+      <div className="kawaii-page">
+        <div className="kawaii-container">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center animate-kawaii-bounce">
+              <div className="kawaii-loading mx-auto mb-6"></div>
+              <div className="animate-kawaii-float">
+                <h2 className="title-kawaii">恋愛の魔法を準備中... ✨</h2>
+                <p className="kawaii-text text-xl">
+                  <span className="animate-kawaii-heartbeat inline-block">💕</span>
+                  素敵な出会いを分析しています
+                  <span className="animate-kawaii-heartbeat inline-block">💕</span>
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="space-y-2">
-            <p className="text-xl font-bold text-kawaii-gradient animate-kawaii-pulse">恋愛の魔法を分析中...</p>
-            <p className="text-pink-600 font-medium flex items-center justify-center gap-2">
-              <span>🌟</span> 素敵な出会いを見つけています <span>🌟</span>
-            </p>
           </div>
         </div>
       </div>
@@ -163,19 +166,24 @@ export function Dashboard({ userId }: DashboardProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-kawaii-dream flex items-center justify-center p-4">
-        <div data-testid="error-state" className="card-kawaii max-w-md mx-auto text-center py-12 animate-bounceIn">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-kawaii-soft flex items-center justify-center animate-wiggle">
-            <span className="text-4xl">😢</span>
+      <div className="kawaii-page">
+        <div className="kawaii-container">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="card-kawaii max-w-md text-center animate-kawaii-bounce">
+              <div className="kawaii-decoration mb-6">
+                <span className="text-6xl animate-kawaii-float">😢</span>
+              </div>
+              <h3 className="kawaii-subtitle">何か問題が起きました</h3>
+              <p className="kawaii-text mb-6">{error}</p>
+              <button
+                onClick={loadDashboardData}
+                className="btn-kawaii"
+              >
+                <span className="animate-kawaii-heartbeat">💕</span>
+                もう一度試す
+              </button>
+            </div>
           </div>
-          <h3 className="text-2xl font-bold text-kawaii-gradient mb-4">ちょっとした問題が起きちゃいました</h3>
-          <p className="text-pink-600 mb-8 leading-relaxed font-medium">{error}</p>
-          <button
-            onClick={() => loadDashboardData()}
-            className="btn-kawaii px-8 py-4 text-lg hover-sparkle"
-          >
-            <span className="animate-heartbeat inline mr-2">💕</span> もう一度試してみる
-          </button>
         </div>
       </div>
     )
@@ -183,47 +191,45 @@ export function Dashboard({ userId }: DashboardProps) {
 
   if (!dashboardData || connections.length === 0) {
     return (
-      <div className="min-h-screen bg-kawaii-dream flex items-center justify-center p-4">
-        <div data-testid="empty-state" className="card-kawaii-magical max-w-2xl mx-auto text-center py-16 animate-bounceIn relative overflow-hidden">
-          <div className="absolute top-4 right-4 animate-sparkle text-3xl">✨</div>
-          <div className="absolute top-8 left-8 animate-float text-2xl">🌸</div>
-          
-          <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-kawaii-romantic flex items-center justify-center animate-heartbeat relative">
-            <span className="text-6xl">💕</span>
-            <div className="absolute inset-0 rounded-full border-4 border-pink-200 animate-pulse"></div>
-          </div>
-          
-          <h3 className="text-4xl font-bold text-kawaii-gradient mb-6 animate-float">
-            新しい恋愛の魔法を始めましょう ✨
-          </h3>
-          
-          <div className="space-y-4 mb-10">
-            <p className="text-pink-700 text-xl leading-relaxed font-medium">
-              🌟 Miruと一緒に素敵な恋愛ストーリーを紡いでいきましょう 🌟
-            </p>
-            <p className="text-pink-600 text-lg leading-relaxed">
-              気になる運命の人の情報を追加して、<br />
-              愛に満ちた成功への魔法の道筋を見つけましょう！
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={handleAddConnection}
-              className="btn-kawaii px-8 py-4 text-lg hover-sparkle relative animate-kawaii-pulse"
-            >
-              <span className="inline mr-2">➕</span> 手動で追加する
-            </button>
-            <button
-              onClick={() => setShowDataImportModal(true)}
-              className="btn-kawaii-secondary px-8 py-4 text-lg hover-sparkle relative animate-kawaii-pulse"
-            >
-              <span className="inline mr-2">📥</span> AIで一括インポート
-            </button>
-          </div>
-          
-          <div className="text-center text-sm text-pink-600 mt-4">
-            <p>💡 AIインポートなら、既存の恋愛アプリの状況を簡単に取り込めます</p>
+      <div className="kawaii-page">
+        <div className="kawaii-container">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="card-kawaii max-w-2xl text-center animate-kawaii-bounce relative">
+              <div className="absolute top-4 right-4 animate-kawaii-sparkle text-3xl">✨</div>
+              <div className="absolute top-8 left-8 animate-kawaii-float text-2xl">🌸</div>
+              
+              <div className="kawaii-heart-decoration mb-8">
+                <span className="text-8xl">💕</span>
+              </div>
+              
+              <h1 className="title-kawaii text-5xl mb-6 animate-kawaii-float">
+                新しい恋愛の魔法を始めましょう ✨
+              </h1>
+              
+              <p className="kawaii-text text-xl mb-8 leading-relaxed">
+                🌟 Miruと一緒に素敵な恋愛ストーリーを紡いでいきましょう 🌟<br />
+                気になる運命の人の情報を追加して、愛に満ちた成功への魔法の道筋を見つけましょう！
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+                <button
+                  onClick={handleAddConnection}
+                  className="btn-kawaii animate-kawaii-float"
+                >
+                  <span>➕</span> 手動で追加する
+                </button>
+                <button
+                  onClick={() => setShowDataImportModal(true)}
+                  className="btn-kawaii bg-temp-warm hover-kawaii"
+                >
+                  <span>📥</span> AIで一括インポート
+                </button>
+              </div>
+              
+              <p className="kawaii-text text-sm">
+                💡 AIインポートなら、既存の恋愛アプリの状況を簡単に取り込めます
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -231,23 +237,22 @@ export function Dashboard({ userId }: DashboardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-kawaii-dream">
-      <div className="container space-y-8 py-8">
+    <div className="kawaii-page">
+      <div className="kawaii-container space-y-8">
         {/* Kawaii ヘッダー */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-kawaii-gradient animate-float">
+          <div className="animate-kawaii-slide-in">
+            <h1 className="title-kawaii text-4xl animate-kawaii-float">
               🌸💕 恋愛ダッシュボード ✨
             </h1>
-            <p className="text-gray-700 text-lg font-medium">
+            <p className="kawaii-text text-lg">
               あなたの素敵な恋愛を応援するMiruの魔法のインサイト 🪄
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-3 animate-kawaii-slide-in">
             <button
-              data-testid="add-connection-button"
               onClick={handleAddConnection}
-              className="btn-kawaii flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
+              className="btn-kawaii hover-kawaii"
             >
               <span className="text-lg">➕</span>
               <span className="hidden sm:inline">手動で追加</span>
@@ -255,7 +260,7 @@ export function Dashboard({ userId }: DashboardProps) {
             </button>
             <button
               onClick={() => setShowDataImportModal(true)}
-              className="btn-kawaii-secondary flex items-center gap-3 touch-manipulation min-h-[48px] w-full sm:w-auto justify-center hover-sparkle relative"
+              className="btn-kawaii bg-temp-warm hover-kawaii"
             >
               <span className="text-lg">📥</span>
               <span className="hidden sm:inline">AIインポート</span>
@@ -266,124 +271,98 @@ export function Dashboard({ userId }: DashboardProps) {
 
         {/* Kawaii サマリー統計 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="card-kawaii hover-kawaii group animate-bounceIn">
+          <div className="card-kawaii hover-kawaii animate-kawaii-bounce">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 rounded-3xl bg-kawaii-romantic flex items-center justify-center group-hover:scale-110 transition-transform animate-float heart-decoration">
-                  <span className="text-3xl animate-kawaii-pulse">👥</span>
-                </div>
+              <div className="kawaii-decoration mr-4">
+                <span className="text-4xl animate-kawaii-heartbeat">👥</span>
               </div>
-              <div className="ml-5 flex-1">
-                <p className="text-sm font-semibold text-kawaii-gradient">出会った運命の人</p>
+              <div>
+                <p className="kawaii-text text-sm font-semibold mb-1">出会った運命の人</p>
                 <div className="flex items-baseline">
-                  <p data-testid="total-connections" className="text-4xl font-extrabold text-kawaii-glow">
-                    {dashboardData.totalConnections}
-                  </p>
-                  <p className="ml-2 text-sm text-pink-400 font-medium">人 💕</p>
+                  <span className="title-kawaii text-3xl">{dashboardData.totalConnections}</span>
+                  <span className="kawaii-text ml-2">人 💕</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="card-kawaii hover-kawaii group animate-bounceIn" style={{animationDelay: '0.1s'}}>
+          <div className="card-kawaii hover-kawaii animate-kawaii-bounce" style={{animationDelay: '0.1s'}}>
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 rounded-3xl bg-kawaii-magical flex items-center justify-center group-hover:scale-110 transition-transform animate-float sparkle-decoration">
-                  <span className="text-3xl animate-kawaii-pulse">🌟</span>
-                </div>
+              <div className="kawaii-star-decoration mr-4">
+                <span className="text-4xl animate-kawaii-sparkle">🌟</span>
               </div>
-              <div className="ml-5 flex-1">
-                <p className="text-sm font-semibold text-kawaii-gradient">進展中の関係</p>
+              <div>
+                <p className="kawaii-text text-sm font-semibold mb-1">進展中の関係</p>
                 <div className="flex items-baseline">
-                  <p data-testid="active-connections" className="text-4xl font-extrabold text-kawaii-glow">
-                    {dashboardData.activeConnections}
-                  </p>
-                  <p className="ml-2 text-sm text-purple-400 font-medium">進行中 ✨</p>
+                  <span className="title-kawaii text-3xl">{dashboardData.activeConnections}</span>
+                  <span className="kawaii-text ml-2">進行中 ✨</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="card-kawaii hover-kawaii group sm:col-span-2 lg:col-span-1 animate-bounceIn" style={{animationDelay: '0.2s'}}>
+          <div className="card-kawaii hover-kawaii sm:col-span-2 lg:col-span-1 animate-kawaii-bounce" style={{animationDelay: '0.2s'}}>
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 rounded-3xl bg-kawaii-soft flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-                  <span className="text-3xl animate-heartbeat">💖</span>
-                </div>
+              <div className="kawaii-heart-decoration mr-4">
+                <span className="text-4xl">💖</span>
               </div>
-              <div className="ml-5 flex-1">
-                <p className="text-sm font-semibold text-kawaii-gradient">愛情スコア平均</p>
+              <div>
+                <p className="kawaii-text text-sm font-semibold mb-1">愛情スコア平均</p>
                 <div className="flex items-baseline">
-                  <p data-testid="average-score" className="text-4xl font-extrabold text-kawaii-glow">
-                    {dashboardData.averageScore || 0}
-                  </p>
-                  <p className="ml-2 text-sm text-pink-400 font-medium">点 💕</p>
+                  <span className="title-kawaii text-3xl">{dashboardData.averageScore || 0}</span>
+                  <span className="kawaii-text ml-2">点 💕</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Kawaii プログレス概要 */}
-        <div data-testid="progress-overview" className="card-kawaii-magical animate-fadeIn">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-kawaii-magical flex items-center justify-center animate-float">
-              <span className="text-2xl animate-sparkle">📈</span>
+        {/* ベストコネクション */}
+        {dashboardData.bestConnection && (
+          <div className="card-kawaii animate-kawaii-fade-in">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-3xl animate-kawaii-sparkle">👑</span>
+              <h2 className="kawaii-subtitle">最も輝いている関係</h2>
             </div>
-            <h2 className="text-3xl font-bold text-kawaii-gradient">今月の魔法の進展 ✨</h2>
-          </div>
-          <div className="space-y-8">
-            {dashboardData.bestConnection && (
-              <div className="p-6 bg-kawaii-romantic rounded-3xl border-2 border-pink-200 relative overflow-hidden hover-kawaii">
-                <div className="absolute top-2 right-2 animate-sparkle text-2xl">✨</div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-pink-600 font-bold mb-3 text-lg">👑 最も輝いている関係</p>
-                    <p className="text-2xl font-extrabold text-kawaii-gradient">{dashboardData.bestConnection.nickname}さん 💕</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-5xl font-extrabold text-kawaii-glow animate-heartbeat">
-                      {connectionService.calculateRelationshipScore(dashboardData.bestConnection)}
-                    </div>
-                    <p className="text-sm text-pink-500 font-semibold">愛情スコア 💖</p>
-                  </div>
-                </div>
+            <div className="flex items-center justify-between p-6 bg-gradient-romantic rounded-kawaii-xl">
+              <div>
+                <h3 className="title-kawaii text-2xl mb-2">{dashboardData.bestConnection.nickname}さん</h3>
+                <span className={`badge-kawaii ${getTemperatureClass(connectionService.calculateRelationshipScore(dashboardData.bestConnection))}`}>
+                  {getTemperatureEmoji(connectionService.calculateRelationshipScore(dashboardData.bestConnection))}
+                  愛情度: {connectionService.calculateRelationshipScore(dashboardData.bestConnection)}点
+                </span>
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* Kawaii 推奨アクション */}
-        <div data-testid="recommended-actions" className="card-kawaii animate-fadeIn">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-kawaii-soft flex items-center justify-center animate-wiggle">
-              <span className="text-2xl">🪄</span>
+              <div className="kawaii-heart-decoration">
+                <span className="text-6xl">💕</span>
+              </div>
             </div>
-            <h2 className="text-3xl font-bold text-kawaii-gradient">今すぐできる魔法のアクション ✨</h2>
           </div>
-          <div className="space-y-6">
+        )}
+
+        {/* 推奨アクション */}
+        <div className="card-kawaii animate-kawaii-fade-in">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="text-3xl animate-kawaii-float">🪄</span>
+            <h2 className="kawaii-subtitle">今すぐできる魔法のアクション</h2>
+          </div>
+          <div className="space-y-4">
             {dashboardData.recommendedActions.map((action, index) => (
               <div
                 key={action.id}
-                className="p-6 bg-kawaii-romantic rounded-2xl border-2 border-pink-100 hover-kawaii relative overflow-hidden animate-slideInRight"
+                className="p-6 bg-gradient-romantic rounded-kawaii-xl hover-kawaii animate-kawaii-slide-in"
                 style={{animationDelay: `${index * 0.1}s`}}
               >
-                <div className="absolute top-2 right-2 animate-sparkle text-lg">
-                  {action.urgency === 'critical' ? '🚨' :
-                   action.urgency === 'high' ? '⚡' :
-                   action.urgency === 'medium' ? '⭐' : '✨'}
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-kawaii-gradient text-xl mb-3">{action.title}</h3>
-                    <p className="text-gray-700 leading-relaxed font-medium">{action.description}</p>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex-1">
+                    <h3 className="kawaii-subtitle text-xl mb-2">{action.title}</h3>
+                    <p className="kawaii-text">{action.description}</p>
                   </div>
-                  <div className="flex items-center gap-4 shrink-0">
+                  <div className="flex items-center gap-4">
                     <span className={`badge-kawaii ${
-                      action.urgency === 'critical' ? 'bg-gradient-to-r from-red-400 to-pink-400' :
-                      action.urgency === 'high' ? 'bg-gradient-to-r from-orange-400 to-pink-400' :
-                      action.urgency === 'medium' ? 'bg-gradient-to-r from-yellow-400 to-orange-400' :
-                      'bg-gradient-to-r from-green-400 to-mint-400'
+                      action.urgency === 'critical' ? 'badge-hot' :
+                      action.urgency === 'high' ? 'badge-warm' :
+                      action.urgency === 'medium' ? 'badge-cool' :
+                      'badge-kawaii'
                     }`}>
                       {action.urgency === 'critical' ? '💝 超緊急' :
                        action.urgency === 'high' ? '💖 高優先' :
@@ -391,9 +370,9 @@ export function Dashboard({ userId }: DashboardProps) {
                     </span>
                     <button
                       onClick={() => handleGeneratePrompt(action.connection_id)}
-                      className="btn-kawaii-secondary hover-sparkle relative"
+                      className="btn-kawaii bg-temp-cool hover-kawaii"
                     >
-                      <span className="animate-heartbeat">💫</span> 実行する
+                      <span className="animate-kawaii-sparkle">💫</span> 実行する
                     </button>
                   </div>
                 </div>
@@ -402,19 +381,17 @@ export function Dashboard({ userId }: DashboardProps) {
           </div>
         </div>
 
-        {/* Kawaii 相手一覧 */}
-        <div>
+        {/* 相手一覧 */}
+        <div className="animate-kawaii-fade-in">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-kawaii-dream flex items-center justify-center animate-float heart-decoration">
-              <span className="text-2xl animate-heartbeat">💕</span>
-            </div>
-            <h2 className="text-3xl font-bold text-kawaii-gradient">💖 あなたの運命の人たち ✨</h2>
+            <span className="text-3xl animate-kawaii-heartbeat">💖</span>
+            <h2 className="kawaii-subtitle">あなたの運命の人たち</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {connections.map((connection, index) => (
               <div 
                 key={connection.id} 
-                className="animate-bounceIn" 
+                className="animate-kawaii-bounce" 
                 style={{animationDelay: `${index * 0.1}s`}}
               >
                 <ConnectionCard
@@ -431,17 +408,13 @@ export function Dashboard({ userId }: DashboardProps) {
 
       {/* モーダル */}
       {showConnectionForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="card max-w-4xl w-full max-h-[95vh] overflow-y-auto hover-lift">
+        <div className="kawaii-modal-backdrop animate-kawaii-fade-in">
+          <div className="modal-kawaii max-w-4xl hover-kawaii">
             <div className="p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {editingConnection ? `${editingConnection.nickname}さんの情報編集` : '✨ 新しい相手を追加'}
+                <span className="text-3xl animate-kawaii-sparkle">✨</span>
+                <h2 className="kawaii-subtitle">
+                  {editingConnection ? `${editingConnection.nickname}さんの情報編集` : '新しい相手を追加'}
                 </h2>
               </div>
               <ConnectionForm
