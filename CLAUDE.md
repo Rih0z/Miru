@@ -13,6 +13,40 @@ Miruは「付き合えるかもしれない」希望を可視化する恋愛オ�
 └─────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## UI/UX開発フロー
+
+### 1. ドキュメント更新プロセス
+UI/UX関連の変更を行う際は、必ず以下の順序で作業すること:
+
+1. **ドキュメント更新**: `docs/ui-ux-comprehensive-guide.md` を最初に更新
+2. **実装更新**: ドキュメントに合わせて実装コードを更新
+3. **テスト**: 変更内容が正しく動作することを確認
+4. **デプロイ**: 本番環境に反映
+
+### 2. UI/UX設計原則
+- **Clean Modern Design**: 読みやすく、プロフェッショナルな外観
+- **React Icons使用**: 絵文字の代わりにReact Icons (Lucide React) を使用
+- **アクセシビリティ**: WCAG AA準拠、適切なARIAラベル
+- **レスポンシブ**: モバイルファーストデザイン
+- **一貫性**: デザインシステムに従った統一感
+
+### 3. アイコン使用ガイドライン
+```typescript
+// 絵文字は使用禁止
+❌ <span>💕</span>
+❌ <div>🌸</div>
+
+// React Icons を使用
+✅ <Heart className="w-5 h-5 text-pink-500" />
+✅ <Sparkles className="w-4 h-4 text-purple-400" />
+```
+
+**アイコンサイズ規則:**
+- インライン: `w-4 h-4`
+- ボタン内: `w-5 h-5`
+- ディスプレイ用: `w-8 h-8`
+- 大型アイコン: `w-16 h-16`
+
 ## 作業完了時の必須タスク
 
 ### 1. GitHub へのプッシュ
@@ -41,6 +75,7 @@ GitHubへのプッシュ前に以下のセキュリティ確認を必ず実施�
 
 ### 4. ドキュメント更新
 実装を変更したら、それに合わせて以下のドキュメントも更新すること:
+- **docs/ui-ux-comprehensive-guide.md** - UI/UX仕様（最優先）
 - README.md - デプロイ先URLの記載を含む
 - docs/ 配下の関連ドキュメント
 - SETUP.md（環境構築手順の変更がある場合）
@@ -54,38 +89,67 @@ GitHubへのプッシュ前に以下のセキュリティ確認を必ず実施�
 ## テスト実行
 コードの品質を保つため、以下のコマンドを実行:
 ```bash
-npm test        # テスト実行
-npm run lint    # Lintチェック
-npm run typecheck  # 型チェック
+npm test           # テスト実行
+npm run lint       # Lintチェック
+npm run type-check # 型チェック
 ```
 
 ## プロジェクト構造
 ```
 src/
-├── app/           # Next.js App Router
-├── components/    # Reactコンポーネント
-├── lib/          # ビジネスロジック
-├── types/        # TypeScript型定義
-└── tests/        # テストファイル
+├── app/              # Next.js App Router
+├── components/       # Reactコンポーネント
+│   ├── ui/          # 基本UIコンポーネント
+│   ├── layout/      # レイアウトコンポーネント
+│   └── ...          # 機能別コンポーネント
+├── lib/             # ビジネスロジック
+├── styles/          # スタイルファイル
+├── types/           # TypeScript型定義
+└── tests/           # テストファイル
 ```
 
 ## 技術スタック
 - Frontend: Next.js 14, TypeScript, Tailwind CSS
+- Icons: Lucide React + React Icons
 - Backend: Cloudflare Workers
 - Database: Supabase (PostgreSQL)
-- Testing: Jest + React Testing Library
+- Testing: Jest + React Testing Library + Playwright
 
 ## 重要な設計原則
-1. Test-Driven Development (TDD) を採用
-2. TypeScriptで型安全性を確保
-3. コンポーネントは再利用可能に設計
-4. ビジネスロジックはlib/に集約
-5. SOLID原則の遵守
+1. **Documentation-First Development**: ドキュメント更新 → 実装更新
+2. **Clean Design**: 読みやすく、プロフェッショナルな外観
+3. **Accessibility-First**: WCAG AA準拠のアクセシブルな設計
+4. **TypeScriptで型安全性を確保**
+5. **コンポーネントは再利用可能に設計**
+6. **ビジネスロジックはlib/に集約**
+7. **SOLID原則の遵守**
    - Single Responsibility Principle: 各クラス・モジュールは単一の責任を持つ
    - Open/Closed Principle: 拡張に対して開いており、修正に対して閉じている
    - Liskov Substitution Principle: 派生型は基底型と置換可能
    - Interface Segregation Principle: クライアントは不要なインターフェースに依存しない
    - Dependency Inversion Principle: 抽象に依存し、具体に依存しない
+
+## アイコンライブラリ設定
+```bash
+# 必要なアイコンライブラリをインストール
+npm install lucide-react react-icons
+```
+
+```typescript
+// 推奨インポート例
+import { 
+  Heart, 
+  Users, 
+  TrendingUp, 
+  Star, 
+  Plus, 
+  Download,
+  Home,
+  Settings,
+  Bot,
+  Thermometer
+} from 'lucide-react';
+```
 
 ## リポジトリ
 https://github.com/Rih0z/Miru.git

@@ -1,21 +1,22 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { Home, Thermometer, Download, Bot, Settings } from 'lucide-react'
 
 interface TabItem {
   id: string
-  icon: string
+  icon: React.ComponentType<{ className?: string }>
   label: string
   path: string
 }
 
 const tabs: TabItem[] = [
-  { id: 'dashboard', icon: '🏠', label: 'ホーム', path: '/' },
-  { id: 'temperature', icon: '🌡️', label: '温度', path: '/temperature' },
-  { id: 'import', icon: '📥', label: 'インポート', path: '/import' },
-  { id: 'ai', icon: '🤖', label: 'AI分析', path: '/ai' },
-  { id: 'settings', icon: '⚙️', label: '設定', path: '/settings' }
+  { id: 'dashboard', icon: Home, label: 'Dashboard', path: '/' },
+  { id: 'temperature', icon: Thermometer, label: 'Temperature', path: '/temperature' },
+  { id: 'import', icon: Download, label: 'Import', path: '/import' },
+  { id: 'ai', icon: Bot, label: 'AI Analysis', path: '/ai' },
+  { id: 'settings', icon: Settings, label: 'Settings', path: '/settings' }
 ]
 
 export const BottomBar: React.FC = () => {
@@ -34,10 +35,11 @@ export const BottomBar: React.FC = () => {
   }
 
   return (
-    <div className="bg-white border-t-2 border-kawaii-pink shadow-lg safe-bottom">
+    <div className="bg-white border-t-2 border-pink-200 shadow-lg safe-bottom">
       <div className="flex justify-around items-center py-2">
         {tabs.map((tab) => {
           const active = isActive(tab)
+          const IconComponent = tab.icon
           return (
             <button
               key={tab.id}
@@ -46,15 +48,14 @@ export const BottomBar: React.FC = () => {
                 flex flex-col items-center justify-center p-3 rounded-xl min-w-0 flex-1 
                 transition-all duration-300 touch-target hover-bounce
                 ${active 
-                  ? 'bg-kawaii-soft text-primary scale-105 animate-kawaii-pulse' 
-                  : 'text-gray-500 hover:text-primary hover:bg-kawaii-cream'
+                  ? 'bg-pink-50 text-pink-600 scale-105 animate-pulse' 
+                  : 'text-gray-500 hover:text-pink-600 hover:bg-pink-25'
                 }
               `}
+              aria-label={tab.label}
             >
-              <span className={`text-xl mb-1 ${active ? 'animate-heartbeat' : ''}`}>
-                {tab.icon}
-              </span>
-              <span className={`text-xs font-medium leading-tight ${active ? 'text-kawaii-glow' : ''}`}>
+              <IconComponent className={`w-5 h-5 mb-1 ${active ? 'animate-pulse' : ''}`} />
+              <span className={`text-xs font-medium leading-tight ${active ? 'text-pink-600 font-semibold' : ''}`}>
                 {tab.label}
               </span>
             </button>

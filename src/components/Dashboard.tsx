@@ -13,6 +13,7 @@ import { EmptyState } from './ui/EmptyState'
 import { Button } from './ui/Button'
 import { Card } from './ui/Card'
 import { Modal } from './ui/Modal'
+import { Heart, Plus, Download, Users, TrendingUp, Star, Sparkles } from 'lucide-react'
 
 interface DashboardProps {
   userId: string
@@ -114,11 +115,11 @@ export function Dashboard({ userId }: DashboardProps) {
         setConnections(prev => prev.map(c => 
           c.id === editingConnection.id ? { ...c, ...data } : c
         ))
-        alert('相手情報を更新しました ✨')
+        alert('相手情報を更新しました')
       } else {
         const newConnection = await connectionService.createConnection(userId, data as any)
         setConnections(prev => [...prev, newConnection])
-        alert('新しい相手を追加しました 💕')
+        alert('新しい相手を追加しました')
       }
       setShowConnectionForm(false)
       setEditingConnection(null)
@@ -138,7 +139,7 @@ export function Dashboard({ userId }: DashboardProps) {
       setConnections(updatedConnections)
       await loadDashboardData()
       setShowDataImportModal(false)
-      alert(`${importedConnections.length}件のコネクションがインポートされました！✨`)
+      alert(`${importedConnections.length}件のコネクションがインポートされました！`)
     } catch (error) {
       console.error('インポート完了処理エラー:', error)
       alert('インポート完了処理でエラーが発生しました')
@@ -149,9 +150,9 @@ export function Dashboard({ userId }: DashboardProps) {
     return (
       <LoadingSpinner 
         fullScreen 
-        message="恋愛の魔法を分析中..."
-        submessage="素敵な出会いを見つけています"
-        variant="magical"
+        message="Analyzing love connections..."
+        submessage="Finding your perfect match"
+        variant="heart"
         size="lg"
       />
     )
@@ -161,7 +162,7 @@ export function Dashboard({ userId }: DashboardProps) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <ErrorState
-          title="ちょっとした問題が起きちゃいました"
+          title="Something minor happened"
           message={error}
           onRetry={loadDashboardData}
         />
@@ -172,18 +173,18 @@ export function Dashboard({ userId }: DashboardProps) {
   if (!dashboardData || connections.length === 0) {
     return (
       <EmptyState
-        title="新しい恋愛の魔法を始めましょう ✨"
-        description="Miruと一緒に素敵な恋愛ストーリーを紡いでいきましょう！気になる運命の人の情報を追加して、愛に満ちた成功への魔法の道筋を見つけましょう 💕"
-        icon="💕"
+        title="Start Your Love Journey"
+        description="Let Miru help you discover amazing connections and build meaningful relationships with AI-powered insights"
+        icon={Heart}
         primaryAction={{
-          label: "手動で追加する",
+          label: "Add Manually",
           onClick: handleAddConnection,
-          icon: "➕"
+          icon: Plus
         }}
         secondaryAction={{
-          label: "AIで一括インポート",
+          label: "AI Bulk Import",
           onClick: () => setShowDataImportModal(true),
-          icon: "📥"
+          icon: Download
         }}
       />
     )
@@ -191,23 +192,29 @@ export function Dashboard({ userId }: DashboardProps) {
 
   return (
     <div className="space-y-8 py-8">
-      {/* スパークルエフェクト */}
+      {/* Sparkle effects */}
       {showSparkle && (
         <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute top-20 left-10 text-2xl animate-sparkle">✨</div>
-          <div className="absolute top-40 right-20 text-xl animate-sparkle delay-100">💕</div>
-          <div className="absolute bottom-20 left-1/2 text-2xl animate-sparkle delay-200">🌸</div>
+          <div className="absolute top-20 left-10">
+            <Sparkles className="w-6 h-6 text-pink-400 animate-pulse" />
+          </div>
+          <div className="absolute top-40 right-20">
+            <Heart className="w-5 h-5 text-purple-400 animate-pulse" />
+          </div>
+          <div className="absolute bottom-20 left-1/2">
+            <Sparkles className="w-6 h-6 text-blue-400 animate-pulse" />
+          </div>
         </div>
       )}
 
-      {/* ヘッダー */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div className="space-y-3">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-kawaii-gradient animate-float">
-            🌸💕 恋愛ダッシュボード ✨
+          <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+            Love Dashboard
           </h1>
           <p className="text-gray-700 text-lg font-medium">
-            あなたの素敵な恋愛を応援するMiruの魔法のインサイト 🪄
+            Your romantic insights powered by AI
           </p>
         </div>
         
@@ -215,36 +222,34 @@ export function Dashboard({ userId }: DashboardProps) {
           <Button
             variant="primary"
             onClick={handleAddConnection}
-            icon="➕"
-            sparkle
+            icon={Plus}
           >
-            <span className="hidden sm:inline">手動で追加</span>
+            <span className="hidden sm:inline">Add Manually</span>
           </Button>
           <Button
             variant="secondary"
             onClick={() => setShowDataImportModal(true)}
-            icon="📥"
-            sparkle
+            icon={Download}
           >
-            <span className="hidden sm:inline">AIインポート</span>
+            <span className="hidden sm:inline">AI Import</span>
           </Button>
         </div>
       </div>
 
-      {/* サマリー統計 */}
+      {/* Summary Statistics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card variant="kawaii" hover className="animate-bounceIn">
           <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-kawaii-romantic flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-              <span className="text-3xl animate-kawaii-pulse">👥</span>
+            <div className="w-16 h-16 rounded-3xl bg-pink-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Users className="w-8 h-8 text-pink-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold text-kawaii-gradient">出会った運命の人</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Connections</p>
               <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-kawaii-glow">
+                <p className="text-4xl font-extrabold text-gray-800">
                   {dashboardData.totalConnections}
                 </p>
-                <p className="ml-2 text-sm text-pink-400 font-medium">人 💕</p>
+                <p className="ml-2 text-sm text-pink-400 font-medium">people</p>
               </div>
             </div>
           </div>
@@ -252,16 +257,16 @@ export function Dashboard({ userId }: DashboardProps) {
 
         <Card variant="magical" hover className="animate-bounceIn">
           <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-kawaii-lavender flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-              <span className="text-3xl animate-kawaii-pulse">📈</span>
+            <div className="w-16 h-16 rounded-3xl bg-purple-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <TrendingUp className="w-8 h-8 text-purple-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold text-kawaii-gradient">進展中の関係</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Active</p>
               <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-kawaii-glow">
+                <p className="text-4xl font-extrabold text-gray-800">
                   {dashboardData.activeConnections}
                 </p>
-                <p className="ml-2 text-sm text-purple-400 font-medium">件 ✨</p>
+                <p className="ml-2 text-sm text-purple-400 font-medium">relationships</p>
               </div>
             </div>
           </div>
@@ -269,16 +274,16 @@ export function Dashboard({ userId }: DashboardProps) {
 
         <Card variant="soft" hover className="animate-bounceIn">
           <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-kawaii-mint flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-              <span className="text-3xl animate-kawaii-pulse">⭐</span>
+            <div className="w-16 h-16 rounded-3xl bg-yellow-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Star className="w-8 h-8 text-yellow-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold text-kawaii-gradient">愛情スコア平均</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Average Score</p>
               <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-kawaii-glow">
+                <p className="text-4xl font-extrabold text-gray-800">
                   {dashboardData.averageScore || 0}
                 </p>
-                <p className="ml-2 text-sm text-yellow-400 font-medium">点 🌟</p>
+                <p className="ml-2 text-sm text-yellow-400 font-medium">points</p>
               </div>
             </div>
           </div>
@@ -286,48 +291,49 @@ export function Dashboard({ userId }: DashboardProps) {
 
         <Card variant="romantic" hover className="animate-bounceIn">
           <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-kawaii-peach flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-              <span className="text-3xl animate-heartbeat">💖</span>
+            <div className="w-16 h-16 rounded-3xl bg-green-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Heart className="w-8 h-8 text-green-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold text-kawaii-gradient">最も有望な関係</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Best Match</p>
               <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-kawaii-glow">
-                  {dashboardData.bestConnection ? '💕' : '-'}
+                <p className="text-4xl font-extrabold text-gray-800">
+                  {dashboardData.bestConnection ? 'Found' : 'None'}
                 </p>
-                <p className="ml-2 text-sm text-green-400 font-medium">💫</p>
               </div>
             </div>
           </div>
         </Card>
       </div>
 
-      {/* 最も有望な関係 */}
+      {/* Best Connection */}
       {dashboardData.bestConnection && (
         <Card variant="magical" className="animate-fadeIn">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-3 h-3 bg-gradient-primary rounded-full animate-pulse"></div>
-            <h2 className="text-xl font-bold text-kawaii-gradient">✨ 最も輝いている関係 ✨</h2>
+            <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-pulse"></div>
+            <h2 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+              Most Promising Connection
+            </h2>
           </div>
-          <div className="flex items-center justify-between p-4 bg-kawaii-cream rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-pink-50 rounded-xl">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold animate-heartbeat">
+              <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
                 {dashboardData.bestConnection.nickname[0]}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-kawaii-gradient">{dashboardData.bestConnection.nickname}さん</h3>
-                <p className="text-sm text-gray-600">愛情度: {connectionService.calculateRelationshipScore(dashboardData.bestConnection)}点</p>
+                <h3 className="text-lg font-bold text-gray-800">{dashboardData.bestConnection.nickname}</h3>
+                <p className="text-sm text-gray-600">Score: {connectionService.calculateRelationshipScore(dashboardData.bestConnection)} points</p>
               </div>
             </div>
-            <span className="text-3xl animate-sparkle">💖</span>
+            <Heart className="w-8 h-8 text-pink-500 animate-pulse" />
           </div>
         </Card>
       )}
 
-      {/* 相手一覧 */}
+      {/* Connections List */}
       <div>
-        <h2 className="text-xl font-bold text-kawaii-gradient mb-6 animate-float">
-          🌸 あなたの運命の人たち 🌸
+        <h2 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-6">
+          Your Connections
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {connections.map((connection, index) => (
@@ -343,11 +349,11 @@ export function Dashboard({ userId }: DashboardProps) {
         </div>
       </div>
 
-      {/* モーダル */}
+      {/* Modals */}
       <Modal
         isOpen={showConnectionForm}
         onClose={handleFormCancel}
-        title={editingConnection ? `${editingConnection.nickname}さんの情報編集` : '新しい相手を追加'}
+        title={editingConnection ? `Edit ${editingConnection.nickname}` : 'Add New Connection'}
         variant="kawaii"
         className="max-w-2xl w-full max-h-[80vh] overflow-y-auto"
       >

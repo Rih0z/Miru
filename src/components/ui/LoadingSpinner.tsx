@@ -1,20 +1,21 @@
 'use client'
 
 import React from 'react'
+import { Heart, Sparkles, Loader } from 'lucide-react'
 
 export interface LoadingSpinnerProps {
   size?: 'sm' | 'base' | 'lg'
   message?: string
   submessage?: string
-  variant?: 'kawaii' | 'magical'
+  variant?: 'heart' | 'sparkle' | 'spinner'
   fullScreen?: boolean
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'base',
-  message = '恋愛の魔法を分析中...',
-  submessage = '素敵な出会いを見つけています',
-  variant = 'kawaii',
+  message = 'Analyzing love connections...',
+  submessage = 'Finding your perfect match',
+  variant = 'heart',
   fullScreen = false
 }) => {
   const sizeClasses = {
@@ -23,21 +24,30 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     lg: 'w-20 h-20'
   }
 
+  const getIcon = () => {
+    switch (variant) {
+      case 'heart': return Heart
+      case 'sparkle': return Sparkles
+      case 'spinner': return Loader
+      default: return Heart
+    }
+  }
+
+  const IconComponent = getIcon()
+
   const spinnerContent = (
     <div className="flex flex-col items-center justify-center space-y-4">
       <div className="relative">
-        <div className={`${sizeClasses[size]} spinner-kawaii`} />
+        <div className={`${sizeClasses[size]} rounded-full border-4 border-pink-200 border-t-pink-500 animate-spin`} />
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`${size === 'lg' ? 'text-2xl' : size === 'base' ? 'text-xl' : 'text-base'} animate-heartbeat`}>
-            {variant === 'magical' ? '🌟' : '💕'}
-          </span>
+          <IconComponent className={`${size === 'lg' ? 'w-8 h-8' : size === 'base' ? 'w-6 h-6' : 'w-4 h-4'} text-pink-500`} />
         </div>
       </div>
       
       {(message || submessage) && (
         <div className="text-center space-y-2">
           {message && (
-            <p className={`font-bold text-kawaii-gradient animate-kawaii-pulse ${
+            <p className={`font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent animate-pulse ${
               size === 'lg' ? 'text-xl' : size === 'base' ? 'text-lg' : 'text-base'
             }`}>
               {message}
@@ -45,7 +55,9 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           )}
           {submessage && (
             <p className="text-pink-600 font-medium flex items-center justify-center gap-2">
-              <span>🌟</span> {submessage} <span>🌟</span>
+              <Sparkles className="w-4 h-4" />
+              {submessage}
+              <Sparkles className="w-4 h-4" />
             </p>
           )}
         </div>
@@ -55,7 +67,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   if (fullScreen) {
     return (
-      <div className="min-h-screen bg-kawaii-dream flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center">
         <div className="animate-bounceIn">
           {spinnerContent}
         </div>
