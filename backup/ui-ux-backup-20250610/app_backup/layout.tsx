@@ -1,26 +1,22 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import '../styles/kawaii-design-system.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { getUserLocale } from '@/lib/locale'
-import { BottomBar } from '@/components/layout/BottomBar'
-import { Container } from '@/components/layout/Container'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Miru - AI恋愛オーケストレーションシステム',
   description: '「付き合えるかもしれない」希望を可視化する恋愛サポートアプリ',
-}
-
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 }
 
 export default async function RootLayout({
@@ -33,17 +29,10 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${inter.className} bg-kawaii-dream min-h-screen font-sans`}>
+      <body className={inter.className}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <AuthProvider>
-            <div className="min-h-screen flex flex-col">
-              <main className="flex-1 safe-top">
-                <Container>
-                  {children}
-                </Container>
-              </main>
-              <BottomBar />
-            </div>
+            {children}
           </AuthProvider>
         </NextIntlClientProvider>
       </body>
