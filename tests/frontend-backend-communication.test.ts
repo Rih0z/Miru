@@ -34,19 +34,29 @@ describe('Frontend-Backend Communication Tests', () => {
       }
     })
 
-    it('should check database connection object', () => {
-      console.log('\n🔍 === データベース接続オブジェクトチェック ===')
+    it('should check database connection functions', () => {
+      console.log('\n🔍 === データベース接続関数チェック ===')
       
-      expect(db.connections).toBeDefined()
-      expect(db.progress_tracking).toBeDefined()
-      expect(db.action_history).toBeDefined()
-      expect(db.prompt_history).toBeDefined()
+      expect(db.getConnections).toBeDefined()
+      expect(db.createConnection).toBeDefined()
+      expect(db.updateConnection).toBeDefined()
+      expect(db.deleteConnection).toBeDefined()
+      expect(db.getProgress).toBeDefined()
+      expect(db.addProgressEntry).toBeDefined()
+      expect(db.getActionHistory).toBeDefined()
+      expect(db.addActionHistory).toBeDefined()
+      expect(db.savePromptHistory).toBeDefined()
       
-      console.log('✅ データベーステーブルオブジェクト定義済み:')
-      console.log('  - connections')
-      console.log('  - progress_tracking')
-      console.log('  - action_history')
-      console.log('  - prompt_history')
+      console.log('✅ データベース操作関数定義済み:')
+      console.log('  - getConnections()')
+      console.log('  - createConnection()')
+      console.log('  - updateConnection()')
+      console.log('  - deleteConnection()')
+      console.log('  - getProgress()')
+      console.log('  - addProgressEntry()')
+      console.log('  - getActionHistory()')
+      console.log('  - addActionHistory()')
+      console.log('  - savePromptHistory()')
     })
   })
 
@@ -113,24 +123,25 @@ describe('Frontend-Backend Communication Tests', () => {
       try {
         // シンプルなクエリを実行
         const startTime = Date.now()
-        const { data, error } = await db.connections
-          .select('id')
-          .limit(1)
+        const data = await db.getConnections('test-user-id')
         const queryTime = Date.now() - startTime
 
         console.log(`⏱️  データベースクエリ応答時間: ${queryTime}ms`)
 
-        if (error) {
-          console.log(`❌ データベースエラー: ${error.message}`)
-          // エラーがあってもSupabaseとの通信は確立されている
-          expect(error).toBeTruthy()
-        } else {
+        if (Array.isArray(data)) {
           console.log('✅ データベースクエリ成功')
+          console.log(`  取得件数: ${data.length}件`)
           expect(data).toBeDefined()
+        } else {
+          console.log('❌ 予期しないデータ形式')
         }
-      } catch (err) {
-        console.log(`❌ 通信エラー: ${err}`)
-        // ネットワークエラーの場合
+      } catch (err: any) {
+        if (err.message === 'Supabase is not configured') {
+          console.log('❌ Supabase未設定')
+        } else {
+          console.log(`❌ 通信エラー: ${err.message}`)
+        }
+        // エラーがあってもテストは続行
       }
     })
 
@@ -138,7 +149,7 @@ describe('Frontend-Backend Communication Tests', () => {
       console.log('\n🔍 === ConnectionServiceデータベース操作テスト ===')
       
       const container = new DIContainer()
-      const connectionService = container.get<ConnectionService>('connectionService')
+      const connectionService = container.get<ConnectionService>('ConnectionApplicationService')
       
       try {
         // ユーザーのコネクション取得を試みる
@@ -230,15 +241,15 @@ describe('Frontend-Backend Communication Tests', () => {
       // データベースチェック
       if (supabase) {
         try {
-          const { error } = await db.connections.select('id').limit(1)
-          if (!error) {
+          const data = await db.getConnections('health-check-test')
+          if (Array.isArray(data)) {
             healthStatus.database = true
             console.log('✅ データベース: 接続成功')
           } else {
-            console.log(`❌ データベース: ${error.message}`)
+            console.log('❌ データベース: 予期しない応答')
           }
-        } catch {
-          console.log('❌ データベース: 接続エラー')
+        } catch (err: any) {
+          console.log(`❌ データベース: ${err.message}`)
         }
       }
 
