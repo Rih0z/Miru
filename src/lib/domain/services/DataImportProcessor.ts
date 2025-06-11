@@ -39,7 +39,7 @@ export class DataImportProcessor {
         // 数値範囲の確認
         const scoreFields = ['attractionLevel', 'compatibilityScore', 'communicationScore']
         scoreFields.forEach(field => {
-          if (conn[field] && (conn[field] < 1 || conn[field] > 10)) {
+          if (conn[field] !== undefined && (conn[field] < 1 || conn[field] > 10)) {
             warnings.push(`コネクション${index + 1}: ${field}は1-10の範囲で設定してください`)
           }
         })
@@ -70,7 +70,7 @@ export class DataImportProcessor {
     connections: Connection[]
     dashboardData: Partial<DashboardData>
   } {
-    const connections: Connection[] = importData.connections.map(this.convertConnection)
+    const connections: Connection[] = importData.connections.map((conn) => this.convertConnection(conn))
     
     const dashboardData: Partial<DashboardData> = {
       connections,
@@ -328,9 +328,12 @@ export class DataImportProcessor {
    */
   private mapConnectionStage(englishStage: string): ConnectionStage {
     const stageMapping: Record<string, ConnectionStage> = {
+      'just_matched': 'マッチング直後',
       'matching': 'マッチング直後',
-      'chatting': 'メッセージ中', 
+      'chatting': 'メッセージ中',
+      'messaging': 'メッセージ中', 
       'planning_date': 'デート前',
+      'before_date': 'デート前',
       'dating': 'デート後',
       'relationship': '交際中',
       'complicated': '停滞中',
@@ -338,5 +341,192 @@ export class DataImportProcessor {
     }
     
     return stageMapping[englishStage] || 'メッセージ中'
+  }
+  
+  /**
+   * データの重複を検出
+   */
+  detectDuplicates(existingConnections: Connection[], importConnections: ImportedConnection[]): Array<{
+    importedConnection: ImportedConnection,
+    existingConnection: Connection,
+    confidence: 'high' | 'medium' | 'low'
+  }> {
+    const duplicates = []
+    
+    for (const importConn of importConnections) {
+      for (const existingConn of existingConnections) {
+        // 完全一致
+        if (importConn.nickname === existingConn.nickname && 
+            importConn.platform === existingConn.platform) {
+          duplicates.push({
+            importedConnection: importConn,
+            existingConnection: existingConn,
+            confidence: 'high' as const
+          })
+        }
+        // 類似性チェック（ひらがな・カタカナ変換など）
+        else if (importConn.platform === existingConn.platform &&
+                 this.isSimilarName(importConn.nickname, existingConn.nickname)) {
+          duplicates.push({
+            importedConnection: importConn,
+            existingConnection: existingConn,
+            confidence: 'medium' as const
+          })
+        }
+      }
+    }
+    
+    return duplicates
+  }
+  
+  /**
+   * 名前の類似性をチェック
+   */
+  private isSimilarName(name1: string, name2: string): boolean {
+    // 簡単な類似性チェック（ひらがな・カタカナ・漢字の変換）
+    const normalize = (name: string) => name.toLowerCase().trim()
+    const n1 = normalize(name1)
+    const n2 = normalize(name2)
+    
+    // 文字列の編集距離が小さい場合は類似とみなす
+    // より柔軟な類似性判定
+    const distance = this.levenshteinDistance(n1, n2)
+    const maxLength = Math.max(n1.length, n2.length)
+    return distance <= Math.max(1, Math.floor(maxLength * 0.3))
+  }
+  
+  /**
+   * レーベンシュタイン距離を計算
+   */
+  private levenshteinDistance(str1: string, str2: string): number {
+    const matrix = []
+    
+    for (let i = 0; i <= str2.length; i++) {
+      matrix[i] = [i]
+    }
+    
+    for (let j = 0; j <= str1.length; j++) {
+      matrix[0][j] = j
+    }
+    
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1]
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          )
+        }
+      }
+    }
+    
+    return matrix[str2.length][str1.length]
+  }
+  
+  /**
+   * コネクションサマリーを生成
+   */
+  generateConnectionSummary(connections: Connection[]): {
+    totalConnections: number
+    activeConnections: number
+    stagnantConnections: number
+    platformBreakdown: Record<string, number>
+    stageBreakdown: Record<string, number>
+    averageScores: {
+      communication: number
+      attraction: number
+      interest: number
+    }
+    overallHealth: string
+  } {
+    if (connections.length === 0) {
+      return {
+        totalConnections: 0,
+        activeConnections: 0,
+        stagnantConnections: 0,
+        platformBreakdown: {},
+        stageBreakdown: {},
+        averageScores: {
+          communication: 0,
+          attraction: 0,
+          interest: 0
+        },
+        overallHealth: '新しいコネクションを追加してください'
+      }
+    }
+    
+    const activeStages = ['メッセージ中', 'デート前', 'デート後', '交際中']
+    const activeConnections = connections.filter(c => activeStages.includes(c.current_stage)).length
+    const stagnantConnections = connections.filter(c => c.current_stage === '停滞中').length
+    
+    // プラットフォーム別集計
+    const platformBreakdown: Record<string, number> = {}
+    connections.forEach(c => {
+      platformBreakdown[c.platform] = (platformBreakdown[c.platform] || 0) + 1
+    })
+    
+    // ステージ別集計
+    const stageBreakdown: Record<string, number> = {}
+    connections.forEach(c => {
+      stageBreakdown[c.current_stage] = (stageBreakdown[c.current_stage] || 0) + 1
+    })
+    
+    // 平均スコア計算（推定値）
+    const communicationSum = connections.reduce((sum, c) => {
+      // 頻度に基づいてスコアを推定
+      const frequency = c.communication?.frequency || 'unknown'
+      let score = 5
+      if (frequency === '毎日') score = 9
+      else if (frequency === '数日に1回') score = 7
+      else if (frequency === '週1回') score = 5
+      else if (frequency === '週1回未満') score = 3
+      return sum + score
+    }, 0)
+    
+    const attractionSum = connections.reduce((sum, c) => {
+      // 魅力的なポイントの数に基づいて推定
+      const pointsCount = c.user_feelings?.attractivePoints?.length || 0
+      const score = Math.min(10, Math.max(1, pointsCount + 3))
+      return sum + score
+    }, 0)
+    
+    const interestSum = connections.reduce((sum, c) => {
+      // ステージに基づいて興味レベルを推定
+      let score = 5
+      if (c.current_stage === '交際中') score = 10
+      else if (c.current_stage === 'デート後') score = 8
+      else if (c.current_stage === 'デート前') score = 7
+      else if (c.current_stage === 'メッセージ中') score = 6
+      else if (c.current_stage === '停滞中') score = 3
+      else if (c.current_stage === '終了') score = 1
+      return sum + score
+    }, 0)
+    
+    const averageScores = {
+      communication: Math.round(communicationSum / connections.length * 10) / 10,
+      attraction: Math.round(attractionSum / connections.length * 10) / 10,
+      interest: Math.round(interestSum / connections.length * 10) / 10
+    }
+    
+    // 全体的な健康度評価
+    let overallHealth = '良好'
+    if (averageScores.communication < 4 || averageScores.interest < 4) {
+      overallHealth = 'コミュニケーションの改善が必要です'
+    } else if (stagnantConnections > activeConnections) {
+      overallHealth = '停滞中のコネクションが多すぎます'
+    }
+    
+    return {
+      totalConnections: connections.length,
+      activeConnections,
+      stagnantConnections,
+      platformBreakdown,
+      stageBreakdown,
+      averageScores,
+      overallHealth
+    }
   }
 }
