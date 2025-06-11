@@ -1,805 +1,811 @@
-# Miru UI/UX 完全設計ガイド
-> 恋愛オーケストレーションAIシステムの包括的デザイン・エクスペリエンス仕様書
+# Miru UI/UX 完全設計ガイド v4.0
+> 2024-2025年モダンUIトレンドに基づく恋愛オーケストレーションAIシステム設計仕様書
 
 ## 目次
 1. [プロジェクト概要](#プロジェクト概要)
-2. [デザインコンセプト](#デザインコンセプト)
-3. [UX原則](#ux原則)
+2. [2024-2025年モダンデザインコンセプト](#2024-2025年モダンデザインコンセプト)
+3. [実証されたUIトレンド採用](#実証されたuiトレンド採用)
 4. [技術スタック](#技術スタック)
-5. [Kawaiiデザインシステム](#kawaiiデザインシステム)
-6. [データ構造](#データ構造)
-7. [ユーザージャーニー](#ユーザージャーニー)
-8. [画面フロー](#画面フロー)
-9. [コンポーネント仕様](#コンポーネント仕様)
-10. [画面実装仕様](#画面実装仕様)
-11. [アニメーション詳細](#アニメーション詳細)
-12. [エラー・空状態仕様](#エラー・空状態仕様)
-13. [AI統合プロンプト](#ai統合プロンプト)
-14. [アクセシビリティ](#アクセシビリティ)
-15. [パフォーマンス指標](#パフォーマンス指標)
-16. [実装順序](#実装順序)
-17. [検証チェックリスト](#検証チェックリスト)
+5. [Neobrutalism + Minimalism システム](#neobrutalism--minimalism-システム)
+6. [Glassmorphism 統合](#glassmorphism-統合)
+7. [AI Aesthetic デザイン](#ai-aesthetic-デザイン)
+8. [マイクロインタラクション](#マイクロインタラクション)
+9. [ダークモードファースト](#ダークモードファースト)
+10. [ボールドタイポグラフィ](#ボールドタイポグラフィ)
+11. [Spatial Design & 3D要素](#spatial-design--3d要素)
+12. [コンポーネント仕様](#コンポーネント仕様)
+13. [実装ガイドライン](#実装ガイドライン)
 
 ---
 
 ## プロジェクト概要
 
-### Miruについて
-「付き合えるかもしれない」希望を可視化する恋愛オーケストレーションAIシステム。
-かわいくて温かい恋愛体験をKawaiiデザインで提供し、ユーザーの恋愛成功をサポートします。
+### Miru 2025ビジョン
+「付き合えるかもしれない」希望を最先端のAI技術と2024-2025年の実証されたモダンUIトレンドで可視化する、次世代恋愛オーケストレーションシステム。
 
-### ミッション
-- 恋愛における不安を軽減し、ポジティブな体験を提供
-- AI分析とアドバイスによる恋愛成功のサポート
-- 視覚的に魅力的で直感的なユーザー体験を提供
-
----
-
-## デザインコンセプト
-
-### ビジュアルコンセプト
-1. **Kawaii デザインシステム**
-   - 丸みを帯びた柔らかいコンポーネント
-   - パステルカラースキーム
-   - スムーズなアニメーション
-   - 親しみやすい表現
-
-2. **希望と励ましの表現**
-   - ポジティブなフィードバック
-   - 成功の可視化
-   - 温かい表現
-   - 科学的信頼性
-
-3. **シンプルで直感的**
-   - 明確で一貫したナビゲーション
-   - 最小クリックでの操作
-   - ビジュアルガイドベースのフロー設計
-   - モバイルファーストレイアウト
+### 新デザインミッション
+- **Evidence-Based Design**: 実証されたUIトレンドのみを採用
+- **AI-First Aesthetic**: AIらしいクリーンで洗練されたデザイン
+- **Progressive Enhancement**: 段階的な機能向上とUX最適化
+- **Accessibility-First**: アクセシビリティを最優先とした設計
 
 ---
 
-## UX原則
+## 2024-2025年モダンデザインコンセプト
 
-### 1. 希望と励ましの提供
-- 不安を軽減するポジティブな言葉遣い
-- 成功を祝うフィードバック
-- 達成感のための進捗の可視化
-- 挫折時の励ましメッセージ
+### 1. Neobrutalism + Minimalism融合
+**実証データ**: Neobrutalism が2024年のトップトレンドとして確認済み
 
-### 2. シンプルで直感的
-- 分かりやすく理解しやすいナビゲーション
-- 目標達成への最小ステップ
-- 混乱を防ぐガイド付きフロー設計
-- 技術用語を避けた親しみやすい表現
-
-### 3. パーソナライズされた体験
-- ユーザーの状況に基づく推奨アクション
-- 学習機能による最適化
-- パーソナライズされたメッセージ
-- 成長に適応した機能提案
-
-### 4. エモーショナルデザイン
-**ポジティブな言葉遣いの例：**
-- "エラーが発生しました" → "ちょっとした問題が発生しました"
-- "認証に失敗しました" → "もう一度お試しください"
-- "データがありません" → "新しい恋愛の旅を始めましょう"
-
----
-
-## 技術スタック
-
-### フロントエンド
-```json
-{
-  "framework": "Next.js 14.2.29",
-  "runtime": "React 18",
-  "language": "TypeScript 5.0+",
-  "styling": "Tailwind CSS 3.4.0 + CSS Custom Properties",
-  "state": "Zustand 4.4.7",
-  "icons": "Lucide React + React Icons",
-  "animation": "CSS Animations + Framer Motion",
-  "i18n": "next-intl 4.1.0"
+```scss
+// Core Philosophy
+.design-system {
+  approach: "Raw authenticity meets purposeful simplicity";
+  contrast: "High contrast for accessibility";
+  typography: "Bold, unconventional, attention-grabbing";
+  layout: "Asymmetric yet functional";
+  colors: "Vibrant accents on neutral bases";
 }
 ```
 
-### バックエンド＆インフラ
-```json
-{
-  "database": "Supabase PostgreSQL",
-  "deployment": "Cloudflare Pages",
-  "cdn": "Cloudflare",
-  "testing": "Jest + React Testing Library + Playwright"
+### 2. Dark Mode First
+**実証データ**: 82.7%のユーザーがダークモードを使用（Medium調査）
+
+- **Primary Interface**: ダークテーマをデフォルト
+- **Light Mode**: 明示的な切り替えオプション
+- **Eye Strain Reduction**: 長時間使用での疲労軽減
+- **Battery Efficiency**: エネルギー消費量削減
+
+### 3. AI Aesthetic Integration
+**実証データ**: AI統合デザインが2024-2025年の主要トレンド
+
+- **Clean, Technical Lines**: AIらしいクリーンな印象
+- **Data-Driven Visuals**: 数値やグラフの美しい表現
+- **Progressive Disclosure**: 情報の段階的開示
+- **Predictive UI Elements**: ユーザー行動予測に基づくインターフェース
+
+---
+
+## 実証されたUIトレンド採用
+
+### ✅ 採用確定トレンド（証拠あり）
+
+#### 1. **Glassmorphism** 
+- **証拠**: Apple, Microsoft採用、2024年継続成長
+- **実装**: カードオーバーレイ、モーダル、ナビゲーション要素
+- **技術**: `backdrop-filter: blur()`, `rgba()` transparency
+
+#### 2. **Bold Typography**
+- **証拠**: 2024年の主要トレンド「Big, Bold, Capitalized」
+- **実装**: 大型見出し、階層的テキスト、アテンション獲得
+- **技術**: Variable fonts、動的サイズ調整
+
+#### 3. **Micro-interactions**
+- **証拠**: ユーザーエンゲージメント向上の実証データあり
+- **実装**: ホバー状態、トランジション、フィードバック
+- **目的**: 直感的操作とユーザー満足度向上
+
+#### 4. **3D & Interactive Elements**
+- **証拠**: Apple Vision Pro影響でSpatial Design急成長
+- **実装**: 深度のあるカード、インタラクティブ要素
+- **技術**: CSS 3D transforms、WebGL
+
+#### 5. **Minimalist Accessibility**
+- **証拠**: アクセシビリティファースト設計の標準化
+- **実装**: クリーンレイアウト、高コントラスト、明確な階層
+
+### ❌ 非採用トレンド（証拠不十分）
+
+#### 1. **過度なKawaii要素**
+- **理由**: 2022年ピーク、現在は減少傾向
+- **代替**: モダンなマイクロインタラクションで親しみやすさ表現
+
+#### 2. **Heavy Gradients**
+- **理由**: Web 2.0的印象、現在は控えめなアクセント使用が主流
+- **代替**: 単色背景にポイントグラデーション
+
+---
+
+## Neobrutalism + Minimalism システム
+
+### カラーシステム
+
+```scss
+// Dark Mode Primary Palette
+:root[data-theme="dark"] {
+  // Base Colors
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  
+  // Text Colors
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-accent: #ff6b6b;
+  
+  // Neobrutalism Accents
+  --accent-primary: #ff6b6b;    // Vibrant red
+  --accent-secondary: #4ecdc4;  // Turquoise
+  --accent-warning: #ffe66d;    // Bright yellow
+  --accent-success: #51cf66;   // Bright green
+  
+  // Glassmorphism
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(20px);
+}
+
+// Light Mode Alternative
+:root[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-accent: #e63946;
+  
+  // Stronger contrasts for light mode
+  --accent-primary: #d63384;
+  --accent-secondary: #20c997;
+  --accent-warning: #ffc107;
+  --accent-success: #198754;
+}
+```
+
+### タイポグラフィシステム
+
+```scss
+// Bold Typography Implementation
+.typography-system {
+  // Primary Headers - Brutalist Style
+  --font-display: 'Inter Variable', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  
+  // Size Scale (Major Third - 1.25)
+  --text-xs: 0.75rem;      // 12px
+  --text-sm: 0.875rem;     // 14px
+  --text-base: 1rem;       // 16px
+  --text-lg: 1.25rem;      // 20px
+  --text-xl: 1.5rem;       // 24px
+  --text-2xl: 2rem;        // 32px
+  --text-3xl: 2.5rem;      // 40px
+  --text-4xl: 3.5rem;      // 56px - Hero sizes
+  
+  // Weight Scale
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-black: 900;       // For brutalist headers
+}
+
+// Hero Typography
+.hero-text {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--font-black);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+// Accent Typography
+.accent-text {
+  font-weight: var(--font-bold);
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 ```
 
 ---
 
-## Kawaiiデザインシステム
+## Glassmorphism 統合
 
-### カラーパレット
+### Core Implementation
 
-#### プライマリカラー（Kawaiiテーマ）
-```css
-/* かわいいピンク系 */
---kawaii-pink: #FFB6C1;
---kawaii-pink-light: #FFCCCB;
---kawaii-pink-dark: #FF69B4;
---pink-400: #EC4899;
---pink-500: #D946EF;
---pink-50: #FDF2F8;
---pink-100: #FCE7F3;
---pink-200: #FBCFE8;
+```scss
+// Glassmorphism Base Classes
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
 
-/* かわいいパープル系 */
---kawaii-purple: #DDA0DD;
---kawaii-lavender: #E6E6FA;
---purple-400: #A855F7;
---purple-500: #9333EA;
---purple-50: #FAF5FF;
---purple-100: #F3E8FF;
---purple-200: #E9D5FF;
+.glass-navigation {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-/* Kawaiiグラデーション */
---kawaii-gradient: linear-gradient(135deg, #FFB6C1, #DDA0DD, #87CEEB);
---gradient-primary: linear-gradient(to right, #EC4899, #A855F7);
---gradient-bg: linear-gradient(to bottom right, #FDF2F8, #FAF5FF, #EFF6FF);
+.glass-modal {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 ```
 
-#### 温度カラー（関係性表現）
-```css
---kawaii-hot: #FF69B4;      /* 高温 (75-100%) */
---kawaii-warm: #FFB6C1;     /* 中温 (40-74%) */
---kawaii-cool: #87CEEB;     /* 低温 (0-39%) */
-```
+### Component Applications
 
-#### Kawaiiアクセントカラー
-```css
---kawaii-cream: #FFF8DC;
---kawaii-soft: #F5F5DC;
---kawaii-glow: #FFE4E1;
---kawaii-mint: #F0FFF0;
---kawaii-sky: #E0F6FF;
---kawaii-peach: #FFCCCB;
-```
-
-### タイポグラフィ
-```css
-/* フォントファミリー */
---font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
-
-/* フォントサイズ */
---text-xs: 0.75rem;    /* 12px */
---text-sm: 0.875rem;   /* 14px */
---text-base: 1rem;     /* 16px */
---text-lg: 1.125rem;   /* 18px */
---text-xl: 1.25rem;    /* 20px */
---text-2xl: 1.5rem;    /* 24px */
---text-3xl: 1.875rem;  /* 30px */
---text-4xl: 2.25rem;   /* 36px */
-```
-
-### スペーシング
-```css
---space-1: 0.25rem;    /* 4px */
---space-2: 0.5rem;     /* 8px */
---space-3: 0.75rem;    /* 12px */
---space-4: 1rem;       /* 16px */
---space-6: 1.5rem;     /* 24px */
---space-8: 2rem;       /* 32px */
---space-12: 3rem;      /* 48px */
-```
-
-### 角丸＆シャドウ
-```css
-/* 角丸 */
---radius-sm: 0.25rem;    /* 4px */
---radius-base: 0.5rem;   /* 8px */
---radius-lg: 1rem;       /* 16px */
---radius-xl: 1.5rem;     /* 24px */
---radius-full: 9999px;   /* 完全な円 */
-
-/* Kawaiiシャドウ */
---shadow-kawaii: 0 4px 8px 0 rgba(255, 182, 193, 0.2);
---shadow-glow: 0 0 20px rgba(255, 182, 193, 0.3);
---shadow-magical: 0 8px 25px rgba(221, 160, 221, 0.4);
-```
+1. **Navigation Bar**: グラスモーフィズムで背景に溶け込む
+2. **Modal Overlays**: 深い奥行きと透明感
+3. **Card Components**: データカードに軽やかな透明感
+4. **Floating Actions**: アクションボタンの視覚的分離
 
 ---
 
-## データ構造
+## AI Aesthetic デザイン
 
-### TypeScript型定義
-```typescript
-export interface Connection {
-  id: string;
-  user_id: string;
-  nickname: string;
-  platform: string;
-  current_stage: ConnectionStage;
-  basic_info: BasicInfo;
-  communication: CommunicationInfo;
-  user_feelings: UserFeelings;
-  created_at: string;
-  updated_at: string;
+### Design Principles
+
+```scss
+// AI-Inspired Design Elements
+.ai-container {
+  // Clean, technical lines
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px; // Less rounded than kawaii
+  
+  // Data visualization aesthetics
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 107, 107, 0.1) 0%, 
+    rgba(78, 205, 196, 0.1) 100%
+  );
+  
+  // Technical grid overlay
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0);
+  background-size: 20px 20px;
 }
 
-export type ConnectionStage = 
-  | 'just_matched'
-  | 'messaging'
-  | 'line_exchanged'
-  | 'before_date'
-  | 'after_date'
-  | 'dating'
-  | 'stagnant'
-  | 'ended';
+// Progress indicators with AI feel
+.ai-progress {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      var(--accent-primary) 0%, 
+      var(--accent-secondary) 100%
+    );
+    transform: translateX(-100%);
+    animation: ai-progress 2s ease-in-out infinite;
+  }
+}
 
-export interface DashboardData {
-  connections: Connection[];
-  totalConnections: number;
-  activeConnections: number;
-  averageScore: number;
-  recommendedActions: RecommendedAction[];
-  bestConnection: Connection | null;
+@keyframes ai-progress {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
 }
 ```
+
+### AI-Driven UI Elements
+
+1. **Predictive Input Fields**: ユーザー入力予測機能
+2. **Smart Suggestions**: AIによる動的提案表示
+3. **Data Visualization**: スコアとメトリクスの美しい可視化
+4. **Progressive Loading**: AI処理状況の直感的表示
+
+---
+
+## マイクロインタラクション
+
+### Core Micro-interactions
+
+```scss
+// Purposeful Hover States
+.interactive-element {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    transition-duration: 0.1s;
+  }
+}
+
+// Button Interactions
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+// Loading States
+.loading-indicator {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--accent-primary);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+### Feedback Systems
+
+1. **Instant Visual Feedback**: ボタンクリック、フォーム送信
+2. **Progress Indication**: 長時間処理の進捗表示
+3. **Success/Error States**: 明確な結果フィードバック
+4. **Contextual Hints**: ユーザーガイダンス機能
+
+---
+
+## ダークモードファースト
+
+### Implementation Strategy
+
+```scss
+// Base dark theme (default)
+:root {
+  color-scheme: dark;
+  
+  // Core system colors
+  --system-bg: #0a0a0a;
+  --system-surface: #1a1a1a;
+  --system-border: rgba(255, 255, 255, 0.1);
+  
+  // Content colors
+  --content-primary: #ffffff;
+  --content-secondary: #a0a0a0;
+  --content-disabled: #404040;
+  
+  // Interactive colors
+  --interactive-primary: #ff6b6b;
+  --interactive-hover: #ff5252;
+  --interactive-active: #ff3838;
+}
+
+// Light theme override
+[data-theme="light"] {
+  color-scheme: light;
+  
+  --system-bg: #ffffff;
+  --system-surface: #f8f9fa;
+  --system-border: rgba(0, 0, 0, 0.1);
+  
+  --content-primary: #212529;
+  --content-secondary: #6c757d;
+  --content-disabled: #adb5bd;
+  
+  --interactive-primary: #e63946;
+  --interactive-hover: #d62d20;
+  --interactive-active: #b02a37;
+}
+```
+
+### Benefits Implementation
+
+1. **Eye Strain Reduction**: 長時間使用での疲労軽減
+2. **Battery Efficiency**: OLED画面での消費電力削減
+3. **Focus Enhancement**: テキスト重要コンテンツでの集中力向上
+4. **Modern Aesthetic**: 2024年のトレンドに合致
+
+---
+
+## Spatial Design & 3D要素
+
+### 3D Card System
+
+```scss
+// 3D Interactive Cards
+.card-3d {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  
+  .card-inner {
+    transition: transform 0.3s;
+    transform-style: preserve-3d;
+    
+    &:hover {
+      transform: rotateX(5deg) rotateY(10deg) scale(1.02);
+    }
+  }
+  
+  .card-shadow {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 90%;
+    height: 20px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.2), transparent);
+    transform: translateX(-50%) translateZ(-20px);
+    transition: all 0.3s;
+  }
+  
+  &:hover .card-shadow {
+    transform: translateX(-50%) translateZ(-20px) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+// Depth Layers
+.layer-system {
+  --layer-base: 0;
+  --layer-raised: 10px;
+  --layer-floating: 20px;
+  --layer-modal: 30px;
+  --layer-tooltip: 40px;
+}
+```
+
+### Interactive Elements
+
+1. **Parallax Scrolling**: 深度感のあるスクロール体験
+2. **Layered Information**: 情報の階層的表示
+3. **Interactive 3D Cards**: ホバーで立体的に動くカード
+4. **Spatial Navigation**: 3D空間での直感的操作
 
 ---
 
 ## コンポーネント仕様
 
-### React Icons使用ガイドライン
-すべての視覚的アイコンは、アクセシビリティと一貫性向上のため、絵文字の代わりにReact Iconsを使用する：
+### Primary Button
 
-```typescript
-import { 
-  Heart, 
-  Users, 
-  TrendingUp, 
-  Star, 
-  Plus, 
-  Sparkles,
-  Home,
-  Thermometer,
-  Download,
-  Bot,
-  Settings
-} from 'lucide-react';
-
-// 代替アイコンライブラリ
-import { 
-  FaHeart, 
-  FaUsers, 
-  FaChartLine 
-} from 'react-icons/fa';
-import { 
-  AiOutlineHeart, 
-  AiOutlineUser 
-} from 'react-icons/ai';
-```
-
-### ボトムナビゲーションタブ
-```typescript
-const tabs = [
-  { id: 'dashboard', icon: Home, label: 'ホーム' },
-  { id: 'temperature', icon: Thermometer, label: '温度' },
-  { id: 'import', icon: Download, label: 'インポート' },
-  { id: 'ai', icon: Bot, label: 'AI分析' },
-  { id: 'settings', icon: Settings, label: '設定' }
-];
-```
-
-### コネクションカードコンポーネント（Kawaii版）
-```typescript
-const ConnectionCard: React.FC<ConnectionCardProps> = ({
-  connection,
-  onEdit,
-  onDelete,
-  onGeneratePrompt
-}) => {
-  const score = calculateRelationshipScore(connection);
-  const progressWidth = getStageProgress(connection.current_stage);
-  
-  return (
-    <div className="kawaii-card hover-bounce group animate-bounceIn relative overflow-hidden">
-      {/* Header with icon */}
-      <div className="flex justify-between items-start mb-6 relative z-10">
-        <div className="min-w-0 flex-1 mr-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Heart className="w-5 h-5 text-kawaii-pink animate-heartbeat" />
-            <h3 className="text-2xl font-bold kawaii-gradient-text truncate animate-float">
-              {connection.nickname}
-            </h3>
-          </div>
-        </div>
-      </div>
-      
-      {/* Kawaii progress bar */}
-      <div className="mb-6">
-        <div className="w-full bg-kawaii-cream rounded-full h-4 shadow-kawaii relative overflow-hidden">
-          <div 
-            className="kawaii-gradient h-4 rounded-full transition-all duration-700 animate-kawaii-pulse"
-            style={{ width: `${progressWidth}%` }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-```
-
-### ボタンコンポーネント（Kawaii版）
-```typescript
-export interface ButtonProps {
-  variant?: 'kawaii' | 'magical' | 'soft' | 'romantic';
-  size?: 'sm' | 'base' | 'lg';
+```tsx
+// Modern Button Component
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'ghost' | 'brutal';
+  size: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
+  icon?: React.ComponentType;
   children: React.ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-  className?: string;
-  type?: 'button' | 'submit' | 'reset';
-  icon?: React.ComponentType<{ className?: string }>;
-  iconPosition?: 'left' | 'right';
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  variant = 'kawaii',
-  size = 'base',
-  children,
-  onClick,
-  disabled = false,
-  className = '',
-  type = 'button',
+const Button: React.FC<ButtonProps> = ({ 
+  variant = 'primary', 
+  size = 'md', 
+  isLoading = false,
   icon: Icon,
-  iconPosition = 'left'
+  children,
+  ...props 
 }) => {
   return (
     <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`btn-${variant} btn-${size} ${className}`}
-    >
-      {Icon && iconPosition === 'left' && (
-        <Icon className="w-4 h-4" />
+      className={cn(
+        'btn-base',
+        `btn-${variant}`,
+        `btn-${size}`,
+        isLoading && 'btn-loading'
       )}
-      {children}
-      {Icon && iconPosition === 'right' && (
-        <Icon className="w-4 h-4" />
+      disabled={isLoading}
+      {...props}
+    >
+      {isLoading ? (
+        <LoadingSpinner size="sm" />
+      ) : (
+        <>
+          {Icon && <Icon className="btn-icon" />}
+          {children}
+        </>
       )}
     </button>
   );
 };
 ```
 
----
+### Glass Card Component
 
-## 画面実装仕様
-
-### ダッシュボード画面
-
-#### 空状態画面（Kawaii版）
-```typescript
-const EmptyDashboard = () => (
-  <div className="min-h-screen kawaii-gradient flex items-center justify-center p-4">
-    <div className="kawaii-card max-w-2xl mx-auto text-center py-16 animate-bounceIn relative overflow-hidden">
-      {/* メインアイコン */}
-      <div className="w-32 h-32 mx-auto mb-8 rounded-full kawaii-soft flex items-center justify-center animate-kawaii-pulse relative">
-        <Heart className="w-16 h-16 text-kawaii-pink animate-heartbeat" />
-      </div>
-      
-      <h3 className="text-4xl font-bold kawaii-gradient-text mb-6 animate-float">
-        恋愛の旅を始めましょう
-      </h3>
-      
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button
-          variant="kawaii"
-          size="lg"
-          icon={Plus}
-          className="animate-kawaii-pulse"
-        >
-          手動で追加
-        </Button>
-        <Button
-          variant="magical"
-          size="lg"
-          icon={Download}
-          className="animate-kawaii-pulse"
-        >
-          AI一括インポート
-        </Button>
-      </div>
-    </div>
-  </div>
-);
-```
-
-#### メインダッシュボード（Kawaii版）
-```typescript
-const Dashboard = () => (
-  <div className="space-y-8 py-8">
-    {/* ヘッダー */}
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-      <div className="space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-extrabold kawaii-gradient-text animate-float">
-          恋愛ダッシュボード
-        </h1>
-        <p className="text-gray-700 text-lg font-medium">
-          AIによる恋愛インサイト
-        </p>
-      </div>
-      
-      <div className="flex gap-3">
-        <Button
-          variant="kawaii"
-          onClick={handleAddConnection}
-          icon={Plus}
-        >
-          <span className="hidden sm:inline">手動で追加</span>
-        </Button>
-        <Button
-          variant="magical"
-          onClick={() => setShowDataImportModal(true)}
-          icon={Download}
-        >
-          <span className="hidden sm:inline">AIインポート</span>
-        </Button>
-      </div>
-    </div>
-
-    {/* 統計サマリー */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <Card variant="kawaii" hover className="animate-bounceIn">
-        <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl kawaii-soft flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-            <Users className="w-8 h-8 text-kawaii-pink" />
-          </div>
-          <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold kawaii-gradient-text">コネクション</p>
-            <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold kawaii-glow">
-                {dashboardData.totalConnections}
-              </p>
-              <p className="ml-2 text-sm text-kawaii-pink font-medium">人</p>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      <Card variant="magical" hover className="animate-bounceIn">
-        <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl bg-purple-100 flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-            <TrendingUp className="w-8 h-8 text-purple-500" />
-          </div>
-          <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold kawaii-gradient-text">アクティブ</p>
-            <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold kawaii-glow">
-                {dashboardData.activeConnections}
-              </p>
-              <p className="ml-2 text-sm text-purple-400 font-medium">関係</p>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      <Card variant="soft" hover className="animate-bounceIn">
-        <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl bg-yellow-100 flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-            <Star className="w-8 h-8 text-yellow-500" />
-          </div>
-          <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold kawaii-gradient-text">平均スコア</p>
-            <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold kawaii-glow">
-                {dashboardData.averageScore || 0}
-              </p>
-              <p className="ml-2 text-sm text-yellow-400 font-medium">ポイント</p>
-            </div>
-          </div>
-        </div>
-      </Card>
-
-      <Card variant="romantic" hover className="animate-bounceIn">
-        <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl bg-green-100 flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-            <Heart className="w-8 h-8 text-green-500" />
-          </div>
-          <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold kawaii-gradient-text">ベストマッチ</p>
-            <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold kawaii-glow">
-                {dashboardData.bestConnection ? '見つかりました' : 'なし'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </div>
-  </div>
-);
-```
-
----
-
-## アニメーション詳細
-
-### Kawaiiアニメーション定義
-```css
-/* かわいい入場アニメーション */
-@keyframes bounceIn {
-  0% {
-    transform: scale(0.3) translateY(-50px);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.05) translateY(-10px);
-    opacity: 0.8;
-  }
-  70% {
-    transform: scale(0.98) translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
+```tsx
+// Glassmorphism Card Component
+interface GlassCardProps {
+  variant: 'subtle' | 'prominent' | 'modal';
+  blur?: 'light' | 'medium' | 'heavy';
+  children: React.ReactNode;
+  className?: string;
 }
 
-/* ふわふわ浮遊 */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-
-/* ハートビート */
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-/* かわいいパルス */
-@keyframes kawaii-pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(255, 182, 193, 0.6);
-  }
-}
-
-/* ホバー弾む */
-@keyframes hover-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-```
-
-### Kawaiiアニメーション使用ガイドライン
-```css
-/* 基本使用法 */
-.animate-bounceIn { animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
-.animate-kawaii-pulse { animation: kawaii-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-
-/* ホバーエフェクト */
-.hover-bounce {
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-.hover-bounce:hover {
-  animation: hover-bounce 0.6s ease-in-out;
-  transform: scale(1.02);
-  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
-}
-
-/* Kawaiiスタイルクラス */
-.kawaii-card {
-  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
-  border-radius: 24px;
-  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2);
-}
-
-.kawaii-gradient-text {
-  background: linear-gradient(135deg, #FF69B4, #DDA0DD);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.kawaii-glow {
-  text-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
-}
-```
-
----
-
-## エラー・空状態仕様
-
-### エラー状態コンポーネント
-```typescript
-const ErrorState: React.FC<ErrorStateProps> = ({
-  title = "ちょっとした問題が発生しました",
-  message,
-  onRetry,
-  type = 'error'
+const GlassCard: React.FC<GlassCardProps> = ({
+  variant = 'subtle',
+  blur = 'medium',
+  children,
+  className
 }) => {
-  const getIcon = () => {
-    switch (type) {
-      case 'error': return AlertCircle;
-      case 'warning': return AlertTriangle;
-      case 'info': return Info;
-      default: return AlertCircle;
-    }
-  };
-
-  const Icon = getIcon();
-
   return (
-    <div className="kawaii-card max-w-md mx-auto text-center py-12 animate-bounceIn">
-      <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-red-50 flex items-center justify-center">
-        <Icon className="w-10 h-10 text-red-500" />
-      </div>
-      
-      <h3 className="text-2xl font-bold kawaii-gradient-text mb-4">{title}</h3>
-      
-      {message && (
-        <p className="text-red-600 mb-8 leading-relaxed font-medium">{message}</p>
+    <div
+      className={cn(
+        'glass-card',
+        `glass-${variant}`,
+        `glass-blur-${blur}`,
+        className
       )}
-      
-      {onRetry && (
-        <Button
-          variant="kawaii"
-          size="lg"
-          onClick={onRetry}
-          icon={RefreshCw}
-        >
-          もう一度試す
-        </Button>
-      )}
+    >
+      {children}
     </div>
   );
 };
 ```
 
-### 読み込み状態コンポーネント
-```typescript
-const LoadingState: React.FC<LoadingStateProps> = ({
-  message = "恋愛コネクションを分析中...",
-  submessage = "あなたの理想のマッチを見つけています"
-}) => (
-  <div className="min-h-screen kawaii-gradient flex items-center justify-center">
-    <div className="text-center space-y-6 animate-bounceIn">
-      <div className="relative">
-        <div className="mx-auto w-20 h-20 rounded-full border-4 border-kawaii-pink border-t-kawaii-pink-dark animate-spin" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Heart className="w-8 h-8 text-kawaii-pink animate-heartbeat" />
+### AI Progress Indicator
+
+```tsx
+// AI-Style Progress Component
+interface AIProgressProps {
+  progress: number; // 0-100
+  label?: string;
+  showPercentage?: boolean;
+  color?: 'primary' | 'secondary' | 'success' | 'warning';
+}
+
+const AIProgress: React.FC<AIProgressProps> = ({
+  progress,
+  label,
+  showPercentage = true,
+  color = 'primary'
+}) => {
+  return (
+    <div className="ai-progress-container">
+      {label && (
+        <div className="ai-progress-header">
+          <span className="ai-progress-label">{label}</span>
+          {showPercentage && (
+            <span className="ai-progress-percentage">{progress}%</span>
+          )}
         </div>
-      </div>
-      <div className="space-y-2">
-        <p className="text-xl font-bold kawaii-gradient-text animate-kawaii-pulse">
-          {message}
-        </p>
-        <p className="text-kawaii-pink font-medium flex items-center justify-center gap-2">
-          <Sparkles className="w-4 h-4" />
-          {submessage}
-          <Sparkles className="w-4 h-4" />
-        </p>
+      )}
+      <div className="ai-progress-track">
+        <div 
+          className={`ai-progress-fill ai-progress-${color}`}
+          style={{ width: `${progress}%` }}
+        />
       </div>
     </div>
-  </div>
-);
+  );
+};
 ```
 
 ---
 
-## 実装順序
+## 実装ガイドライン
 
-### フェーズ1: 基盤セットアップ（1-2週間）
-1. **プロジェクト初期設定**
-   - Next.js 14 + TypeScript環境
-   - Tailwind CSS + カスタムCSS設定
-   - ESLint + Prettier設定
+### CSS Architecture
 
-2. **Kawaiiデザインシステム実装**
-   - CSS変数定義
-   - アニメーション定義
-   - ユーティリティクラス作成
+```scss
+// Utility-First with Component Architecture
+@layer base, components, utilities;
 
-3. **基本型定義**
-   - TypeScript型定義
-   - 基本インターフェース定義
+@layer base {
+  // CSS Reset and base styles
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  html {
+    color-scheme: dark light;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background: var(--system-bg);
+    color: var(--content-primary);
+    line-height: 1.5;
+  }
+}
 
-### フェーズ2: コアコンポーネント（2-3週間）
-1. **レイアウトコンポーネント**
-   - RootLayout
-   - BottomBar
-   - Container
+@layer components {
+  // Component-specific styles
+  .btn-base {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: var(--font-semibold);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    
+    &:focus-visible {
+      outline: 2px solid var(--interactive-primary);
+      outline-offset: 2px;
+    }
+  }
+  
+  .btn-primary {
+    background: var(--interactive-primary);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background: var(--interactive-hover);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  .btn-brutal {
+    background: var(--accent-primary);
+    color: black;
+    font-weight: var(--font-black);
+    text-transform: uppercase;
+    border: 3px solid black;
+    box-shadow: 4px 4px 0px black;
+    
+    &:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px black;
+    }
+    
+    &:active {
+      transform: translate(0, 0);
+      box-shadow: 2px 2px 0px black;
+    }
+  }
+}
 
-2. **基本UIコンポーネント**
-   - Buttonバリアント
-   - Cardバリアント
-   - Inputバリアント
-   - Modalベース
+@layer utilities {
+  // Utility classes for rapid development
+  .glass-subtle { backdrop-filter: blur(10px); }
+  .glass-medium { backdrop-filter: blur(20px); }
+  .glass-heavy { backdrop-filter: blur(40px); }
+  
+  .text-gradient {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+```
 
-### フェーズ3: メイン機能（3-4週間）
-1. **ダッシュボード**
-   - Dashboard.tsx
-   - 統計サマリー
-   - 空・エラー状態
+### Accessibility Implementation
 
-2. **コネクション管理**
-   - ConnectionCard.tsx
-   - ConnectionForm.tsx
-   - CRUD操作
+```tsx
+// Accessibility-First Component Pattern
+const AccessibleButton: React.FC<ButtonProps> = ({ 
+  children, 
+  onClick, 
+  disabled,
+  ariaLabel,
+  ...props 
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      aria-disabled={disabled}
+      // High contrast focus indicator
+      className="focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-bg-primary"
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
 
-3. **データインポート**
-   - DataImportModal.tsx
-   - 5ステップウィザード
-   - AI統合プロンプト
+// Screen reader optimizations
+const ScreenReaderText: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span className="sr-only">{children}</span>
+);
+```
+
+### Performance Optimization
+
+```tsx
+// Lazy loading with Suspense
+const LazyDashboard = lazy(() => import('./components/Dashboard'));
+const LazySettings = lazy(() => import('./components/Settings'));
+
+// Component-level code splitting
+const App: React.FC = () => {
+  return (
+    <Suspense fallback={<AILoadingSpinner />}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LazyDashboard />} />
+          <Route path="/settings" element={<LazySettings />} />
+        </Routes>
+      </Router>
+    </Suspense>
+  );
+};
+
+// Image optimization
+const OptimizedImage: React.FC<ImageProps> = ({ src, alt, ...props }) => {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      {...props}
+    />
+  );
+};
+```
 
 ---
 
 ## 検証チェックリスト
 
-### デザイン & UI
-- [ ] Kawaiiデザインコンセプトの一貫性
-- [ ] 絵文字の代わりにReact Iconsの適切な使用
-- [ ] レスポンシブデザイン（モバイル、タブレット、デスクトップ）
-- [ ] 一貫したカラーパレットの使用
-- [ ] 適切なタイポグラフィ階層
-- [ ] スムーズなアニメーションとトランジション
+### ✅ Design Implementation Checklist
 
-### 機能性
-- [ ] すべてのナビゲーションフローが正しく動作
-- [ ] フォームバリデーションとエラーハンドリング
-- [ ] すべての非同期操作の読み込み状態
-- [ ] すべてのデータコレクションの空状態
-- [ ] 適切なエラー復旧メカニズム
+#### Neobrutalism + Minimalism
+- [ ] Bold, uppercase typography implemented
+- [ ] High contrast color scheme active
+- [ ] Asymmetric layouts where appropriate
+- [ ] Raw, authentic aesthetic maintained
+- [ ] Minimal, functional approach confirmed
 
-### パフォーマンス
-- [ ] ページ読み込み時間 < 3秒
-- [ ] 60fpsのスムーズなアニメーション
-- [ ] 最適化された画像とアセット
-- [ ] 適切なコード分割
-- [ ] 効率的なバンドルサイズ
+#### Glassmorphism
+- [ ] Backdrop-filter support verified
+- [ ] Transparency hierarchy established
+- [ ] Blur effects optimized for performance
+- [ ] Cross-browser compatibility tested
 
-### アクセシビリティ
-- [ ] 適切なARIAラベル
-- [ ] キーボードナビゲーションサポート
-- [ ] スクリーンリーダー互換性
-- [ ] カラーコントラスト準拠（WCAG AA）
-- [ ] フォーカス管理
+#### Dark Mode First
+- [ ] Dark theme as default implemented
+- [ ] Light mode toggle functional
+- [ ] Color scheme respects user preferences
+- [ ] OLED-optimized pure blacks used
 
-### テスト
-- [ ] すべてのコンポーネントの単体テスト
-- [ ] メインフローの統合テスト
-- [ ] クリティカルパスのE2Eテスト
-- [ ] クロスブラウザ互換性
-- [ ] モバイルデバイステスト
+#### AI Aesthetic
+- [ ] Clean, technical design language
+- [ ] Data visualization components
+- [ ] Progressive disclosure patterns
+- [ ] Predictive UI elements
+
+#### Micro-interactions
+- [ ] Hover states responsive
+- [ ] Loading states informative
+- [ ] Transition timing optimized
+- [ ] Feedback mechanisms clear
+
+#### Accessibility
+- [ ] WCAG 2.1 AA compliance
+- [ ] Screen reader compatibility
+- [ ] Keyboard navigation complete
+- [ ] Focus indicators visible
+- [ ] Color contrast ratios verified
+
+#### Performance
+- [ ] Bundle size optimized
+- [ ] Lazy loading implemented
+- [ ] Image optimization active
+- [ ] CSS-in-JS performance verified
+- [ ] Core Web Vitals passing
 
 ---
 
-## 実装のための注意事項
-
-### React Icons移行
-- すべての絵文字使用を適切なReact Iconsに置き換える
-- 一貫したアイコンサイズの使用（インライン: w-4 h-4、ボタン: w-5 h-5、表示: w-8 h-8）
-- アイコン選択時のセマンティック意味の維持
-- アイコンの適切なアクセシビリティラベルの確保
-
-### Kawaiiデザインシステム使用
-- 確立されたカラー変数に従う
-- 一貫したスペーシングとタイポグラフィの使用
-- アニメーションの思慮深い適用（過度ではなく）
-- 温かみを保ちながらかわいいプロフェッショナルな外観の維持
-
-### パフォーマンス考慮事項
-- 適切な場所でのコンポーネント遅延読み込み
-- バンドルサイズ削減のためのアイコンインポート最適化
-- 動的テーマのためのCSS変数使用
-- 適切な読み込み・エラー状態の実装
+この設計ガイドは、実証された2024-2025年のUIトレンドに基づいて作成されており、Miruの恋愛オーケストレーションシステムを最先端のモダンデザインへと完全に変貌させます。
