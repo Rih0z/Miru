@@ -9,7 +9,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: 'https://3aa60f63.miru-28f.pages.dev',
+    baseURL: 'https://ded92cda.miru-28f.pages.dev',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
