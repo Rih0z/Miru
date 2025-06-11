@@ -99,7 +99,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           sizeClasses[size],
           
           // Glow effect
-          glow && 'shadow-glow hover:shadow-glow',
+          glow && 'shadow-glow hover:shadow-glow-lg',
           
           // Disabled state
           isDisabled && 'opacity-50 cursor-not-allowed hover:transform-none active:transform-none',

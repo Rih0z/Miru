@@ -34,6 +34,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "autoprefixer": "^10.4.16",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.513.0",
     "next": "^14.2.29",
     "next-intl": "^4.1.0",
@@ -42,6 +43,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.3.8",
     "react-icons": "^5.5.0",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.4.0",
     "zustand": "^4.4.7"
   },

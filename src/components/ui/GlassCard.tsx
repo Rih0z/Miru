@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'subtle' | 'default' | 'prominent' | 'floating'
   blur?: 'light' | 'medium' | 'heavy'
-  hover?: boolean
+  hover?: 'default' | 'spotlight' | 'none' | boolean
   children: React.ReactNode
 }
 
@@ -15,7 +15,7 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
     className,
     variant = 'default',
     blur = 'medium',
-    hover = true,
+    hover = 'default',
     children,
     ...props
   }, ref) => {
@@ -40,7 +40,8 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
           'transition-all duration-normal',
           variantClasses[variant],
           blurClasses[blur],
-          hover && 'hover:shadow-lg hover:bg-glass-15 hover:-translate-y-0.5',
+          (hover === true || hover === 'default') && 'hover:shadow-lg hover:bg-glass-15 hover:-translate-y-0.5',
+          hover === 'spotlight' && 'hover:shadow-xl hover:bg-glass-20 hover:scale-105 hover:-translate-y-1',
           'p-6',
           className
         )}

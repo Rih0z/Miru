@@ -158,7 +158,7 @@ export function Dashboard({ userId }: DashboardProps) {
         message="恋愛コネクションを分析中..."
         submessage="あなたの理想のマッチを見つけています"
         variant="ai"
-        size="lg"
+        
       />
     )
   }
@@ -180,7 +180,7 @@ export function Dashboard({ userId }: DashboardProps) {
       <EmptyState
         title="恋愛の旅を始めましょう"
         description="MiruがAIの力で素晴らしいコネクションを発見し、意味のある関係を築くお手伝いをします"
-        icon={Heart}
+        
         primaryAction={{
           label: "手動で追加",
           onClick: handleAddConnection,
@@ -228,18 +228,17 @@ export function Dashboard({ userId }: DashboardProps) {
             <RippleButton
               variant="primary"
               onClick={handleAddConnection}
-              icon={Plus}
-              className="animate-slide-right"
+              className="animate-slide-right flex items-center gap-2"
             >
+              <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">手動で追加</span>
             </RippleButton>
             <Button
               variant="secondary"
               onClick={() => setShowDataImportModal(true)}
-              icon={Download}
-              className="animate-slide-right"
-              glow
+              className="animate-slide-right flex items-center gap-2"
             >
+              <Download className="w-4 h-4" />
               <span className="hidden sm:inline">AIインポート</span>
             </Button>
           </div>
@@ -258,7 +257,7 @@ export function Dashboard({ userId }: DashboardProps) {
           onMouseEnter={() => setActiveStatCard(0)}
           onMouseLeave={() => setActiveStatCard(null)}
         >
-          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+          <GlassCard variant="prominent" hover={true} className="h-full">
             <div className="flex items-center p-6">
               <div className="w-16 h-16 rounded-2xl bg-accent-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Users className="w-8 h-8 text-accent-primary" />
@@ -287,7 +286,7 @@ export function Dashboard({ userId }: DashboardProps) {
           onMouseEnter={() => setActiveStatCard(1)}
           onMouseLeave={() => setActiveStatCard(null)}
         >
-          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+          <GlassCard variant="prominent" hover={true} className="h-full">
             <div className="flex items-center p-6">
               <div className="w-16 h-16 rounded-2xl bg-accent-success/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Activity className="w-8 h-8 text-accent-success" />
@@ -316,7 +315,7 @@ export function Dashboard({ userId }: DashboardProps) {
           onMouseEnter={() => setActiveStatCard(2)}
           onMouseLeave={() => setActiveStatCard(null)}
         >
-          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+          <GlassCard variant="prominent" hover={true} className="h-full">
             <div className="flex items-center p-6">
               <div className="w-16 h-16 rounded-2xl bg-accent-warning/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-accent-warning" />
@@ -345,7 +344,7 @@ export function Dashboard({ userId }: DashboardProps) {
           onMouseEnter={() => setActiveStatCard(3)}
           onMouseLeave={() => setActiveStatCard(null)}
         >
-          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+          <GlassCard variant="prominent" hover={true} className="h-full">
             <div className="flex items-center p-6">
               <div className="w-16 h-16 rounded-2xl bg-accent-secondary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Heart className="w-8 h-8 text-accent-secondary" />
@@ -366,7 +365,7 @@ export function Dashboard({ userId }: DashboardProps) {
       {/* Best Connection */}
       {dashboardData.bestConnection && (
         <Spatial3DCard depth="deep" rotateOnHover floatAnimation className="animate-slide-up">
-          <GlassCard variant="featured" blur="heavy" className="relative overflow-hidden">
+          <GlassCard variant="prominent" blur="heavy" className="relative overflow-hidden">
             <div className="flex items-center gap-3 mb-6 p-6 pb-0">
               <div className="w-3 h-3 bg-ai-gradient rounded-full animate-pulse"></div>
               <h2 className="text-xl font-bold ai-text-gradient">
@@ -428,7 +427,7 @@ export function Dashboard({ userId }: DashboardProps) {
         onClose={handleFormCancel}
         title={editingConnection ? `${editingConnection.nickname}を編集` : '新しいコネクションを追加'}
         variant="glass"
-        size="lg"
+        
         className="max-h-[80vh] overflow-y-auto"
       >
         <ConnectionForm

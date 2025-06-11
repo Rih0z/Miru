@@ -110,9 +110,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {primaryAction && (
             <Button
               variant={variant === 'brutal' ? 'brutal' : 'primary'}
-              size="lg"
               onClick={primaryAction.onClick}
-              icon={primaryAction.icon || <Plus className="w-5 h-5" />}
               glow={variant === '3d'}
             >
               {primaryAction.label}
@@ -122,9 +120,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {secondaryAction && (
             <Button
               variant="secondary"
-              size="lg"
               onClick={secondaryAction.onClick}
-              icon={secondaryAction.icon || <Download className="w-5 h-5" />}
             >
               {secondaryAction.label}
             </Button>
@@ -207,7 +203,7 @@ export const ConnectionsEmptyState: React.FC<Omit<EmptyStateProps, 'variant' | '
 export const Error404EmptyState: React.FC<Omit<EmptyStateProps, 'variant' | 'icon'>> = (props) => (
   <EmptyState
     variant="brutal"
-    icon={<div className="text-6xl font-black">404</div>}
+    icon={Download}
     title="ページが見つかりません"
     description="お探しのページは存在しないか、移動した可能性があります"
     {...props}

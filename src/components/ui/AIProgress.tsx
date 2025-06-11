@@ -169,7 +169,7 @@ export const AIStatusBadge: React.FC<{
       <span className={cn(
         'text-lg',
         config.color,
-        config.animate && 'animate-spin'
+        'animate' in config && config.animate && 'animate-spin'
       )}>
         {config.icon}
       </span>
@@ -219,3 +219,6 @@ export const AIMetricCard: React.FC<{
     </div>
   )
 }
+
+// AIProgressBar alias for AIProgress
+export const AIProgressBar = AIProgress

@@ -230,7 +230,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
       isOpen={isOpen}
       onClose={onClose}
       variant="glass"
-      size="md"
+      
       closeOnBackdrop={!isLoading}
       closeOnEscape={!isLoading}
     >
@@ -252,7 +252,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
 
         {/* Error State */}
         {error && (
-          <GlassCard variant="danger" className="border border-accent-error/20">
+          <GlassCard variant="prominent" className="border border-accent-error/20">
             <div className="flex items-start gap-3 p-4">
               <div className="w-8 h-8 rounded-xl bg-accent-error/10 flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-4 h-4 text-accent-error" />
@@ -278,7 +278,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
 
         {/* Success State */}
         {message && (
-          <GlassCard variant="success" className="border border-accent-success/20">
+          <GlassCard variant="prominent" className="border border-accent-success/20">
             <div className="flex items-center gap-3 p-4">
               <div className="w-8 h-8 rounded-xl bg-accent-success/10 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4 text-accent-success" />
@@ -383,10 +383,7 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
             type="submit"
             disabled={isLoading}
             variant="primary"
-            size="lg"
-            className="w-full min-h-[48px]"
-            glow
-            icon={isLoading ? <LoadingSpinner size="sm" className="w-4 h-4" /> : undefined}
+            className="w-full min-h-[48px] px-6 py-3"
           >
             {isLoading ? (
               mode === 'login' ? t('auth.loggingIn') :
@@ -438,8 +435,8 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
             <Button
               onClick={() => switchMode('login')}
               variant="ghost"
-              size="sm"
-              icon={<ArrowLeft className="w-4 h-4" />}
+              
+              
               className="mx-auto"
             >
               {t('auth.backToLogin')}

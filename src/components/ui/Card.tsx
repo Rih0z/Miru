@@ -52,7 +52,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     // Hover effects
     const hoverClasses = {
       lift: 'hover:shadow-xl hover:-translate-y-1',
-      glow: 'hover:shadow-glow',
+      glow: 'hover:shadow-glow hover:shadow-glow-lg',
       '3d': '', // Handled by 3D wrapper
       spotlight: '', // Handled by Spotlight wrapper
       none: '',

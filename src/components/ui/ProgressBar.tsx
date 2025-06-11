@@ -66,12 +66,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       case 'glass':
         return cn(baseClasses, 'bg-glass-5 backdrop-blur-sm border border-glass-10')
       case 'ai':
-        return <AIProgressBar 
-          progress={clampedProgress} 
-          variant="gradient" 
-          className={className}
-          animated={animated}
-        />
+        return cn(baseClasses, 'bg-glass-10 ai-gradient-border')
       default:
         return cn(baseClasses, 'bg-bg-secondary')
     }
@@ -114,8 +109,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         )}
         <AIProgressBar 
           progress={clampedProgress} 
-          variant="gradient" 
-          animated={animated}
+          variant="gradient"
         />
       </div>
     )

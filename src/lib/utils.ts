@@ -9,11 +9,13 @@ export function cn(...inputs: ClassValue[]) {
 export function formatDate(date: Date | string, format: 'short' | 'medium' | 'long' = 'medium'): string {
   const d = typeof date === 'string' ? new Date(date) : date
   
-  const options: Intl.DateTimeFormatOptions = {
-    short: { month: 'numeric', day: 'numeric' },
-    medium: { year: 'numeric', month: 'short', day: 'numeric' },
-    long: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }
-  }[format]
+  const optionsMap = {
+    short: { month: 'numeric', day: 'numeric' } as const,
+    medium: { year: 'numeric', month: 'short', day: 'numeric' } as const,
+    long: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' } as const
+  }
+  
+  const options: Intl.DateTimeFormatOptions = optionsMap[format]
   
   return new Intl.DateTimeFormat('ja-JP', options).format(d)
 }

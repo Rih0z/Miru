@@ -58,7 +58,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         )
 
       case 'ai':
-        return <AILoadingIndicator size={size} message={message} submessage={submessage} />
+        return <AILoadingIndicator size={size === 'xl' ? 'lg' : size} message={message} submessage={submessage} />
 
       case 'brutal':
         return (

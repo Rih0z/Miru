@@ -217,11 +217,9 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
       <RippleButton
         onClick={handleGeneratePrompt}
         variant="primary"
-        size="lg"
-        className="w-full"
-        icon={<Target className="w-5 h-5" />}
-        glow
+        className="w-full px-6 py-3 flex items-center gap-2"
       >
+        <Target className="w-5 h-5" />
         プロンプトを生成する
       </RippleButton>
     </div>
@@ -236,7 +234,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
         <HeroText className="text-xl ai-text-gradient">プロンプトの使用方法</HeroText>
       </div>
 
-      <GlassCard variant="info" className="border border-accent-info/20">
+      <GlassCard variant="subtle" className="border border-accent-info/20">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-xl bg-accent-info/10 flex items-center justify-center">
@@ -272,10 +270,9 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
           />
           <Button
             onClick={handleCopyPrompt}
-            variant={copiedPrompt ? "success" : "ghost"}
+            variant={copiedPrompt ? "secondary" : "ghost"}
             size="sm"
             className="absolute top-3 right-3"
-            icon={copiedPrompt ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
           >
             {copiedPrompt ? 'コピー済み' : 'コピー'}
           </Button>
@@ -286,18 +283,18 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
         <Button
           onClick={() => setCurrentStep('config')}
           variant="ghost"
-          size="lg"
+          
           className="flex-1"
-          icon={<ArrowLeft className="w-4 h-4" />}
+          
         >
           戻る
         </Button>
         <RippleButton
           onClick={handleProceedToImport}
           variant="primary"
-          size="lg"
+          
           className="flex-1"
-          icon={<Upload className="w-4 h-4" />}
+          
         >
           JSONを入力する
         </RippleButton>
@@ -314,7 +311,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
         <HeroText className="text-xl ai-text-gradient">JSONデータの入力</HeroText>
       </div>
 
-      <GlassCard variant="warning" className="border border-accent-warning/20">
+      <GlassCard variant="prominent" className="border border-accent-warning/20">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-xl bg-accent-warning/10 flex items-center justify-center">
@@ -349,7 +346,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
 
       {validationResult && (
         <GlassCard 
-          variant={validationResult.isValid ? 'success' : 'danger'} 
+          variant={validationResult.isValid ? 'subtle' : 'prominent'} 
           className={cn(
             'border',
             validationResult.isValid ? 'border-accent-success/20' : 'border-accent-error/20'
@@ -406,9 +403,9 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
         <Button
           onClick={() => setCurrentStep('prompt')}
           variant="ghost"
-          size="lg"
+          
           className="flex-1"
-          icon={<ArrowLeft className="w-4 h-4" />}
+          
         >
           戻る
         </Button>
@@ -416,9 +413,9 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
           onClick={handleProcessJson}
           disabled={!jsonInput.trim() || isProcessing}
           variant="primary"
-          size="lg"
+          
           className="flex-1"
-          icon={isProcessing ? <LoadingSpinner size="sm" className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+          
         >
           {isProcessing ? '処理中...' : 'データを処理する'}
         </RippleButton>
@@ -437,7 +434,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
 
       {importedData && (
         <div className="space-y-6">
-          <GlassCard variant="success" className="border border-accent-success/20">
+          <GlassCard variant="subtle" className="border border-accent-success/20">
             <div className="p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-xl bg-accent-success/10 flex items-center justify-center">
@@ -494,20 +491,17 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
         <Button
           onClick={() => setCurrentStep('import')}
           variant="ghost"
-          size="lg"
+          
           className="flex-1"
-          icon={<ArrowLeft className="w-4 h-4" />}
+          
         >
           戻る
         </Button>
         <RippleButton
           onClick={handleConfirmImport}
           disabled={isProcessing}
-          variant="success"
-          size="lg"
+          variant="secondary"
           className="flex-1"
-          icon={isProcessing ? <LoadingSpinner size="sm" className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
-          glow
         >
           {isProcessing ? 'インポート中...' : 'インポートを確定する'}
         </RippleButton>
@@ -536,10 +530,10 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
       <RippleButton
         onClick={onClose}
         variant="primary"
-        size="lg"
+        
         className="px-8 animate-slide-up"
         style={{ animationDelay: '200ms' }}
-        glow
+        
       >
         完了
       </RippleButton>
@@ -551,7 +545,7 @@ export function DataImportModal({ isOpen, onClose, onImportComplete, userId }: D
       isOpen={isOpen}
       onClose={onClose}
       variant="glass"
-      size="xl"
+      
       title="データインポート"
       closeOnBackdrop={currentStep === 'complete'}
     >

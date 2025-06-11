@@ -282,8 +282,8 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 type="button"
                 onClick={addHobby}
                 variant="secondary"
-                size="md"
-                icon={<Plus className="w-4 h-4" />}
+                
+                
               >
                 追加
               </Button>
@@ -462,9 +462,9 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 <Button
                   type="button"
                   onClick={addAttractivePoint}
-                  variant="success"
-                  size="md"
-                  icon={<Plus className="w-4 h-4" />}
+                  variant="secondary"
+                  
+                  
                 >
                   追加
                 </Button>
@@ -519,9 +519,9 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
                 <Button
                   type="button"
                   onClick={addConcern}
-                  variant="warning"
-                  size="md"
-                  icon={<Plus className="w-4 h-4" />}
+                  variant="secondary"
+                  
+                  
                 >
                   追加
                 </Button>
@@ -563,7 +563,7 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
           type="button"
           onClick={onCancel}
           variant="ghost"
-          size="lg"
+          
           className="px-8 order-2 sm:order-1"
         >
           キャンセル
@@ -571,11 +571,9 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
         <RippleButton
           type="submit"
           variant="primary"
-          size="lg"
-          className="px-8 order-1 sm:order-2"
-          glow
-          icon={initialData ? <Star className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+          className="px-8 py-3 order-1 sm:order-2 flex items-center gap-2"
         >
+          {initialData ? <Star className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
           {initialData ? '更新する' : '登録する'}
         </RippleButton>
       </div>

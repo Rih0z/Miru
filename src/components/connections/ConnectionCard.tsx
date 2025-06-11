@@ -80,7 +80,7 @@ export function ConnectionCard({
     <Spatial3DCard depth="medium" rotateOnHover className="h-full">
       <GlassCard 
         variant="prominent" 
-        hover="glow" 
+        hover={true} 
         className="h-full flex flex-col"
       >
         <div className="p-6 flex-1">
@@ -149,8 +149,7 @@ export function ConnectionCard({
             <RelationshipProgress 
               progress={getProgressWidth(connection.current_stage)}
               showLabel
-              label="関係の進展"
-              size="sm"
+              
               showPercentage={false}
               className="mb-2"
             />
@@ -238,17 +237,15 @@ export function ConnectionCard({
             <RippleButton
               onClick={() => onGeneratePrompt(connection.id)}
               variant="primary"
-              size="sm"
-              icon={<Lightbulb size={14} />}
-              className="flex-1"
-              glow
+              className="flex-1 flex items-center gap-2"
             >
+              <Lightbulb size={14} />
               AIプロンプト
             </RippleButton>
             <Button
               onClick={() => onEdit(connection)}
               variant="ghost"
-              size="sm"
+              
               className="px-4"
             >
               詳細

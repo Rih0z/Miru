@@ -263,3 +263,6 @@ export const PulseDot: React.FC<{
     </div>
   )
 }
+
+// RippleButton alias for InteractiveButton
+export const RippleButton = InteractiveButton

@@ -3,7 +3,10 @@
 import React, { useState, useMemo } from 'react'
 import { Connection } from '@/types'
 import { DIContainer } from '@/lib/infrastructure/container/DIContainer'
-import { X, Copy, Check, Sparkles, Target, Zap, FileText } from 'lucide-react'
+import { X, Copy, Check, Sparkles, Target, Zap, FileText, CheckCircle } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
+import { RippleButton } from '@/components/ui/MicroInteractions'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
 interface PromptExecutorProps {
   connection: Connection
@@ -194,28 +197,32 @@ export function PromptExecutor({ connection, promptType, onClose }: PromptExecut
         </div>
 
         {/* フッター */}
-        <div className="flex justify-end gap-4 pt-4">
-          <Button
+        <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
+          <button
             onClick={onClose}
-            variant="ghost"
-            size="lg"
-            className="px-8"
+            className="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
           >
             キャンセル
-          </Button>
-          <RippleButton
+          </button>
+          <button
             onClick={handleAIResponse}
             disabled={!aiResponse || isExecuting}
-            variant="primary"
-            size="lg"
-            className="px-8"
-            icon={isExecuting ? <LoadingSpinner size="sm" className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
-            glow
+            className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
           >
-            {isExecuting ? '保存中...' : '保存して完了'}
-          </RippleButton>
+            {isExecuting ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                保存中...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                保存して完了
+              </>
+            )}
+          </button>
         </div>
       </div>
-    </Modal>
+    </div>
   )
 }

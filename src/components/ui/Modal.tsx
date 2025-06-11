@@ -237,7 +237,7 @@ export const AlertDialog: React.FC<{
       onClose={onClose}
       title={title}
       description={description}
-      size="sm"
+      
       variant="glass"
     >
       <div className="flex gap-3 mt-6">

@@ -98,7 +98,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
             <Button
               onClick={onRetry}
               variant={variant === 'brutal' ? 'brutal' : 'primary'}
-              icon={<RefreshCw className="w-4 h-4" />}
+              
             >
               もう一度試す
             </Button>
@@ -106,8 +106,8 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
           {onGoHome && (
             <Button
               onClick={onGoHome}
-              variant="secondary"
-              icon={<Home className="w-4 h-4" />}
+              variant="ghost"
+              size="md"
             >
               ホームに戻る
             </Button>
