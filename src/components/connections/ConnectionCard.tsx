@@ -3,6 +3,13 @@
 import React, { useMemo } from 'react'
 import { Connection } from '@/types'
 import { ConnectionService } from '@/lib/connectionService'
+import { GlassCard } from '../ui/GlassCard'
+import { Button } from '../ui/Button'
+import { BrutalButton } from '../ui/BrutalButton'
+import { RelationshipProgress } from '../ui/ProgressBar'
+import { Spatial3DCard } from '../ui/Spatial3D'
+import { RippleButton } from '../ui/MicroInteractions'
+import { Body, Caption } from '../ui/Typography'
 import { 
   Calendar, 
   AlertCircle, 
@@ -13,8 +20,12 @@ import {
   CheckCircle2,
   Edit2,
   Trash2,
-  Lightbulb
+  Lightbulb,
+  Heart,
+  Sparkles,
+  Star
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface ConnectionCardProps {
   connection: Connection
@@ -48,155 +59,203 @@ export function ConnectionCard({
     return progress[stage] || 0
   }
 
-  // ステージカラー
-  const getStageColor = (stage: string) => {
-    const colors: Record<string, string> = {
-      'マッチング直後': 'purple',
-      'メッセージ中': 'blue',
-      'LINE交換済み': 'green',
-      'デート前': 'yellow',
-      'デート後': 'pink',
-      '交際中': 'pink',
-      '停滞中': 'gray',
-      '終了': 'gray'
+  // ステージスタイリング（モダンデザイン対応）
+  const getStageConfig = (stage: string) => {
+    const configs: Record<string, { variant: string; icon: React.ReactNode }> = {
+      'マッチング直後': { variant: 'accent-secondary', icon: <Sparkles className="w-3 h-3" /> },
+      'メッセージ中': { variant: 'accent-info', icon: <Target className="w-3 h-3" /> },
+      'LINE交換済み': { variant: 'accent-success', icon: <CheckCircle2 className="w-3 h-3" /> },
+      'デート前': { variant: 'accent-warning', icon: <Clock className="w-3 h-3" /> },
+      'デート後': { variant: 'accent-primary', icon: <Heart className="w-3 h-3" /> },
+      '交際中': { variant: 'accent-primary', icon: <Star className="w-3 h-3" /> },
+      '停滞中': { variant: 'text-muted', icon: <Zap className="w-3 h-3" /> },
+      '終了': { variant: 'text-muted', icon: <AlertCircle className="w-3 h-3" /> }
     }
-    return colors[stage] || 'gray'
+    return configs[stage] || { variant: 'text-muted', icon: <Target className="w-3 h-3" /> }
   }
 
-  const stageColor = getStageColor(connection.current_stage)
+  const stageConfig = getStageConfig(connection.current_stage)
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-      {/* ヘッダー */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold">
-            {connection.nickname[0]}
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-gray-800">{connection.nickname}さん</h3>
-            <p className="text-sm text-gray-600">{connection.platform}</p>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => onEdit(connection)}
-            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-            title="編集"
-          >
-            <Edit2 size={18} />
-          </button>
-          <button
-            onClick={() => onDelete(connection.id)}
-            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-            title="削除"
-          >
-            <Trash2 size={18} />
-          </button>
-        </div>
-      </div>
-
-      {/* ステージとスコア */}
-      <div className="flex items-center justify-between mb-4">
-        <span className={`px-3 py-1 rounded-full text-sm font-medium bg-${stageColor}-100 text-${stageColor}-700`}>
-          {connection.current_stage}
-        </span>
-        <div className="flex items-center gap-2">
-          <Target className="text-purple-500" size={16} />
-          <span className="text-sm font-semibold text-gray-700">愛情度: {score}点</span>
-        </div>
-      </div>
-
-      {/* プログレスバー */}
-      <div className="mb-4">
-        <div className="relative">
-          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-pink-400 to-purple-400 rounded-full transition-all duration-500"
-              style={{ width: `${getProgressWidth(connection.current_stage)}%` }}
-            />
-          </div>
-          {/* 目盛り */}
-          <div className="absolute top-0 left-0 w-full h-3 flex justify-between px-1">
-            {[20, 40, 60, 80].map(mark => (
-              <div key={mark} className="w-0.5 h-full bg-white" style={{ marginLeft: `${mark}%` }} />
-            ))}
-          </div>
-        </div>
-        <div className="flex justify-between mt-2 text-xs text-gray-500">
-          <span>出会い</span>
-          <span>恋愛成就</span>
-        </div>
-      </div>
-
-      {/* 基本情報 */}
-      <div className="space-y-2 mb-4">
-        {connection.basic_info.age && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Calendar size={14} className="text-gray-400" />
-            <span>{connection.basic_info.age}歳</span>
-          </div>
-        )}
-        {connection.basic_info.occupation && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Target size={14} className="text-gray-400" />
-            <span>{connection.basic_info.occupation}</span>
-          </div>
-        )}
-        {connection.communication.lastContact && (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Clock size={14} className="text-gray-400" />
-            <span>最終連絡: {connection.communication.lastContact}</span>
-          </div>
-        )}
-      </div>
-
-      {/* 趣味タグ */}
-      {connection.basic_info.hobbies && connection.basic_info.hobbies.length > 0 && (
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-2">
-            {connection.basic_info.hobbies.map((hobby, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium"
+    <Spatial3DCard depth="medium" rotateOnHover className="h-full">
+      <GlassCard 
+        variant="prominent" 
+        hover="glow" 
+        className="h-full flex flex-col"
+      >
+        <div className="p-6 flex-1">
+          {/* ヘッダー */}
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-ai-gradient rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg">
+                {connection.nickname[0]}
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-text-primary">{connection.nickname}さん</h3>
+                <Caption className="text-text-secondary">{connection.platform}</Caption>
+              </div>
+            </div>
+            <div className="flex gap-1">
+              <button
+                onClick={() => onEdit(connection)}
+                className={cn(
+                  'p-2 rounded-lg transition-all duration-200',
+                  'text-text-muted hover:text-accent-info hover:bg-accent-info/10',
+                  'hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent-info'
+                )}
+                title="編集"
               >
-                {hobby}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 推奨アクション */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
-          <div className="flex items-center gap-3">
-            <AlertCircle className="text-purple-500" size={20} />
-            <div>
-              <p className="text-sm font-medium text-gray-800">{recommendedAction.title}</p>
-              <p className="text-xs text-gray-600">{recommendedAction.description}</p>
+                <Edit2 size={16} />
+              </button>
+              <button
+                onClick={() => onDelete(connection.id)}
+                className={cn(
+                  'p-2 rounded-lg transition-all duration-200',
+                  'text-text-muted hover:text-accent-error hover:bg-accent-error/10',
+                  'hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent-error'
+                )}
+                title="削除"
+              >
+                <Trash2 size={16} />
+              </button>
             </div>
           </div>
-          <ChevronRight className="text-purple-600" size={20} />
-        </div>
-      </div>
 
-      {/* アクションボタン */}
-      <div className="flex gap-3">
-        <button
-          onClick={() => onGeneratePrompt(connection.id)}
-          className="flex-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2"
-        >
-          <Lightbulb size={16} />
-          AIプロンプト生成
-        </button>
-        <button
-          onClick={() => onEdit(connection)}
-          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium transition-all duration-300 hover:bg-gray-200"
-        >
-          詳細
-        </button>
-      </div>
-    </div>
+          {/* ステージとスコア */}
+          <div className="flex items-center justify-between mb-4">
+            <div className={cn(
+              'flex items-center gap-2 px-3 py-1.5 rounded-xl',
+              'border border-glass-20 bg-glass-5 backdrop-blur-sm'
+            )}>
+              <span className={`text-${stageConfig.variant}`}>
+                {stageConfig.icon}
+              </span>
+              <Caption className={`font-medium text-${stageConfig.variant}`}>
+                {connection.current_stage}
+              </Caption>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-accent-primary/10 flex items-center justify-center">
+                <Target className="text-accent-primary" size={12} />
+              </div>
+              <Caption className="font-bold ai-text-gradient">
+                愛情度: {score}点
+              </Caption>
+            </div>
+          </div>
+
+          {/* プログレスバー */}
+          <div className="mb-4">
+            <RelationshipProgress 
+              progress={getProgressWidth(connection.current_stage)}
+              showLabel
+              label="関係の進展"
+              size="sm"
+              showPercentage={false}
+              className="mb-2"
+            />
+            <div className="flex justify-between">
+              <Caption className="text-text-muted">出会い</Caption>
+              <Caption className="text-text-muted">恋愛成就</Caption>
+            </div>
+          </div>
+
+          {/* 基本情報 */}
+          <div className="space-y-2 mb-4">
+            {connection.basic_info.age && (
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-md bg-glass-10 flex items-center justify-center">
+                  <Calendar size={12} className="text-text-muted" />
+                </div>
+                <Caption className="text-text-secondary">{connection.basic_info.age}歳</Caption>
+              </div>
+            )}
+            {connection.basic_info.occupation && (
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-md bg-glass-10 flex items-center justify-center">
+                  <Target size={12} className="text-text-muted" />
+                </div>
+                <Caption className="text-text-secondary">{connection.basic_info.occupation}</Caption>
+              </div>
+            )}
+            {connection.communication.lastContact && (
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-md bg-glass-10 flex items-center justify-center">
+                  <Clock size={12} className="text-text-muted" />
+                </div>
+                <Caption className="text-text-secondary">最終連絡: {connection.communication.lastContact}</Caption>
+              </div>
+            )}
+          </div>
+
+          {/* 趣味タグ */}
+          {connection.basic_info.hobbies && connection.basic_info.hobbies.length > 0 && (
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-2">
+                {connection.basic_info.hobbies.slice(0, 3).map((hobby, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'px-3 py-1 rounded-xl text-xs font-medium',
+                      'bg-accent-secondary/10 text-accent-secondary',
+                      'border border-accent-secondary/20'
+                    )}
+                  >
+                    {hobby}
+                  </div>
+                ))}
+                {connection.basic_info.hobbies.length > 3 && (
+                  <div className="px-3 py-1 rounded-xl text-xs font-medium bg-glass-10 text-text-muted border border-glass-20">
+                    +{connection.basic_info.hobbies.length - 3}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 推奨アクション */}
+          <div className="mb-6">
+            <div className={cn(
+              'flex items-center justify-between p-3 rounded-xl',
+              'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+              'hover:bg-glass-10 transition-all duration-200'
+            )}>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-accent-warning/10 flex items-center justify-center">
+                  <Lightbulb className="text-accent-warning" size={16} />
+                </div>
+                <div>
+                  <Body className="font-medium text-text-primary text-sm">{recommendedAction.title}</Body>
+                  <Caption className="text-text-muted">{recommendedAction.description}</Caption>
+                </div>
+              </div>
+              <ChevronRight className="text-accent-primary" size={16} />
+            </div>
+          </div>
+
+          {/* アクションボタン */}
+          <div className="flex gap-3 mt-auto">
+            <RippleButton
+              onClick={() => onGeneratePrompt(connection.id)}
+              variant="primary"
+              size="sm"
+              icon={<Lightbulb size={14} />}
+              className="flex-1"
+              glow
+            >
+              AIプロンプト
+            </RippleButton>
+            <Button
+              onClick={() => onEdit(connection)}
+              variant="ghost"
+              size="sm"
+              className="px-4"
+            >
+              詳細
+            </Button>
+          </div>
+        </div>
+      </GlassCard>
+    </Spatial3DCard>
   )
 }

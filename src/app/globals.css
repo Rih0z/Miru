@@ -1,203 +1,168 @@
+/* === Import Variable Fonts === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* === Global Styles === */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* === Design System v4.0 - 2024-2025 Modern UI === */
+@import '../styles/design-system-v4.css';
+
+/* === Base Theme Application === */
+@layer base {
+  /* Smooth transitions for theme switching */
+  * {
+    transition: background-color var(--duration-normal) var(--ease-out),
+                border-color var(--duration-normal) var(--ease-out);
+  }
+  
+  /* GPU Acceleration for animations */
+  *:where([class*="animate-"]) {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
 }
 
-html {
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+/* === Theme Toggle Transitions === */
+[data-theme-switching] * {
+  transition: none !important;
 }
 
-body {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: 1.6;
-  color: #374151;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* === Typography === */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  line-height: 1.2;
-  color: #1f2937;
-}
-
-h1 { font-size: var(--text-4xl); }
-h2 { font-size: var(--text-3xl); }
-h3 { font-size: var(--text-2xl); }
-h4 { font-size: var(--text-xl); }
-h5 { font-size: var(--text-lg); }
-h6 { font-size: var(--text-base); }
-
-/* === Links === */
-a {
-  color: var(--primary);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-a:hover {
-  color: var(--primary-light);
-}
-
-/* === Selection === */
-::selection {
-  background-color: var(--kawaii-pink);
-  color: #1f2937;
-}
-
-/* === Modern Button Base === */
-button, .btn {
-  font-family: inherit;
-  font-size: var(--text-base);
-  font-weight: 600;
-  border: none;
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  outline: none;
-  position: relative;
-  overflow: hidden;
-}
-
-button:disabled, .btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* === Input Base === */
-input, textarea, select {
-  font-family: inherit;
-  font-size: var(--text-base);
-  border: 1px solid #d1d5db;
-  border-radius: var(--radius-lg);
-  padding: var(--space-3) var(--space-4);
-  background: white;
-  transition: all var(--transition-fast);
-  width: 100%;
-}
-
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(255, 88, 100, 0.1);
+/* === Global Enhancements === */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-normal);
+  animation-timing-function: var(--ease-out);
 }
 
 /* === Loading States === */
 .skeleton {
   background: linear-gradient(
     90deg,
-    #f3f4f6 25%,
-    #e5e7eb 50%,
-    #f3f4f6 75%
+    var(--glass-white-10) 25%,
+    var(--glass-white-20) 50%,
+    var(--glass-white-10) 75%
   );
   background-size: 200% 100%;
-  animation: loading 1.5s ease-in-out infinite;
+  animation: skeleton-loading 1.5s infinite;
 }
 
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* === Mobile Optimizations === */
-@media (max-width: 768px) {
-  html {
-    font-size: 15px;
-  }
-  
-  h1 { font-size: var(--text-3xl); }
-  h2 { font-size: var(--text-2xl); }
-  h3 { font-size: var(--text-xl); }
-  h4 { font-size: var(--text-lg); }
-  
-  /* Ensure touch targets are at least 44px */
-  button, .btn, input, select, textarea {
-    min-height: 44px;
-  }
-  
-  /* Prevent horizontal scroll on mobile */
-  body {
-    overflow-x: hidden;
-  }
-  
-  /* Improve tap highlighting */
-  button, a, input, select, textarea {
-    -webkit-tap-highlight-color: rgba(255, 88, 100, 0.1);
-  }
-}
-
-/* === Accessibility === */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+/* === Micro-interactions === */
+[data-interactive]:not(:disabled) {
+  cursor: pointer;
+  position: relative;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
 }
 
-/* === Print Styles === */
-@media print {
-  body {
-    background: white;
-    color: black;
+[data-interactive]:not(:disabled)::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--glass-white-20);
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-slow) var(--ease-out),
+              height var(--duration-slow) var(--ease-out);
+}
+
+[data-interactive]:not(:disabled):active::before {
+  width: 300%;
+  height: 300%;
+}
+
+/* === 3D Transform Utilities === */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.rotate-x-10:hover {
+  transform: rotateX(10deg);
+}
+
+.rotate-y-10:hover {
+  transform: rotateY(10deg);
+}
+
+/* === Glassmorphism Enhancements === */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .glass-frost {
+    background: var(--glass-white-10);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+  }
+}
+
+/* === Performance Optimizations === */
+@media (prefers-reduced-data: reduce) {
+  * {
+    background-image: none !important;
   }
   
-  .no-print {
+  .glass,
+  .glass-subtle,
+  .glass-prominent {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--bg-secondary) !important;
+  }
+}
+
+/* === High Contrast Mode === */
+@media (prefers-contrast: high) {
+  :root {
+    --accent-primary: #ff0000;
+    --accent-secondary: #00ff00;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --bg-primary: #000000;
+    --bg-secondary: #111111;
+  }
+  
+  * {
+    border-width: 2px !important;
+  }
+}
+
+/* === Print Optimization === */
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  .no-print,
+  .glass,
+  [class*="animate-"] {
     display: none !important;
   }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  
-  /* モバイル最適化 */
-  .touch-manipulation {
-    touch-action: manipulation;
-  }
-  
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  /* フォームのズーム防止（iOS Safari） */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  input[type="date"],
-  select,
-  textarea {
-    font-size: 16px !important;
+/* === Critical Rendering Path === */
+@media (min-width: 1024px) {
+  .lg\:transform-gpu {
+    transform: translateZ(0);
+    will-change: transform;
   }
 }

@@ -3,7 +3,25 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslations } from 'next-intl'
-// v2.0 では絵文字アイコンを使用するため、react-icons は不要
+import { Modal } from '../ui/Modal'
+import { Button } from '../ui/Button'
+import { GlassCard } from '../ui/GlassCard'
+import { LoadingSpinner } from '../ui/LoadingSpinner'
+import { ErrorState } from '../ui/ErrorState'
+import { HeroText, Body, Caption } from '../ui/Typography'
+import { RippleButton } from '../ui/MicroInteractions'
+import { 
+  Mail, 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  AlertTriangle, 
+  CheckCircle2,
+  ArrowLeft,
+  Shield,
+  User
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface AuthModalProps {
   isOpen: boolean
@@ -189,87 +207,121 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
     }
   }
 
+  const getAuthIcon = () => {
+    switch (mode) {
+      case 'login': return <User className="w-5 h-5" />
+      case 'signup': return <Shield className="w-5 h-5" />
+      case 'reset': return <Mail className="w-5 h-5" />
+      default: return <User className="w-5 h-5" />
+    }
+  }
+
+  const getAuthTitle = () => {
+    switch (mode) {
+      case 'login': return t('auth.login')
+      case 'signup': return t('auth.createAccount')
+      case 'reset': return t('auth.resetPassword')
+      default: return t('auth.login')
+    }
+  }
+
   return (
-    <div 
-      data-testid="modal-backdrop"
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50"
-      onClick={handleBackdropClick}
+    <Modal 
+      isOpen={isOpen}
+      onClose={onClose}
+      variant="glass"
+      size="md"
+      closeOnBackdrop={!isLoading}
+      closeOnEscape={!isLoading}
     >
-      <div 
-        data-testid="modal-content"
-        className="bg-white rounded-lg max-w-md w-full p-4 sm:p-6 max-h-[95vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex justify-between items-center mb-4 sm:mb-6">
-          <h2 
-            aria-label={t('auth.modal.title')}
-            className="text-xl sm:text-2xl font-bold"
-          >
-            {mode === 'login' && t('auth.login')}
-            {mode === 'signup' && t('auth.createAccount')}
-            {mode === 'reset' && t('auth.resetPassword')}
-          </h2>
-          <button
-            aria-label="close"
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 active:text-gray-800 touch-manipulation p-2 -m-2"
-          >
-            <span>✕</span>
-          </button>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-3">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-ai-gradient flex items-center justify-center text-white shadow-lg">
+            {getAuthIcon()}
+          </div>
+          <HeroText className="text-2xl">
+            {getAuthTitle()}
+          </HeroText>
+          <Body className="text-text-secondary">
+            {mode === 'login' && 'おかえりなさい！アカウントにログインしてください'}
+            {mode === 'signup' && '新しいアカウントを作成して、恋愛の旅を始めましょう'}
+            {mode === 'reset' && 'パスワードをリセットするためのメールをお送りします'}
+          </Body>
         </div>
 
+        {/* Error State */}
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <span className="text-red-500 text-base">⚠️</span>
+          <GlassCard variant="danger" className="border border-accent-error/20">
+            <div className="flex items-start gap-3 p-4">
+              <div className="w-8 h-8 rounded-xl bg-accent-error/10 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-4 h-4 text-accent-error" />
               </div>
-              <div className="ml-3">
-                <h4 className="font-medium text-red-800 mb-1">
+              <div className="flex-1">
+                <Body className="font-medium text-accent-error mb-1">
                   {mode === 'login' ? 'ログインエラー' : 
                    mode === 'signup' ? 'アカウント作成エラー' : 
                    'パスワードリセットエラー'}
-                </h4>
-                <p className="text-red-700">{error}</p>
+                </Body>
+                <Caption className="text-accent-error/80">{error}</Caption>
                 {mode === 'login' && error.includes('メールアドレスまたはパスワードが正しくありません') && (
-                  <div className="mt-2 text-xs text-red-600">
-                    <p>• メールアドレスに間違いがないか確認してください</p>
-                    <p>• パスワードの大文字・小文字をご確認ください</p>
-                    <p>• パスワードを忘れた場合は「パスワードを忘れた方はこちら」をクリックしてください</p>
+                  <div className="mt-2 space-y-1">
+                    <Caption className="text-accent-error/70">• メールアドレスに間違いがないか確認してください</Caption>
+                    <Caption className="text-accent-error/70">• パスワードの大文字・小文字をご確認ください</Caption>
+                    <Caption className="text-accent-error/70">• パスワードを忘れた場合は下のリンクをクリックしてください</Caption>
                   </div>
                 )}
               </div>
             </div>
-          </div>
+          </GlassCard>
         )}
 
+        {/* Success State */}
         {message && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
-            {message}
-          </div>
+          <GlassCard variant="success" className="border border-accent-success/20">
+            <div className="flex items-center gap-3 p-4">
+              <div className="w-8 h-8 rounded-xl bg-accent-success/10 flex items-center justify-center">
+                <CheckCircle2 className="w-4 h-4 text-accent-success" />
+              </div>
+              <Caption className="text-accent-success font-medium">{message}</Caption>
+            </div>
+          </GlassCard>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email Input */}
+          <div className="space-y-2">
+            <Caption className="font-medium text-text-primary flex items-center gap-2">
+              <Mail className="w-4 h-4" />
               {t('auth.email')}
-            </label>
-            <input
-              type="email"
-              required
-              disabled={isLoading}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base sm:text-sm"
-              placeholder={t('auth.email')}
-            />
+            </Caption>
+            <div className="relative">
+              <input
+                type="email"
+                required
+                disabled={isLoading}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'disabled:bg-glass-10 disabled:text-text-muted',
+                  'placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="例: your@email.com"
+              />
+            </div>
           </div>
 
+          {/* Password Input */}
           {mode !== 'reset' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="space-y-2">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Lock className="w-4 h-4" />
                 {t('auth.password')}
-              </label>
+              </Caption>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -277,46 +329,64 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
                   disabled={isLoading}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-3 sm:py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base sm:text-sm"
-                  placeholder={t('auth.password')}
+                  className={cn(
+                    'w-full px-4 py-3 pr-12 rounded-xl transition-all duration-200',
+                    'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                    'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                    'disabled:bg-glass-10 disabled:text-text-muted',
+                    'placeholder:text-text-muted text-text-primary'
+                  )}
+                  placeholder="6文字以上のパスワード"
                 />
                 <button
                   type="button"
-                  aria-label="toggle-password-visibility"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 active:text-gray-800 touch-manipulation"
+                  className={cn(
+                    'absolute inset-y-0 right-0 pr-3 flex items-center',
+                    'text-text-muted hover:text-text-primary transition-colors',
+                    'focus:outline-none focus:text-accent-primary'
+                  )}
                 >
-                  <span>{showPassword ? '🙈' : '👁️'}</span>
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
           )}
 
+          {/* Confirm Password Input */}
           {mode === 'signup' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="space-y-2">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Lock className="w-4 h-4" />
                 {t('auth.confirmPassword')}
-              </label>
+              </Caption>
               <input
                 type="password"
                 required
                 disabled={isLoading}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-3 py-3 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 text-base sm:text-sm"
-                placeholder={t('auth.confirmPassword')}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'disabled:bg-glass-10 disabled:text-text-muted',
+                  'placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="パスワードを再入力してください"
               />
             </div>
           )}
 
-          <button
+          {/* Submit Button */}
+          <RippleButton
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 sm:py-2 px-4 rounded-md font-medium touch-manipulation min-h-[44px] sm:min-h-[auto] ${
-              isLoading
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
-            }`}
+            variant="primary"
+            size="lg"
+            className="w-full min-h-[48px]"
+            glow
+            icon={isLoading ? <LoadingSpinner size="sm" className="w-4 h-4" /> : undefined}
           >
             {isLoading ? (
               mode === 'login' ? t('auth.loggingIn') :
@@ -327,62 +397,63 @@ export function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
               mode === 'signup' ? t('auth.signupButton') :
               t('auth.sendResetEmail')
             )}
-          </button>
+          </RippleButton>
         </form>
 
-        <div className="mt-4 sm:mt-6 space-y-2 text-center text-sm">
+        {/* Mode Switching */}
+        <div className="space-y-4 text-center">
           {mode === 'login' && (
-            <>
-              <p>
-                {t('auth.noAccount')}{' '}
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2">
+                <Caption className="text-text-muted">{t('auth.noAccount')}</Caption>
                 <button
                   onClick={() => switchMode('signup')}
-                  className="text-blue-600 hover:text-blue-800 active:text-blue-900 underline touch-manipulation"
+                  className="text-accent-primary hover:text-accent-primary/80 font-medium transition-colors underline"
                 >
                   {t('auth.signup')}
                 </button>
-              </p>
-              <p>
-                <button
-                  onClick={() => switchMode('reset')}
-                  className="text-blue-600 hover:text-blue-800 active:text-blue-900 underline touch-manipulation"
-                >
-                  {t('auth.forgotPassword')}
-                </button>
-              </p>
-            </>
+              </div>
+              <button
+                onClick={() => switchMode('reset')}
+                className="text-accent-info hover:text-accent-info/80 font-medium transition-colors underline"
+              >
+                {t('auth.forgotPassword')}
+              </button>
+            </div>
           )}
 
           {mode === 'signup' && (
-            <p>
-              {t('auth.alreadyHaveAccount')}{' '}
+            <div className="flex items-center justify-center gap-2">
+              <Caption className="text-text-muted">{t('auth.alreadyHaveAccount')}</Caption>
               <button
                 onClick={() => switchMode('login')}
-                className="text-blue-600 hover:text-blue-800 active:text-blue-900 underline touch-manipulation"
+                className="text-accent-primary hover:text-accent-primary/80 font-medium transition-colors underline"
               >
                 {t('auth.login')}
               </button>
-            </p>
+            </div>
           )}
 
           {mode === 'reset' && (
-            <p>
-              <button
-                onClick={() => switchMode('login')}
-                className="text-blue-600 hover:text-blue-800 active:text-blue-900 underline touch-manipulation"
-              >
-                {t('auth.backToLogin')}
-              </button>
-            </p>
+            <Button
+              onClick={() => switchMode('login')}
+              variant="ghost"
+              size="sm"
+              icon={<ArrowLeft className="w-4 h-4" />}
+              className="mx-auto"
+            >
+              {t('auth.backToLogin')}
+            </Button>
           )}
         </div>
 
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center">
+        {/* Agreement */}
+        <div className="pt-4 border-t border-glass-20">
+          <Caption className="text-text-muted text-center">
             {t('auth.agreementText')}
-          </p>
+          </Caption>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

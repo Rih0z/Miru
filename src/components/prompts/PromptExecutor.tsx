@@ -194,26 +194,28 @@ export function PromptExecutor({ connection, promptType, onClose }: PromptExecut
         </div>
 
         {/* フッター */}
-        <div className="mt-8 flex justify-end gap-4">
-          <button
+        <div className="flex justify-end gap-4 pt-4">
+          <Button
             onClick={onClose}
-            className="px-6 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium transition-all duration-300 hover:bg-gray-200"
+            variant="ghost"
+            size="lg"
+            className="px-8"
           >
             キャンセル
-          </button>
-          <button
+          </Button>
+          <RippleButton
             onClick={handleAIResponse}
-            disabled={!aiResponse}
-            className={`px-6 py-2 rounded-xl font-medium transition-all duration-300 ${
-              aiResponse
-                ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:shadow-lg hover:scale-105'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
+            disabled={!aiResponse || isExecuting}
+            variant="primary"
+            size="lg"
+            className="px-8"
+            icon={isExecuting ? <LoadingSpinner size="sm" className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+            glow
           >
-            保存して完了
-          </button>
+            {isExecuting ? '保存中...' : '保存して完了'}
+          </RippleButton>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

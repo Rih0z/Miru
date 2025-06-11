@@ -11,9 +11,13 @@ import { LoadingSpinner } from './ui/LoadingSpinner'
 import { ErrorState } from './ui/ErrorState'
 import { EmptyState } from './ui/EmptyState'
 import { Button } from './ui/Button'
-import { Card } from './ui/Card'
+import { GlassCard } from './ui/GlassCard'
 import { Modal } from './ui/Modal'
-import { Heart, Plus, Download, Users, TrendingUp, Star, Sparkles } from 'lucide-react'
+import { HeroText, Body } from './ui/Typography'
+import { Spatial3DCard } from './ui/Spatial3D'
+import { RippleButton } from './ui/MicroInteractions'
+import { Heart, Plus, Download, Users, TrendingUp, Star, Sparkles, Activity, Target } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface DashboardProps {
   userId: string
@@ -34,6 +38,7 @@ export function Dashboard({ userId }: DashboardProps) {
   } | null>(null)
   const [showDataImportModal, setShowDataImportModal] = useState(false)
   const [showSparkle, setShowSparkle] = useState(false)
+  const [activeStatCard, setActiveStatCard] = useState<number | null>(null)
 
   useEffect(() => {
     loadDashboardData()
@@ -152,7 +157,7 @@ export function Dashboard({ userId }: DashboardProps) {
         fullScreen 
         message="恋愛コネクションを分析中..."
         submessage="あなたの理想のマッチを見つけています"
-        variant="heart"
+        variant="ai"
         size="lg"
       />
     )
@@ -191,153 +196,221 @@ export function Dashboard({ userId }: DashboardProps) {
   }
 
   return (
-    <div className="space-y-8 py-8">
-      {/* Sparkle effects */}
+    <div className="space-y-8 py-8 relative">
+      {/* Ambient Effects */}
       {showSparkle && (
         <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute top-20 left-10">
-            <Sparkles className="w-6 h-6 text-pink-400 animate-pulse" />
+            <Sparkles className="w-6 h-6 text-accent-secondary animate-pulse" />
           </div>
           <div className="absolute top-40 right-20">
-            <Heart className="w-5 h-5 text-purple-400 animate-pulse" />
+            <Heart className="w-5 h-5 text-accent-primary animate-pulse" />
           </div>
           <div className="absolute bottom-20 left-1/2">
-            <Sparkles className="w-6 h-6 text-blue-400 animate-pulse" />
+            <Sparkles className="w-6 h-6 text-accent-info animate-pulse" />
           </div>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-        <div className="space-y-3">
-          <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-            恋愛ダッシュボード
-          </h1>
-          <p className="text-gray-700 text-lg font-medium">
-            AIによる恋愛インサイト
-          </p>
+      <GlassCard variant="subtle" className="animate-slide-down">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 p-6">
+          <div className="space-y-3">
+            <HeroText className="animate-fade-in">
+              恋愛ダッシュボード
+            </HeroText>
+            <Body className="text-text-secondary">
+              AIによる恋愛インサイト
+            </Body>
+          </div>
+          
+          <div className="flex gap-3">
+            <RippleButton
+              variant="primary"
+              onClick={handleAddConnection}
+              icon={Plus}
+              className="animate-slide-right"
+            >
+              <span className="hidden sm:inline">手動で追加</span>
+            </RippleButton>
+            <Button
+              variant="secondary"
+              onClick={() => setShowDataImportModal(true)}
+              icon={Download}
+              className="animate-slide-right"
+              glow
+            >
+              <span className="hidden sm:inline">AIインポート</span>
+            </Button>
+          </div>
         </div>
-        
-        <div className="flex gap-3">
-          <Button
-            variant="primary"
-            onClick={handleAddConnection}
-            icon={Plus}
-          >
-            <span className="hidden sm:inline">手動で追加</span>
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => setShowDataImportModal(true)}
-            icon={Download}
-          >
-            <span className="hidden sm:inline">AIインポート</span>
-          </Button>
-        </div>
-      </div>
+      </GlassCard>
 
       {/* Summary Statistics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card variant="kawaii" hover className="animate-bounceIn">
-          <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-pink-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Users className="w-8 h-8 text-pink-500" />
-            </div>
-            <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">コネクション</p>
-              <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-gray-800">
-                  {dashboardData.totalConnections}
-                </p>
-                <p className="ml-2 text-sm text-pink-400 font-medium">人</p>
+        <Spatial3DCard 
+          depth="medium" 
+          rotateOnHover 
+          className={cn(
+            "animate-scale-in cursor-pointer transition-all duration-300",
+            activeStatCard === 0 && "scale-105"
+          )}
+          onMouseEnter={() => setActiveStatCard(0)}
+          onMouseLeave={() => setActiveStatCard(null)}
+        >
+          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+            <div className="flex items-center p-6">
+              <div className="w-16 h-16 rounded-2xl bg-accent-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Users className="w-8 h-8 text-accent-primary" />
+              </div>
+              <div className="ml-5 flex-1">
+                <p className="text-sm font-semibold ai-text-gradient">コネクション</p>
+                <div className="flex items-baseline">
+                  <p className="text-4xl font-black text-text-primary">
+                    {dashboardData.totalConnections}
+                  </p>
+                  <p className="ml-2 text-sm text-accent-primary font-medium">人</p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </GlassCard>
+        </Spatial3DCard>
 
-        <Card variant="magical" hover className="animate-bounceIn">
-          <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-purple-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <TrendingUp className="w-8 h-8 text-purple-500" />
-            </div>
-            <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">アクティブ</p>
-              <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-gray-800">
-                  {dashboardData.activeConnections}
-                </p>
-                <p className="ml-2 text-sm text-purple-400 font-medium">関係</p>
+        <Spatial3DCard 
+          depth="medium" 
+          rotateOnHover 
+          className={cn(
+            "animate-scale-in cursor-pointer transition-all duration-300",
+            activeStatCard === 1 && "scale-105"
+          )}
+          style={{ animationDelay: '100ms' }}
+          onMouseEnter={() => setActiveStatCard(1)}
+          onMouseLeave={() => setActiveStatCard(null)}
+        >
+          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+            <div className="flex items-center p-6">
+              <div className="w-16 h-16 rounded-2xl bg-accent-success/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Activity className="w-8 h-8 text-accent-success" />
+              </div>
+              <div className="ml-5 flex-1">
+                <p className="text-sm font-semibold ai-text-gradient">アクティブ</p>
+                <div className="flex items-baseline">
+                  <p className="text-4xl font-black text-text-primary">
+                    {dashboardData.activeConnections}
+                  </p>
+                  <p className="ml-2 text-sm text-accent-success font-medium">関係</p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </GlassCard>
+        </Spatial3DCard>
 
-        <Card variant="soft" hover className="animate-bounceIn">
-          <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-yellow-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Star className="w-8 h-8 text-yellow-500" />
-            </div>
-            <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">平均スコア</p>
-              <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-gray-800">
-                  {dashboardData.averageScore || 0}
-                </p>
-                <p className="ml-2 text-sm text-yellow-400 font-medium">ポイント</p>
+        <Spatial3DCard 
+          depth="medium" 
+          rotateOnHover 
+          className={cn(
+            "animate-scale-in cursor-pointer transition-all duration-300",
+            activeStatCard === 2 && "scale-105"
+          )}
+          style={{ animationDelay: '200ms' }}
+          onMouseEnter={() => setActiveStatCard(2)}
+          onMouseLeave={() => setActiveStatCard(null)}
+        >
+          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+            <div className="flex items-center p-6">
+              <div className="w-16 h-16 rounded-2xl bg-accent-warning/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Target className="w-8 h-8 text-accent-warning" />
+              </div>
+              <div className="ml-5 flex-1">
+                <p className="text-sm font-semibold ai-text-gradient">平均スコア</p>
+                <div className="flex items-baseline">
+                  <p className="text-4xl font-black text-text-primary">
+                    {dashboardData.averageScore || 0}
+                  </p>
+                  <p className="ml-2 text-sm text-accent-warning font-medium">ポイント</p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </GlassCard>
+        </Spatial3DCard>
 
-        <Card variant="romantic" hover className="animate-bounceIn">
-          <div className="flex items-center">
-            <div className="w-16 h-16 rounded-3xl bg-green-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Heart className="w-8 h-8 text-green-500" />
-            </div>
-            <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">ベストマッチ</p>
-              <div className="flex items-baseline">
-                <p className="text-4xl font-extrabold text-gray-800">
-                  {dashboardData.bestConnection ? '見つかりました' : 'なし'}
-                </p>
+        <Spatial3DCard 
+          depth="medium" 
+          rotateOnHover 
+          className={cn(
+            "animate-scale-in cursor-pointer transition-all duration-300",
+            activeStatCard === 3 && "scale-105"
+          )}
+          style={{ animationDelay: '300ms' }}
+          onMouseEnter={() => setActiveStatCard(3)}
+          onMouseLeave={() => setActiveStatCard(null)}
+        >
+          <GlassCard variant="prominent" hover="spotlight" className="h-full">
+            <div className="flex items-center p-6">
+              <div className="w-16 h-16 rounded-2xl bg-accent-secondary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Heart className="w-8 h-8 text-accent-secondary" />
+              </div>
+              <div className="ml-5 flex-1">
+                <p className="text-sm font-semibold ai-text-gradient">ベストマッチ</p>
+                <div className="flex items-baseline">
+                  <p className="text-2xl font-black text-text-primary">
+                    {dashboardData.bestConnection ? '発見' : 'なし'}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </GlassCard>
+        </Spatial3DCard>
       </div>
 
       {/* Best Connection */}
       {dashboardData.bestConnection && (
-        <Card variant="magical" className="animate-fadeIn">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-pulse"></div>
-            <h2 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-              最も有望なコネクション
-            </h2>
-          </div>
-          <div className="flex items-center justify-between p-4 bg-pink-50 rounded-xl">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                {dashboardData.bestConnection.nickname[0]}
+        <Spatial3DCard depth="deep" rotateOnHover floatAnimation className="animate-slide-up">
+          <GlassCard variant="featured" blur="heavy" className="relative overflow-hidden">
+            <div className="flex items-center gap-3 mb-6 p-6 pb-0">
+              <div className="w-3 h-3 bg-ai-gradient rounded-full animate-pulse"></div>
+              <h2 className="text-xl font-bold ai-text-gradient">
+                最も有望なコネクション
+              </h2>
+            </div>
+            <div className="flex items-center justify-between p-6 pt-0">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-ai-gradient rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
+                  {dashboardData.bestConnection.nickname[0]}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-text-primary mb-1">{dashboardData.bestConnection.nickname}</h3>
+                  <p className="text-sm text-text-secondary">
+                    スコア: <span className="font-bold text-accent-primary">{connectionService.calculateRelationshipScore(dashboardData.bestConnection)}</span> ポイント
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-800">{dashboardData.bestConnection.nickname}</h3>
-                <p className="text-sm text-gray-600">スコア: {connectionService.calculateRelationshipScore(dashboardData.bestConnection)} ポイント</p>
+              <div className="flex items-center gap-2">
+                <Heart className="w-8 h-8 text-accent-primary animate-pulse" />
+                <Sparkles className="w-6 h-6 text-accent-secondary animate-spin-slow" />
               </div>
             </div>
-            <Heart className="w-8 h-8 text-pink-500 animate-pulse" />
-          </div>
-        </Card>
+            {/* Background gradient overlay */}
+            <div className="absolute inset-0 bg-ai-gradient opacity-5 pointer-events-none" />
+          </GlassCard>
+        </Spatial3DCard>
       )}
 
       {/* Connections List */}
-      <div>
-        <h2 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-6">
-          あなたのコネクション
-        </h2>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-8 bg-ai-gradient rounded-full" />
+          <h2 className="text-2xl font-bold ai-text-gradient">
+            あなたのコネクション
+          </h2>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {connections.map((connection, index) => (
-            <div key={connection.id} className="animate-bounceIn" style={{ animationDelay: `${index * 100}ms` }}>
+            <div 
+              key={connection.id} 
+              className="animate-scale-in" 
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
               <ConnectionCard
                 connection={connection}
                 onEdit={handleEditConnection}
@@ -354,8 +427,9 @@ export function Dashboard({ userId }: DashboardProps) {
         isOpen={showConnectionForm}
         onClose={handleFormCancel}
         title={editingConnection ? `${editingConnection.nickname}を編集` : '新しいコネクションを追加'}
-        variant="kawaii"
-        className="max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+        variant="glass"
+        size="lg"
+        className="max-h-[80vh] overflow-y-auto"
       >
         <ConnectionForm
           initialData={editingConnection || undefined}

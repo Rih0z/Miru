@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import '../styles/kawaii-design-system.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
@@ -33,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${inter.className} bg-kawaii-dream min-h-screen font-sans`}>
+      <body className={`${inter.className} bg-bg-primary min-h-screen font-sans text-text-primary`}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <AuthProvider>
             <div className="min-h-screen flex flex-col">

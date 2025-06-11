@@ -1,66 +1,137 @@
 'use client'
 
 import React from 'react'
+import { cn } from '@/lib/utils'
+import { Loader2 } from 'lucide-react'
+import { useRipple } from './MicroInteractions'
 
-export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
-  size?: 'sm' | 'base' | 'lg'
-  children: React.ReactNode
-  onClick?: () => void
-  disabled?: boolean
-  className?: string
-  type?: 'button' | 'submit' | 'reset'
-  icon?: React.ComponentType<{ className?: string }>
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'brutal' | 'glass'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  isLoading?: boolean
+  icon?: React.ReactNode
   iconPosition?: 'left' | 'right'
+  ripple?: boolean
+  glow?: boolean
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  size = 'base',
-  children,
-  onClick,
-  disabled = false,
-  className = '',
-  type = 'button',
-  icon: Icon,
-  iconPosition = 'left'
-}) => {
-  const baseClasses = 'font-semibold transition-all duration-300 relative inline-flex items-center justify-center gap-2 touch-target focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2'
-  
-  const variantClasses = {
-    primary: 'bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:from-pink-600 hover:to-purple-600 hover:shadow-lg hover:scale-105',
-    secondary: 'bg-white text-pink-600 border-2 border-pink-200 hover:bg-pink-50 hover:border-pink-300 hover:scale-102',
-    outline: 'bg-transparent text-pink-600 border-2 border-pink-500 hover:bg-pink-50 hover:shadow-md',
-    ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ 
+    className,
+    variant = 'primary',
+    size = 'md',
+    isLoading = false,
+    icon,
+    iconPosition = 'left',
+    ripple = true,
+    glow = false,
+    children,
+    disabled,
+    onClick,
+    ...props
+  }, ref) => {
+    const { createRipple, RippleContainer } = useRipple()
+    const isDisabled = disabled || isLoading
+
+    // Variant styles - Modern 2024-2025 design
+    const variantClasses = {
+      primary: cn(
+        'bg-accent-primary text-bg-primary',
+        'hover:bg-accent-primary/90 hover:shadow-lg hover:-translate-y-0.5',
+        'active:translate-y-0'
+      ),
+      secondary: cn(
+        'bg-glass-10 backdrop-blur-medium text-text-primary',
+        'border border-glass-border',
+        'hover:bg-glass-20 hover:shadow-md hover:-translate-y-0.5',
+        'active:translate-y-0'
+      ),
+      ghost: cn(
+        'bg-transparent text-text-primary',
+        'hover:bg-glass-5 hover:text-accent-primary',
+        'active:bg-glass-10'
+      ),
+      brutal: cn(
+        'bg-accent-secondary text-bg-primary',
+        'border-3 border-black shadow-brutal-md',
+        'hover:shadow-brutal-lg hover:-translate-x-0.5 hover:-translate-y-0.5',
+        'active:shadow-brutal-sm active:translate-x-1 active:translate-y-1',
+        'font-black uppercase tracking-wider'
+      ),
+      glass: cn(
+        'glass text-text-primary',
+        'hover:bg-glass-20 hover:shadow-lg hover:-translate-y-0.5',
+        'active:translate-y-0'
+      ),
+    }
+
+    // Size styles
+    const sizeClasses = {
+      sm: 'px-4 py-2 text-sm rounded-lg',
+      md: 'px-6 py-3 text-base rounded-xl',
+      lg: 'px-8 py-4 text-lg rounded-xl',
+      xl: 'px-10 py-5 text-xl rounded-2xl',
+    }
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!isDisabled && ripple) {
+        createRipple(e)
+      }
+      onClick?.(e)
+    }
+
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          // Base styles
+          'relative font-semibold transition-all duration-normal',
+          'inline-flex items-center justify-center gap-2',
+          'focus-visible:outline-none focus-visible:ring-2',
+          'focus-visible:ring-accent-primary focus-visible:ring-offset-2',
+          'focus-visible:ring-offset-bg-primary',
+          'overflow-hidden',
+          
+          // Variant styles
+          variantClasses[variant],
+          
+          // Size styles
+          sizeClasses[size],
+          
+          // Glow effect
+          glow && 'shadow-glow hover:shadow-glow',
+          
+          // Disabled state
+          isDisabled && 'opacity-50 cursor-not-allowed hover:transform-none active:transform-none',
+          
+          className
+        )}
+        disabled={isDisabled}
+        onClick={handleClick}
+        {...props}
+      >
+        {/* Loading overlay */}
+        {isLoading && (
+          <span className="absolute inset-0 flex items-center justify-center bg-inherit">
+            <Loader2 className="animate-spin" size={16} />
+          </span>
+        )}
+        
+        {/* Button content */}
+        <span className={cn(
+          'inline-flex items-center justify-center gap-2',
+          isLoading && 'invisible'
+        )}>
+          {icon && iconPosition === 'left' && icon}
+          {children}
+          {icon && iconPosition === 'right' && icon}
+        </span>
+        
+        {/* Ripple effect container */}
+        {ripple && <RippleContainer />}
+      </button>
+    )
   }
-  
-  const sizeClasses = {
-    sm: 'px-4 py-2 text-sm rounded-lg',
-    base: 'px-6 py-3 text-base rounded-xl',
-    lg: 'px-8 py-4 text-lg rounded-xl'
-  }
-  
-  return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`
-        ${baseClasses} 
-        ${variantClasses[variant]} 
-        ${sizeClasses[size]} 
-        ${className}
-        ${disabled ? 'opacity-50 cursor-not-allowed transform-none' : ''}
-      `.trim()}
-      aria-disabled={disabled}
-    >
-      {Icon && iconPosition === 'left' && (
-        <Icon className="w-4 h-4" />
-      )}
-      {children}
-      {Icon && iconPosition === 'right' && (
-        <Icon className="w-4 h-4" />
-      )}
-    </button>
-  )
-}
+)
+
+Button.displayName = 'Button'

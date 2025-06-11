@@ -2,6 +2,24 @@
 
 import React, { useState } from 'react'
 import { Connection, ConnectionStage } from '@/types'
+import { GlassCard } from '../ui/GlassCard'
+import { Button } from '../ui/Button'
+import { RippleButton } from '../ui/MicroInteractions'
+import { HeroText, Body, Caption } from '../ui/Typography'
+import { 
+  User, 
+  MessageCircle, 
+  Heart, 
+  Plus, 
+  X, 
+  Calendar,
+  Briefcase,
+  MapPin,
+  Clock,
+  Star,
+  AlertTriangle
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface ConnectionFormProps {
   onSubmit: (data: Partial<Connection>) => void
@@ -102,356 +120,464 @@ export function ConnectionForm({ onSubmit, onCancel, initialData }: ConnectionFo
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
-      <div className="card hover-glow animate-fadeIn">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-            <span className="text-lg">👤</span>
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* 基本情報セクション */}
+      <GlassCard variant="prominent" className="animate-slide-up">
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-2xl bg-ai-gradient flex items-center justify-center shadow-lg">
+              <User className="w-5 h-5 text-white" />
+            </div>
+            <HeroText className="text-xl">基本情報</HeroText>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold gradient-text">基本情報</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              ニックネーム *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.nickname}
-              onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
-              placeholder="Aさん、B子さん など"
-            />
-          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <User className="w-4 h-4" />
+                ニックネーム *
+              </Caption>
+              <input
+                type="text"
+                required
+                value={formData.nickname}
+                onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="Aさん、B子さん など"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              出会った場所 *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.platform}
-              onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
-              placeholder="Pairs、with、Omiai など"
-            />
-          </div>
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Heart className="w-4 h-4" />
+                出会った場所 *
+              </Caption>
+              <input
+                type="text"
+                required
+                value={formData.platform}
+                onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="Pairs、with、Omiai など"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              現在のステージ *
-            </label>
-            <select
-              value={formData.current_stage}
-              onChange={(e) => setFormData({ ...formData, current_stage: e.target.value as ConnectionStage })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300 bg-white"
-            >
-              {stages.map(stage => (
-                <option key={stage} value={stage}>{stage}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              年齢
-            </label>
-            <input
-              type="number"
-              value={formData.basic_info.age || ''}
-              onChange={(e) => setFormData({
-                ...formData,
-                basic_info: { ...formData.basic_info, age: e.target.value ? parseInt(e.target.value) : undefined }
-              })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
-              placeholder="25"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              職業
-            </label>
-            <input
-              type="text"
-              value={formData.basic_info.occupation}
-              onChange={(e) => setFormData({
-                ...formData,
-                basic_info: { ...formData.basic_info, occupation: e.target.value }
-              })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
-              placeholder="エンジニア、デザイナー など"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              居住地
-            </label>
-            <input
-              type="text"
-              value={formData.basic_info.location || ''}
-              onChange={(e) => setFormData({
-                ...formData,
-                basic_info: { ...formData.basic_info, location: e.target.value }
-              })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
-              placeholder="東京都、大阪府 など"
-            />
-          </div>
-        </div>
-
-        <div className="mt-6 sm:mt-8 space-y-4">
-          <label className="block text-sm font-semibold text-gray-700">
-            趣味・興味
-          </label>
-          <div className="flex gap-3">
-            <input
-              type="text"
-              value={newHobby}
-              onChange={(e) => setNewHobby(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addHobby())}
-              className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-primary-400 transition-all text-base hover:border-gray-300"
-              placeholder="映画鑑賞、カフェ巡り など"
-            />
-            <button
-              type="button"
-              onClick={addHobby}
-              className="px-6 py-3 gradient-primary text-white rounded-xl font-semibold hover-lift transition-all touch-manipulation whitespace-nowrap shadow-primary"
-            >
-              追加
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {formData.basic_info.hobbies.map((hobby, index) => (
-              <span
-                key={index}
-                className="px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 rounded-full text-sm font-medium border border-purple-200 flex items-center gap-2"
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                現在のステージ *
+              </Caption>
+              <select
+                value={formData.current_stage}
+                onChange={(e) => setFormData({ ...formData, current_stage: e.target.value as ConnectionStage })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'hover:border-glass-30 text-text-primary'
+                )}
               >
-                {hobby}
-                <button
+                {stages.map(stage => (
+                  <option key={stage} value={stage}>{stage}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                年齢
+              </Caption>
+              <input
+                type="number"
+                value={formData.basic_info.age || ''}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  basic_info: { ...formData.basic_info, age: e.target.value ? parseInt(e.target.value) : undefined }
+                })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="25"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Briefcase className="w-4 h-4" />
+                職業
+              </Caption>
+              <input
+                type="text"
+                value={formData.basic_info.occupation}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  basic_info: { ...formData.basic_info, occupation: e.target.value }
+                })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="エンジニア、デザイナー など"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                居住地
+              </Caption>
+              <input
+                type="text"
+                value={formData.basic_info.location || ''}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  basic_info: { ...formData.basic_info, location: e.target.value }
+                })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="東京都、大阪府 など"
+              />
+            </div>
+          </div>
+
+          <div className="mt-8 space-y-4">
+            <Caption className="font-medium text-text-primary">
+              趣味・興味
+            </Caption>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={newHobby}
+                onChange={(e) => setNewHobby(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addHobby())}
+                className={cn(
+                  'flex-1 px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-secondary focus:border-accent-secondary',
+                  'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                )}
+                placeholder="映画鑑賞、カフェ巡り など"
+              />
+              <Button
+                type="button"
+                onClick={addHobby}
+                variant="secondary"
+                size="md"
+                icon={<Plus className="w-4 h-4" />}
+              >
+                追加
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {formData.basic_info.hobbies.map((hobby, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    'px-4 py-2 rounded-2xl text-sm font-medium flex items-center gap-2',
+                    'bg-accent-secondary/10 text-accent-secondary border border-accent-secondary/20'
+                  )}
+                >
+                  {hobby}
+                  <button
+                    type="button"
+                    onClick={() => removeHobby(index)}
+                    className="text-accent-secondary/70 hover:text-accent-error transition-colors p-1 -m-1"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </GlassCard>
+
+      {/* コミュニケーションセクション */}
+      <GlassCard variant="prominent" className="animate-slide-up" style={{ animationDelay: '100ms' }}>
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-2xl bg-accent-info/20 flex items-center justify-center border border-accent-info/30">
+              <MessageCircle className="w-5 h-5 text-accent-info" />
+            </div>
+            <HeroText className="text-xl ai-text-gradient">コミュニケーション状況</HeroText>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                連絡頻度
+              </Caption>
+              <select
+                value={formData.communication.frequency}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  communication: { ...formData.communication, frequency: e.target.value }
+                })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-info focus:border-accent-info',
+                  'hover:border-glass-30 text-text-primary'
+                )}
+              >
+                <option value="">選択してください</option>
+                <option value="毎日">毎日</option>
+                <option value="2日に1回">2日に1回</option>
+                <option value="週2-3回">週2-3回</option>
+                <option value="週1回">週1回</option>
+                <option value="月数回">月数回</option>
+                <option value="不定期">不定期</option>
+              </select>
+            </div>
+
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                最後の連絡
+              </Caption>
+              <input
+                type="date"
+                value={formData.communication.lastContact}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  communication: { ...formData.communication, lastContact: e.target.value }
+                })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-info focus:border-accent-info',
+                  'hover:border-glass-30 text-text-primary'
+                )}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <MessageCircle className="w-4 h-4" />
+                返信速度
+              </Caption>
+              <select
+                value={formData.communication.responseTime}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  communication: { ...formData.communication, responseTime: e.target.value }
+                })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-info focus:border-accent-info',
+                  'hover:border-glass-30 text-text-primary'
+                )}
+              >
+                <option value="">選択してください</option>
+                <option value="即レス">即レス</option>
+                <option value="数時間以内">数時間以内</option>
+                <option value="1日以内">1日以内</option>
+                <option value="2-3日">2-3日</option>
+                <option value="1週間以上">1週間以上</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </GlassCard>
+
+      {/* 気持ちセクション */}
+      <GlassCard variant="prominent" className="animate-slide-up" style={{ animationDelay: '200ms' }}>
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-2xl bg-accent-primary/20 flex items-center justify-center border border-accent-primary/30">
+              <Heart className="w-5 h-5 text-accent-primary" />
+            </div>
+            <HeroText className="text-xl ai-text-gradient">あなたの気持ち</HeroText>
+          </div>
+          
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Heart className="w-4 h-4" />
+                関係性への期待
+              </Caption>
+              <select
+                value={formData.user_feelings.expectations}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  user_feelings: { ...formData.user_feelings, expectations: e.target.value }
+                })}
+                className={cn(
+                  'w-full px-4 py-3 rounded-xl transition-all duration-200',
+                  'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                  'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-accent-primary',
+                  'hover:border-glass-30 text-text-primary'
+                )}
+              >
+                <option value="">選択してください</option>
+                <option value="真剣な交際">真剣な交際</option>
+                <option value="楽しい関係">楽しい関係</option>
+                <option value="友達から始めたい">友達から始めたい</option>
+                <option value="まだわからない">まだわからない</option>
+                <option value="カジュアルな関係">カジュアルな関係</option>
+              </select>
+            </div>
+
+            <div className="space-y-4">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                魅力を感じるポイント
+              </Caption>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={newAttractivePoint}
+                  onChange={(e) => setNewAttractivePoint(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAttractivePoint())}
+                  className={cn(
+                    'flex-1 px-4 py-3 rounded-xl transition-all duration-200',
+                    'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                    'focus:outline-none focus:ring-2 focus:ring-accent-success focus:border-accent-success',
+                    'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                  )}
+                  placeholder="優しい、話が面白い など"
+                />
+                <Button
                   type="button"
-                  onClick={() => removeHobby(index)}
-                  className="text-purple-600 hover:text-red-500 active:text-red-700 touch-manipulation p-1 -m-1 font-bold"
+                  onClick={addAttractivePoint}
+                  variant="success"
+                  size="md"
+                  icon={<Plus className="w-4 h-4" />}
                 >
-                  ×
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="card hover-glow animate-fadeIn">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 rounded-lg gradient-secondary flex items-center justify-center">
-            <span className="text-lg">💬</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold gradient-text">コミュニケーション状況</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              連絡頻度
-            </label>
-            <select
-              value={formData.communication.frequency}
-              onChange={(e) => setFormData({
-                ...formData,
-                communication: { ...formData.communication, frequency: e.target.value }
-              })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-secondary-400 transition-all text-base hover:border-gray-300 bg-white"
-            >
-              <option value="">選択してください</option>
-              <option value="毎日">毎日</option>
-              <option value="2日に1回">2日に1回</option>
-              <option value="週2-3回">週2-3回</option>
-              <option value="週1回">週1回</option>
-              <option value="月数回">月数回</option>
-              <option value="不定期">不定期</option>
-            </select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              最後の連絡
-            </label>
-            <input
-              type="date"
-              value={formData.communication.lastContact}
-              onChange={(e) => setFormData({
-                ...formData,
-                communication: { ...formData.communication, lastContact: e.target.value }
-              })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-secondary-400 transition-all text-base hover:border-gray-300"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              返信速度
-            </label>
-            <select
-              value={formData.communication.responseTime}
-              onChange={(e) => setFormData({
-                ...formData,
-                communication: { ...formData.communication, responseTime: e.target.value }
-              })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-secondary-400 transition-all text-base hover:border-gray-300 bg-white"
-            >
-              <option value="">選択してください</option>
-              <option value="即レス">即レス</option>
-              <option value="数時間以内">数時間以内</option>
-              <option value="1日以内">1日以内</option>
-              <option value="2-3日">2-3日</option>
-              <option value="1週間以上">1週間以上</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div className="card hover-glow animate-fadeIn">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 rounded-lg gradient-success flex items-center justify-center">
-            <span className="text-lg">💖</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold gradient-text">あなたの気持ち</h2>
-        </div>
-        
-        <div className="space-y-6 sm:space-y-8">
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              関係性への期待
-            </label>
-            <select
-              value={formData.user_feelings.expectations}
-              onChange={(e) => setFormData({
-                ...formData,
-                user_feelings: { ...formData.user_feelings, expectations: e.target.value }
-              })}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-success-400 transition-all text-base hover:border-gray-300 bg-white"
-            >
-              <option value="">選択してください</option>
-              <option value="真剣な交際">真剣な交際</option>
-              <option value="楽しい関係">楽しい関係</option>
-              <option value="友達から始めたい">友達から始めたい</option>
-              <option value="まだわからない">まだわからない</option>
-              <option value="カジュアルな関係">カジュアルな関係</option>
-            </select>
-          </div>
-
-          <div className="space-y-4">
-            <label className="block text-sm font-semibold text-gray-700">
-              魅力を感じるポイント
-            </label>
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={newAttractivePoint}
-                onChange={(e) => setNewAttractivePoint(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAttractivePoint())}
-                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-success-400 transition-all text-base hover:border-gray-300"
-                placeholder="優しい、話が面白い など"
-              />
-              <button
-                type="button"
-                onClick={addAttractivePoint}
-                className="px-6 py-3 gradient-success text-white rounded-xl font-semibold hover-lift transition-all touch-manipulation whitespace-nowrap shadow-success"
-              >
-                追加
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {formData.user_feelings.attractivePoints.map((point, index) => (
-                <span
-                  key={index}
-                  className="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 rounded-full text-sm font-medium border border-green-200 flex items-center gap-2"
-                >
-                  ✨ {point}
-                  <button
-                    type="button"
-                    onClick={() => setFormData({
-                      ...formData,
-                      user_feelings: {
-                        ...formData.user_feelings,
-                        attractivePoints: formData.user_feelings.attractivePoints.filter((_, i) => i !== index)
-                      }
-                    })}
-                    className="text-green-600 hover:text-red-500 touch-manipulation p-1 -m-1 font-bold"
+                  追加
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {formData.user_feelings.attractivePoints.map((point, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'px-4 py-2 rounded-2xl text-sm font-medium flex items-center gap-2',
+                      'bg-accent-success/10 text-accent-success border border-accent-success/20'
+                    )}
                   >
-                    ×
-                  </button>
-                </span>
-              ))}
+                    <Star className="w-3 h-3" /> {point}
+                    <button
+                      type="button"
+                      onClick={() => setFormData({
+                        ...formData,
+                        user_feelings: {
+                          ...formData.user_feelings,
+                          attractivePoints: formData.user_feelings.attractivePoints.filter((_, i) => i !== index)
+                        }
+                      })}
+                      className="text-accent-success/70 hover:text-accent-error transition-colors p-1 -m-1"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            <label className="block text-sm font-semibold text-gray-700">
-              気になる点・不安
-            </label>
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={newConcern}
-                onChange={(e) => setNewConcern(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addConcern())}
-                className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-caution transition-all text-base hover:border-gray-300"
-                placeholder="返信が遅い、価値観の違い など"
-              />
-              <button
-                type="button"
-                onClick={addConcern}
-                className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold hover-lift transition-all touch-manipulation whitespace-nowrap"
-              >
-                追加
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {formData.user_feelings.concerns?.map((concern, index) => (
-                <span
-                  key={index}
-                  className="px-4 py-2 bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-700 rounded-full text-sm font-medium border border-orange-200 flex items-center gap-2"
+            <div className="space-y-4">
+              <Caption className="font-medium text-text-primary flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" />
+                気になる点・不安
+              </Caption>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={newConcern}
+                  onChange={(e) => setNewConcern(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addConcern())}
+                  className={cn(
+                    'flex-1 px-4 py-3 rounded-xl transition-all duration-200',
+                    'bg-glass-5 border border-glass-20 backdrop-blur-sm',
+                    'focus:outline-none focus:ring-2 focus:ring-accent-warning focus:border-accent-warning',
+                    'hover:border-glass-30 placeholder:text-text-muted text-text-primary'
+                  )}
+                  placeholder="返信が遅い、価値観の違い など"
+                />
+                <Button
+                  type="button"
+                  onClick={addConcern}
+                  variant="warning"
+                  size="md"
+                  icon={<Plus className="w-4 h-4" />}
                 >
-                  ⚠️ {concern}
-                  <button
-                    type="button"
-                    onClick={() => setFormData({
-                      ...formData,
-                      user_feelings: {
-                        ...formData.user_feelings,
-                        concerns: formData.user_feelings.concerns?.filter((_, i) => i !== index) || []
-                      }
-                    })}
-                    className="text-orange-600 hover:text-red-500 active:text-red-700 touch-manipulation p-1 -m-1 font-bold"
+                  追加
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {formData.user_feelings.concerns?.map((concern, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'px-4 py-2 rounded-2xl text-sm font-medium flex items-center gap-2',
+                      'bg-accent-warning/10 text-accent-warning border border-accent-warning/20'
+                    )}
                   >
-                    ×
-                  </button>
-                </span>
-              ))}
+                    <AlertTriangle className="w-3 h-3" /> {concern}
+                    <button
+                      type="button"
+                      onClick={() => setFormData({
+                        ...formData,
+                        user_feelings: {
+                          ...formData.user_feelings,
+                          concerns: formData.user_feelings.concerns?.filter((_, i) => i !== index) || []
+                        }
+                      })}
+                      className="text-accent-warning/70 hover:text-accent-error transition-colors p-1 -m-1"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </GlassCard>
 
-      <div className="flex flex-col sm:flex-row justify-end gap-4 sm:gap-6 pt-4">
-        <button
+      {/* アクションボタン */}
+      <div className="flex flex-col sm:flex-row justify-end gap-4 pt-4">
+        <Button
           type="button"
           onClick={onCancel}
-          className="px-8 py-3 bg-white border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-700 touch-manipulation order-2 sm:order-1 min-h-[48px] hover-lift"
+          variant="ghost"
+          size="lg"
+          className="px-8 order-2 sm:order-1"
         >
           キャンセル
-        </button>
-        <button
+        </Button>
+        <RippleButton
           type="submit"
-          className="px-8 py-3 gradient-primary text-white rounded-xl font-bold hover-lift transition-all touch-manipulation order-1 sm:order-2 min-h-[48px] shadow-primary"
+          variant="primary"
+          size="lg"
+          className="px-8 order-1 sm:order-2"
+          glow
+          icon={initialData ? <Star className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
         >
-          {initialData ? '✨ 更新する' : '💫 登録する'}
-        </button>
+          {initialData ? '更新する' : '登録する'}
+        </RippleButton>
       </div>
     </form>
   )

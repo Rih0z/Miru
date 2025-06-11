@@ -2,19 +2,19 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testIgnore: '**/local-*.spec.ts',
+  testMatch: '**/local-*.spec.ts',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: 0,
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: 'https://3aa60f63.miru-28f.pages.dev',
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    actionTimeout: 30000,
-    navigationTimeout: 30000,
+    actionTimeout: 10000,
+    navigationTimeout: 10000,
   },
 
   projects: [
@@ -24,5 +24,10 @@ export default defineConfig({
     },
   ],
 
-  webServer: undefined, // 既にデプロイされているサイトを使用
+  webServer: {
+    command: 'npm run dev',
+    port: 3000,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 })
