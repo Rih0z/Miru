@@ -15,6 +15,14 @@
 ### 1.3 ターゲット
 25-40歳の真剣な交際を求める独身男女（日本国内）
 
+### 1.4 デザイン方針（2024-2025年トレンド準拠）
+- **Dark Mode First**: デフォルトでダークテーマを採用
+- **Glassmorphism**: 透明感のある階層的UI
+- **Neobrutalism**: 個性的で記憶に残るデザイン
+- **AI Aesthetic**: クリーンで技術的な印象
+- **Micro-interactions**: 直感的なフィードバック
+- **Bold Typography**: 視認性と印象を重視
+
 ## 2. システムアーキテクチャ
 
 ### 2.1 全体構成
@@ -79,10 +87,19 @@
 
 ### 3.1 フロントエンド
 - **モバイルアプリ**: React Native (iOS/Android)
-- **Webアプリ**: React + TypeScript + PWA
+- **Webアプリ**: Next.js 14 + TypeScript + PWA
 - **管理画面**: React + Material-UI
 - **状態管理**: Redux Toolkit + RTK Query
-- **UI**: Native Base + Styled Components
+- **UI フレームワーク**: 
+  - Tailwind CSS (ユーティリティファースト)
+  - CSS Modules (コンポーネントスコープ)
+  - Framer Motion (アニメーション)
+- **デザインシステム**:
+  - Dark Mode First 対応
+  - Glassmorphism エフェクト (backdrop-filter)
+  - Neobrutalism コンポーネント
+  - Variable Fonts (Inter, Noto Sans JP)
+  - CSS Custom Properties による動的テーマ
 
 ### 3.2 バックエンド
 - **API**: Node.js + Express + TypeScript
@@ -113,6 +130,36 @@
 - **セキュリティ**: HashiCorp Vault
 
 ## 4. データベース設計
+
+### 4.0 UI/UX関連データ
+
+```sql
+-- ユーザーテーマ設定
+CREATE TABLE user_preferences (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    theme VARCHAR(20) DEFAULT 'dark', -- dark, light, system
+    color_scheme VARCHAR(50) DEFAULT 'default', -- default, high-contrast, colorblind
+    animation_enabled BOOLEAN DEFAULT TRUE,
+    glassmorphism_enabled BOOLEAN DEFAULT TRUE,
+    language VARCHAR(10) DEFAULT 'ja',
+    accessibility_settings JSONB,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- UI/UXメトリクス
+CREATE TABLE ux_metrics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    session_id VARCHAR(255),
+    interaction_type VARCHAR(50), -- click, scroll, hover, swipe
+    component_name VARCHAR(100),
+    response_time_ms INTEGER,
+    satisfaction_score INTEGER CHECK (satisfaction_score >= 1 AND satisfaction_score <= 5),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
 
 ### 4.1 主要テーブル構造
 
@@ -224,6 +271,43 @@ match_candidates:{user_id} -> [
 ```
 
 ## 5. API設計
+
+### 5.0 UI/UX設定API
+
+```typescript
+// テーマ設定取得
+GET /api/v1/preferences/theme
+Response: {
+    "theme": "dark",
+    "color_scheme": "default",
+    "glassmorphism_enabled": true,
+    "animation_enabled": true,
+    "custom_colors": {
+        "accent_primary": "#ff6b6b",
+        "accent_secondary": "#4ecdc4"
+    }
+}
+
+// テーマ設定更新
+PUT /api/v1/preferences/theme
+{
+    "theme": "light",
+    "glassmorphism_enabled": false
+}
+
+// UI/UXメトリクス送信
+POST /api/v1/metrics/ux
+{
+    "interactions": [
+        {
+            "type": "micro_interaction",
+            "component": "connection_card",
+            "response_time_ms": 150,
+            "satisfaction": 5
+        }
+    ]
+}
+```
 
 ### 5.1 認証・ユーザー管理
 
@@ -500,7 +584,51 @@ ml_metrics:
 - **Cache**: Redis Cluster
 - **Message Queue**: Apache Kafka for async processing
 
-## 10. 開発・デプロイメント
+## 10. UI/UXテスト戦略
+
+### 10.0 デザインシステムテスト
+
+```javascript
+// Storybook設定
+export default {
+  title: 'Design System/Components',
+  parameters: {
+    themes: {
+      default: 'dark',
+      list: [
+        { name: 'dark', class: 'theme-dark', color: '#0a0a0a' },
+        { name: 'light', class: 'theme-light', color: '#ffffff' }
+      ]
+    }
+  }
+};
+
+// Visual Regression Test
+test('Glassmorphism effects render correctly', async () => {
+  await page.goto('/components/glass-card');
+  await expect(page).toHaveScreenshot('glass-card-dark.png');
+  
+  await page.click('[data-theme-toggle]');
+  await expect(page).toHaveScreenshot('glass-card-light.png');
+});
+
+// Accessibility Test
+test('Components meet WCAG 2.1 AA standards', async () => {
+  const violations = await axe(page);
+  expect(violations).toHaveLength(0);
+});
+
+// Performance Test
+test('Micro-interactions complete within 200ms', async () => {
+  const startTime = Date.now();
+  await page.click('.interactive-element');
+  await page.waitForSelector('.animation-complete');
+  const duration = Date.now() - startTime;
+  expect(duration).toBeLessThan(200);
+});
+```
+
+## 11. 開発・デプロイメント
 
 ### 10.1 開発環境
 ```yaml
@@ -568,7 +696,7 @@ jobs:
           kubectl apply -f k8s/
 ```
 
-## 11. パフォーマンス要件
+## 12. パフォーマンス要件
 
 ### 11.1 レスポンス時間目標
 - **API レスポンス**: < 200ms (95パーセンタイル)
@@ -582,7 +710,84 @@ jobs:
 - **メッセージ処理**: 1,000 messages/sec
 - **AI 分析**: 500 analyses/sec
 
-## 12. 災害復旧・事業継続
+## 13. UI/UXパフォーマンス最適化
+
+### 13.0 レンダリング最適化
+
+```typescript
+// Critical CSS抽出
+const criticalCSS = {
+  // Dark Mode First基本スタイル
+  ':root': {
+    'color-scheme': 'dark',
+    '--bg-primary': '#0a0a0a',
+    '--text-primary': '#ffffff'
+  },
+  // Glassmorphismプリロード
+  '.glass-preload': {
+    'backdrop-filter': 'blur(0px)',
+    'will-change': 'backdrop-filter'
+  }
+};
+
+// 画像最適化
+const imageOptimization = {
+  formats: ['webp', 'avif'],
+  sizes: {
+    mobile: 640,
+    tablet: 1024,
+    desktop: 1920
+  },
+  lazy: true,
+  placeholder: 'blur'
+};
+
+// アニメーション最適化
+const animationSettings = {
+  preferReducedMotion: {
+    duration: 0,
+    easing: 'linear'
+  },
+  gpu: {
+    transform: 'translateZ(0)',
+    willChange: 'transform'
+  }
+};
+```
+
+### 13.1 バンドルサイズ最適化
+
+```javascript
+// コンポーネント別分割
+const routes = [
+  {
+    path: '/',
+    component: lazy(() => import('./pages/Home')),
+    preload: true
+  },
+  {
+    path: '/dashboard',
+    component: lazy(() => import('./pages/Dashboard')),
+    preload: false
+  }
+];
+
+// CSS最適化
+module.exports = {
+  purge: {
+    content: ['./src/**/*.{js,jsx,ts,tsx}'],
+    options: {
+      safelist: [
+        /^glass-/,
+        /^animate-/,
+        /^theme-/
+      ]
+    }
+  }
+};
+```
+
+## 14. 災害復旧・事業継続
 
 ### 12.1 バックアップ戦略
 - **データベース**: 毎日自動バックアップ + PITR
