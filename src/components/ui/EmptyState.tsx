@@ -22,8 +22,8 @@ export interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  title = 'Start Your Love Journey',
-  description = 'Let Miru help you discover amazing connections',
+  title = '恋愛の旅を始めましょう',
+  description = 'MiruがAIの力で素晴らしいコネクションを発見し、意味のある関係を築くお手伝いをします',
   icon: IconComponent = Heart,
   primaryAction,
   secondaryAction,

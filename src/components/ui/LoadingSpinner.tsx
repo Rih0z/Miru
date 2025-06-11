@@ -13,8 +13,8 @@ export interface LoadingSpinnerProps {
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'base',
-  message = 'Analyzing love connections...',
-  submessage = 'Finding your perfect match',
+  message = '恋愛コネクションを分析中...',
+  submessage = 'あなたの理想のマッチを見つけています',
   variant = 'heart',
   fullScreen = false
 }) => {

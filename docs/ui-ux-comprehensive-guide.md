@@ -1,93 +1,94 @@
-# Miru UI/UX Complete Design Guide
-> Comprehensive Design and Experience Specification for Love Orchestration AI System
+# Miru UI/UX 完全設計ガイド
+> 恋愛オーケストレーションAIシステムの包括的デザイン・エクスペリエンス仕様書
 
-## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Design Concept](#design-concept)
-3. [UX Principles](#ux-principles)
-4. [Technical Stack](#technical-stack)
-5. [Design System](#design-system)
-6. [Data Structure](#data-structure)
-7. [User Journey](#user-journey)
-8. [Screen Flow](#screen-flow)
-9. [Component Specifications](#component-specifications)
-10. [Screen Implementation Specs](#screen-implementation-specs)
-11. [Animation Details](#animation-details)
-12. [Error and Empty State Specs](#error-and-empty-state-specs)
-13. [AI Integration Prompts](#ai-integration-prompts)
-14. [Accessibility](#accessibility)
-15. [Performance Metrics](#performance-metrics)
-16. [Implementation Order](#implementation-order)
-17. [Validation Checklist](#validation-checklist)
-
----
-
-## Project Overview
-
-### About Miru
-A Love Orchestration AI System that visualizes the hope of "potential romantic relationship". Provides heartwarming romantic experiences with clean, modern design and supports users' romantic success.
-
-### Mission
-- Reduce anxiety in relationships and provide positive experiences
-- Support romantic success through AI analysis and advice
-- Deliver visually appealing and intuitive user experiences
+## 目次
+1. [プロジェクト概要](#プロジェクト概要)
+2. [デザインコンセプト](#デザインコンセプト)
+3. [UX原則](#ux原則)
+4. [技術スタック](#技術スタック)
+5. [Kawaiiデザインシステム](#kawaiiデザインシステム)
+6. [データ構造](#データ構造)
+7. [ユーザージャーニー](#ユーザージャーニー)
+8. [画面フロー](#画面フロー)
+9. [コンポーネント仕様](#コンポーネント仕様)
+10. [画面実装仕様](#画面実装仕様)
+11. [アニメーション詳細](#アニメーション詳細)
+12. [エラー・空状態仕様](#エラー・空状態仕様)
+13. [AI統合プロンプト](#ai統合プロンプト)
+14. [アクセシビリティ](#アクセシビリティ)
+15. [パフォーマンス指標](#パフォーマンス指標)
+16. [実装順序](#実装順序)
+17. [検証チェックリスト](#検証チェックリスト)
 
 ---
 
-## Design Concept
+## プロジェクト概要
 
-### Visual Concept
-1. **Clean Modern Design**
-   - Rounded, soft components
-   - Pastel color schemes
-   - Smooth animations
-   - Friendly expressions
+### Miruについて
+「付き合えるかもしれない」希望を可視化する恋愛オーケストレーションAIシステム。
+かわいくて温かい恋愛体験をKawaiiデザインで提供し、ユーザーの恋愛成功をサポートします。
 
-2. **Hope and Encouragement**
-   - Positive feedback
-   - Success visualization
-   - Warm expressions
-   - Scientific reliability
-
-3. **Simple and Intuitive**
-   - Clear and consistent navigation
-   - Minimal clicks for operations
-   - Visual guide-based flow design
-   - Mobile-first layout
+### ミッション
+- 恋愛における不安を軽減し、ポジティブな体験を提供
+- AI分析とアドバイスによる恋愛成功のサポート
+- 視覚的に魅力的で直感的なユーザー体験を提供
 
 ---
 
-## UX Principles
+## デザインコンセプト
 
-### 1. Hope and Encouragement
-- Positive language to reduce anxiety
-- Celebrate success with feedback
-- Visualize progress for sense of achievement
-- Encouraging messages during setbacks
+### ビジュアルコンセプト
+1. **Kawaii デザインシステム**
+   - 丸みを帯びた柔らかいコンポーネント
+   - パステルカラースキーム
+   - スムーズなアニメーション
+   - 親しみやすい表現
 
-### 2. Simple and Intuitive
-- Clear and understandable navigation
-- Minimal steps to achieve goals
-- Guided flow design to prevent confusion
-- Friendly expressions avoiding technical jargon
+2. **希望と励ましの表現**
+   - ポジティブなフィードバック
+   - 成功の可視化
+   - 温かい表現
+   - 科学的信頼性
 
-### 3. Personalized Experience
-- Recommended actions based on user situation
-- Optimization through learning features
-- Personalized messages
-- Feature suggestions adapted to growth
-
-### 4. Emotional Design
-**Positive Language Examples:**
-- "An error occurred" → "Something minor happened"
-- "Authentication failed" → "Please try again"
-- "No data available" → "Let's start a new romantic journey"
+3. **シンプルで直感的**
+   - 明確で一貫したナビゲーション
+   - 最小クリックでの操作
+   - ビジュアルガイドベースのフロー設計
+   - モバイルファーストレイアウト
 
 ---
 
-## Technical Stack
+## UX原則
 
-### Frontend
+### 1. 希望と励ましの提供
+- 不安を軽減するポジティブな言葉遣い
+- 成功を祝うフィードバック
+- 達成感のための進捗の可視化
+- 挫折時の励ましメッセージ
+
+### 2. シンプルで直感的
+- 分かりやすく理解しやすいナビゲーション
+- 目標達成への最小ステップ
+- 混乱を防ぐガイド付きフロー設計
+- 技術用語を避けた親しみやすい表現
+
+### 3. パーソナライズされた体験
+- ユーザーの状況に基づく推奨アクション
+- 学習機能による最適化
+- パーソナライズされたメッセージ
+- 成長に適応した機能提案
+
+### 4. エモーショナルデザイン
+**ポジティブな言葉遣いの例：**
+- "エラーが発生しました" → "ちょっとした問題が発生しました"
+- "認証に失敗しました" → "もう一度お試しください"
+- "データがありません" → "新しい恋愛の旅を始めましょう"
+
+---
+
+## 技術スタック
+
+### フロントエンド
 ```json
 {
   "framework": "Next.js 14.2.29",
@@ -101,7 +102,7 @@ A Love Orchestration AI System that visualizes the hope of "potential romantic r
 }
 ```
 
-### Backend & Infrastructure
+### バックエンド＆インフラ
 ```json
 {
   "database": "Supabase PostgreSQL",
@@ -113,54 +114,60 @@ A Love Orchestration AI System that visualizes the hope of "potential romantic r
 
 ---
 
-## Design System
+## Kawaiiデザインシステム
 
-### Color Palette
+### カラーパレット
 
-#### Primary Colors
+#### プライマリカラー（Kawaiiテーマ）
 ```css
-/* Pink system */
+/* かわいいピンク系 */
+--kawaii-pink: #FFB6C1;
+--kawaii-pink-light: #FFCCCB;
+--kawaii-pink-dark: #FF69B4;
 --pink-400: #EC4899;
 --pink-500: #D946EF;
 --pink-50: #FDF2F8;
 --pink-100: #FCE7F3;
 --pink-200: #FBCFE8;
 
-/* Purple system */
+/* かわいいパープル系 */
+--kawaii-purple: #DDA0DD;
+--kawaii-lavender: #E6E6FA;
 --purple-400: #A855F7;
 --purple-500: #9333EA;
 --purple-50: #FAF5FF;
 --purple-100: #F3E8FF;
 --purple-200: #E9D5FF;
 
-/* Gradients */
+/* Kawaiiグラデーション */
+--kawaii-gradient: linear-gradient(135deg, #FFB6C1, #DDA0DD, #87CEEB);
 --gradient-primary: linear-gradient(to right, #EC4899, #A855F7);
 --gradient-bg: linear-gradient(to bottom right, #FDF2F8, #FAF5FF, #EFF6FF);
 ```
 
-#### Temperature Colors (Relationship Expression)
+#### 温度カラー（関係性表現）
 ```css
---temp-hot: #FF5864;     /* High (75-100%) */
---temp-warm: #FFB548;    /* Medium (40-74%) */
---temp-cool: #4FC3F7;    /* Low (0-39%) */
+--kawaii-hot: #FF69B4;      /* 高温 (75-100%) */
+--kawaii-warm: #FFB6C1;     /* 中温 (40-74%) */
+--kawaii-cool: #87CEEB;     /* 低温 (0-39%) */
 ```
 
-#### Accent Colors
+#### Kawaiiアクセントカラー
 ```css
---accent-pink: #FFB6C1;
---accent-peach: #FFCCCB;
---accent-lavender: #E6E6FA;
---accent-mint: #F0FFF0;
---accent-cream: #FFF8DC;
---accent-sky: #E0F6FF;
+--kawaii-cream: #FFF8DC;
+--kawaii-soft: #F5F5DC;
+--kawaii-glow: #FFE4E1;
+--kawaii-mint: #F0FFF0;
+--kawaii-sky: #E0F6FF;
+--kawaii-peach: #FFCCCB;
 ```
 
-### Typography
+### タイポグラフィ
 ```css
-/* Font Family */
+/* フォントファミリー */
 --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
 
-/* Font Sizes */
+/* フォントサイズ */
 --text-xs: 0.75rem;    /* 12px */
 --text-sm: 0.875rem;   /* 14px */
 --text-base: 1rem;     /* 16px */
@@ -171,7 +178,7 @@ A Love Orchestration AI System that visualizes the hope of "potential romantic r
 --text-4xl: 2.25rem;   /* 36px */
 ```
 
-### Spacing
+### スペーシング
 ```css
 --space-1: 0.25rem;    /* 4px */
 --space-2: 0.5rem;     /* 8px */
@@ -182,26 +189,26 @@ A Love Orchestration AI System that visualizes the hope of "potential romantic r
 --space-12: 3rem;      /* 48px */
 ```
 
-### Border Radius & Shadows
+### 角丸＆シャドウ
 ```css
-/* Border Radius */
+/* 角丸 */
 --radius-sm: 0.25rem;    /* 4px */
 --radius-base: 0.5rem;   /* 8px */
 --radius-lg: 1rem;       /* 16px */
 --radius-xl: 1.5rem;     /* 24px */
---radius-full: 9999px;   /* Full circle */
+--radius-full: 9999px;   /* 完全な円 */
 
-/* Shadows */
---shadow-sm: 0 4px 8px 0 rgba(255, 182, 193, 0.2);
+/* Kawaiiシャドウ */
+--shadow-kawaii: 0 4px 8px 0 rgba(255, 182, 193, 0.2);
 --shadow-glow: 0 0 20px rgba(255, 182, 193, 0.3);
 --shadow-magical: 0 8px 25px rgba(221, 160, 221, 0.4);
 ```
 
 ---
 
-## Data Structure
+## データ構造
 
-### TypeScript Type Definitions
+### TypeScript型定義
 ```typescript
 export interface Connection {
   id: string;
@@ -238,10 +245,10 @@ export interface DashboardData {
 
 ---
 
-## Component Specifications
+## コンポーネント仕様
 
-### Icon Usage with React Icons
-All visual icons should use React Icons instead of emoji for better accessibility and consistency:
+### React Icons使用ガイドライン
+すべての視覚的アイコンは、アクセシビリティと一貫性向上のため、絵文字の代わりにReact Iconsを使用する：
 
 ```typescript
 import { 
@@ -258,7 +265,7 @@ import {
   Settings
 } from 'lucide-react';
 
-// Alternative icon libraries
+// 代替アイコンライブラリ
 import { 
   FaHeart, 
   FaUsers, 
@@ -270,18 +277,18 @@ import {
 } from 'react-icons/ai';
 ```
 
-### Bottom Navigation Tabs
+### ボトムナビゲーションタブ
 ```typescript
 const tabs = [
-  { id: 'dashboard', icon: Home, label: 'Dashboard' },
-  { id: 'temperature', icon: Thermometer, label: 'Temperature' },
-  { id: 'import', icon: Download, label: 'Import' },
-  { id: 'ai', icon: Bot, label: 'AI Analysis' },
-  { id: 'settings', icon: Settings, label: 'Settings' }
+  { id: 'dashboard', icon: Home, label: 'ホーム' },
+  { id: 'temperature', icon: Thermometer, label: '温度' },
+  { id: 'import', icon: Download, label: 'インポート' },
+  { id: 'ai', icon: Bot, label: 'AI分析' },
+  { id: 'settings', icon: Settings, label: '設定' }
 ];
 ```
 
-### Connection Card Component
+### コネクションカードコンポーネント（Kawaii版）
 ```typescript
 const ConnectionCard: React.FC<ConnectionCardProps> = ({
   connection,
@@ -293,24 +300,24 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   const progressWidth = getStageProgress(connection.current_stage);
   
   return (
-    <div className="card-clean hover-lift group animate-fadeIn relative overflow-hidden">
+    <div className="kawaii-card hover-bounce group animate-bounceIn relative overflow-hidden">
       {/* Header with icon */}
       <div className="flex justify-between items-start mb-6 relative z-10">
         <div className="min-w-0 flex-1 mr-3">
           <div className="flex items-center gap-2 mb-2">
-            <Heart className="w-5 h-5 text-pink-500" />
-            <h3 className="text-2xl font-bold text-gradient truncate">
+            <Heart className="w-5 h-5 text-kawaii-pink animate-heartbeat" />
+            <h3 className="text-2xl font-bold kawaii-gradient-text truncate animate-float">
               {connection.nickname}
             </h3>
           </div>
         </div>
       </div>
       
-      {/* Progress bar */}
+      {/* Kawaii progress bar */}
       <div className="mb-6">
-        <div className="w-full bg-pink-100 rounded-full h-4 shadow-inner relative overflow-hidden">
+        <div className="w-full bg-kawaii-cream rounded-full h-4 shadow-kawaii relative overflow-hidden">
           <div 
-            className="gradient-primary h-4 rounded-full transition-all duration-700 shadow-glow"
+            className="kawaii-gradient h-4 rounded-full transition-all duration-700 animate-kawaii-pulse"
             style={{ width: `${progressWidth}%` }}
           />
         </div>
@@ -320,10 +327,10 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
 };
 ```
 
-### Button Component with Icons
+### ボタンコンポーネント（Kawaii版）
 ```typescript
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'kawaii' | 'magical' | 'soft' | 'romantic';
   size?: 'sm' | 'base' | 'lg';
   children: React.ReactNode;
   onClick?: () => void;
@@ -335,7 +342,7 @@ export interface ButtonProps {
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
+  variant = 'kawaii',
   size = 'base',
   children,
   onClick,
@@ -366,40 +373,40 @@ export const Button: React.FC<ButtonProps> = ({
 
 ---
 
-## Screen Implementation Specs
+## 画面実装仕様
 
-### Dashboard Screen
+### ダッシュボード画面
 
-#### Empty State Screen
+#### 空状態画面（Kawaii版）
 ```typescript
 const EmptyDashboard = () => (
-  <div className="min-h-screen bg-gradient-soft flex items-center justify-center p-4">
-    <div className="card-clean max-w-2xl mx-auto text-center py-16 animate-bounceIn relative overflow-hidden">
-      {/* Main icon */}
-      <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-accent-soft flex items-center justify-center animate-pulse relative">
-        <Heart className="w-16 h-16 text-pink-500" />
+  <div className="min-h-screen kawaii-gradient flex items-center justify-center p-4">
+    <div className="kawaii-card max-w-2xl mx-auto text-center py-16 animate-bounceIn relative overflow-hidden">
+      {/* メインアイコン */}
+      <div className="w-32 h-32 mx-auto mb-8 rounded-full kawaii-soft flex items-center justify-center animate-kawaii-pulse relative">
+        <Heart className="w-16 h-16 text-kawaii-pink animate-heartbeat" />
       </div>
       
-      <h3 className="text-4xl font-bold text-gradient mb-6 animate-float">
-        Start Your Love Journey
+      <h3 className="text-4xl font-bold kawaii-gradient-text mb-6 animate-float">
+        恋愛の旅を始めましょう
       </h3>
       
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button
-          variant="primary"
+          variant="kawaii"
           size="lg"
           icon={Plus}
-          className="animate-pulse"
+          className="animate-kawaii-pulse"
         >
-          Add Manually
+          手動で追加
         </Button>
         <Button
-          variant="secondary"
+          variant="magical"
           size="lg"
           icon={Download}
-          className="animate-pulse"
+          className="animate-kawaii-pulse"
         >
-          AI Bulk Import
+          AI一括インポート
         </Button>
       </div>
     </div>
@@ -407,70 +414,70 @@ const EmptyDashboard = () => (
 );
 ```
 
-#### Main Dashboard
+#### メインダッシュボード（Kawaii版）
 ```typescript
 const Dashboard = () => (
   <div className="space-y-8 py-8">
-    {/* Header */}
+    {/* ヘッダー */}
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
       <div className="space-y-3">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gradient animate-float">
-          Love Dashboard
+        <h1 className="text-3xl sm:text-4xl font-extrabold kawaii-gradient-text animate-float">
+          恋愛ダッシュボード
         </h1>
         <p className="text-gray-700 text-lg font-medium">
-          Your romantic insights powered by AI
+          AIによる恋愛インサイト
         </p>
       </div>
       
       <div className="flex gap-3">
         <Button
-          variant="primary"
+          variant="kawaii"
           onClick={handleAddConnection}
           icon={Plus}
         >
-          <span className="hidden sm:inline">Add Manually</span>
+          <span className="hidden sm:inline">手動で追加</span>
         </Button>
         <Button
-          variant="secondary"
+          variant="magical"
           onClick={() => setShowDataImportModal(true)}
           icon={Download}
         >
-          <span className="hidden sm:inline">AI Import</span>
+          <span className="hidden sm:inline">AIインポート</span>
         </Button>
       </div>
     </div>
 
-    {/* Summary Statistics */}
+    {/* 統計サマリー */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <Card variant="clean" hover className="animate-bounceIn">
+      <Card variant="kawaii" hover className="animate-bounceIn">
         <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl bg-accent-soft flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
-            <Users className="w-8 h-8 text-pink-500" />
+          <div className="w-16 h-16 rounded-3xl kawaii-soft flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
+            <Users className="w-8 h-8 text-kawaii-pink" />
           </div>
           <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold text-gradient">Connections</p>
+            <p className="text-sm font-semibold kawaii-gradient-text">コネクション</p>
             <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold text-glow">
+              <p className="text-4xl font-extrabold kawaii-glow">
                 {dashboardData.totalConnections}
               </p>
-              <p className="ml-2 text-sm text-pink-400 font-medium">people</p>
+              <p className="ml-2 text-sm text-kawaii-pink font-medium">人</p>
             </div>
           </div>
         </div>
       </Card>
 
-      <Card variant="accent" hover className="animate-bounceIn">
+      <Card variant="magical" hover className="animate-bounceIn">
         <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl bg-accent-lavender flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
+          <div className="w-16 h-16 rounded-3xl bg-purple-100 flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
             <TrendingUp className="w-8 h-8 text-purple-500" />
           </div>
           <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold text-gradient">Active</p>
+            <p className="text-sm font-semibold kawaii-gradient-text">アクティブ</p>
             <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold text-glow">
+              <p className="text-4xl font-extrabold kawaii-glow">
                 {dashboardData.activeConnections}
               </p>
-              <p className="ml-2 text-sm text-purple-400 font-medium">relationships</p>
+              <p className="ml-2 text-sm text-purple-400 font-medium">関係</p>
             </div>
           </div>
         </div>
@@ -478,31 +485,31 @@ const Dashboard = () => (
 
       <Card variant="soft" hover className="animate-bounceIn">
         <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl bg-accent-mint flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
+          <div className="w-16 h-16 rounded-3xl bg-yellow-100 flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
             <Star className="w-8 h-8 text-yellow-500" />
           </div>
           <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold text-gradient">Average Score</p>
+            <p className="text-sm font-semibold kawaii-gradient-text">平均スコア</p>
             <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold text-glow">
+              <p className="text-4xl font-extrabold kawaii-glow">
                 {dashboardData.averageScore || 0}
               </p>
-              <p className="ml-2 text-sm text-yellow-400 font-medium">points</p>
+              <p className="ml-2 text-sm text-yellow-400 font-medium">ポイント</p>
             </div>
           </div>
         </div>
       </Card>
 
-      <Card variant="warm" hover className="animate-bounceIn">
+      <Card variant="romantic" hover className="animate-bounceIn">
         <div className="flex items-center">
-          <div className="w-16 h-16 rounded-3xl bg-accent-peach flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
+          <div className="w-16 h-16 rounded-3xl bg-green-100 flex items-center justify-center group-hover:scale-110 transition-transform animate-float">
             <Heart className="w-8 h-8 text-green-500" />
           </div>
           <div className="ml-5 flex-1">
-            <p className="text-sm font-semibold text-gradient">Best Match</p>
+            <p className="text-sm font-semibold kawaii-gradient-text">ベストマッチ</p>
             <div className="flex items-baseline">
-              <p className="text-4xl font-extrabold text-glow">
-                {dashboardData.bestConnection ? 'Found' : 'None'}
+              <p className="text-4xl font-extrabold kawaii-glow">
+                {dashboardData.bestConnection ? '見つかりました' : 'なし'}
               </p>
             </div>
           </div>
@@ -515,29 +522,11 @@ const Dashboard = () => (
 
 ---
 
-## Animation Details
+## アニメーション詳細
 
-### Clean Animation Definitions
+### Kawaiiアニメーション定義
 ```css
-/* Smooth entrance */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Gentle floating */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-/* Bouncy entrance */
+/* かわいい入場アニメーション */
 @keyframes bounceIn {
   0% {
     transform: scale(0.3) translateY(-50px);
@@ -557,45 +546,84 @@ const Dashboard = () => (
   }
 }
 
-/* Gentle pulse */
-@keyframes pulse {
+/* ふわふわ浮遊 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* ハートビート */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* かわいいパルス */
+@keyframes kawaii-pulse {
   0%, 100% {
     opacity: 1;
     transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
   }
   50% {
-    opacity: 0.7;
-    transform: scale(1.02);
+    opacity: 0.8;
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 182, 193, 0.6);
   }
+}
+
+/* ホバー弾む */
+@keyframes hover-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 ```
 
-### Animation Usage Guidelines
+### Kawaiiアニメーション使用ガイドライン
 ```css
-/* Basic usage */
-.animate-fadeIn { animation: fadeIn 0.35s ease-out; }
-.animate-float { animation: float 3s ease-in-out infinite; }
+/* 基本使用法 */
 .animate-bounceIn { animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
+.animate-kawaii-pulse { animation: kawaii-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 
-/* Hover effects */
-.hover-lift {
-  transition: all var(--transition-base);
+/* ホバーエフェクト */
+.hover-bounce {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
-.hover-lift:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: var(--shadow-glow);
+.hover-bounce:hover {
+  animation: hover-bounce 0.6s ease-in-out;
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
+}
+
+/* Kawaiiスタイルクラス */
+.kawaii-card {
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border-radius: 24px;
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2);
+}
+
+.kawaii-gradient-text {
+  background: linear-gradient(135deg, #FF69B4, #DDA0DD);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kawaii-glow {
+  text-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
 }
 ```
 
 ---
 
-## Error and Empty State Specs
+## エラー・空状態仕様
 
-### Error State Component
+### エラー状態コンポーネント
 ```typescript
 const ErrorState: React.FC<ErrorStateProps> = ({
-  title = "Something minor happened",
+  title = "ちょっとした問題が発生しました",
   message,
   onRetry,
   type = 'error'
@@ -612,12 +640,12 @@ const ErrorState: React.FC<ErrorStateProps> = ({
   const Icon = getIcon();
 
   return (
-    <div className="card-clean max-w-md mx-auto text-center py-12 animate-bounceIn">
+    <div className="kawaii-card max-w-md mx-auto text-center py-12 animate-bounceIn">
       <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-red-50 flex items-center justify-center">
         <Icon className="w-10 h-10 text-red-500" />
       </div>
       
-      <h3 className="text-2xl font-bold text-gradient mb-4">{title}</h3>
+      <h3 className="text-2xl font-bold kawaii-gradient-text mb-4">{title}</h3>
       
       {message && (
         <p className="text-red-600 mb-8 leading-relaxed font-medium">{message}</p>
@@ -625,12 +653,12 @@ const ErrorState: React.FC<ErrorStateProps> = ({
       
       {onRetry && (
         <Button
-          variant="primary"
+          variant="kawaii"
           size="lg"
           onClick={onRetry}
           icon={RefreshCw}
         >
-          Try Again
+          もう一度試す
         </Button>
       )}
     </div>
@@ -638,25 +666,25 @@ const ErrorState: React.FC<ErrorStateProps> = ({
 };
 ```
 
-### Loading State Component
+### 読み込み状態コンポーネント
 ```typescript
 const LoadingState: React.FC<LoadingStateProps> = ({
-  message = "Analyzing love connections...",
-  submessage = "Finding your perfect match"
+  message = "恋愛コネクションを分析中...",
+  submessage = "あなたの理想のマッチを見つけています"
 }) => (
-  <div className="min-h-screen bg-gradient-soft flex items-center justify-center">
+  <div className="min-h-screen kawaii-gradient flex items-center justify-center">
     <div className="text-center space-y-6 animate-bounceIn">
       <div className="relative">
-        <div className="mx-auto w-20 h-20 rounded-full border-4 border-pink-200 border-t-pink-500 animate-spin" />
+        <div className="mx-auto w-20 h-20 rounded-full border-4 border-kawaii-pink border-t-kawaii-pink-dark animate-spin" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <Heart className="w-8 h-8 text-pink-500" />
+          <Heart className="w-8 h-8 text-kawaii-pink animate-heartbeat" />
         </div>
       </div>
       <div className="space-y-2">
-        <p className="text-xl font-bold text-gradient animate-pulse">
+        <p className="text-xl font-bold kawaii-gradient-text animate-kawaii-pulse">
           {message}
         </p>
-        <p className="text-pink-600 font-medium flex items-center justify-center gap-2">
+        <p className="text-kawaii-pink font-medium flex items-center justify-center gap-2">
           <Sparkles className="w-4 h-4" />
           {submessage}
           <Sparkles className="w-4 h-4" />
@@ -669,109 +697,109 @@ const LoadingState: React.FC<LoadingStateProps> = ({
 
 ---
 
-## Implementation Order
+## 実装順序
 
-### Phase 1: Foundation Setup (1-2 weeks)
-1. **Project Initial Setup**
-   - Next.js 14 + TypeScript environment
-   - Tailwind CSS + Custom CSS setup
-   - ESLint + Prettier configuration
+### フェーズ1: 基盤セットアップ（1-2週間）
+1. **プロジェクト初期設定**
+   - Next.js 14 + TypeScript環境
+   - Tailwind CSS + カスタムCSS設定
+   - ESLint + Prettier設定
 
-2. **Design System Implementation**
-   - CSS variable definitions
-   - Animation definitions
-   - Utility class creation
+2. **Kawaiiデザインシステム実装**
+   - CSS変数定義
+   - アニメーション定義
+   - ユーティリティクラス作成
 
-3. **Basic Type Definitions**
-   - TypeScript type definitions
-   - Basic interface definitions
+3. **基本型定義**
+   - TypeScript型定義
+   - 基本インターフェース定義
 
-### Phase 2: Core Components (2-3 weeks)
-1. **Layout Components**
+### フェーズ2: コアコンポーネント（2-3週間）
+1. **レイアウトコンポーネント**
    - RootLayout
    - BottomBar
    - Container
 
-2. **Basic UI Components**
-   - Button variants
-   - Card variants
-   - Input variants
-   - Modal base
+2. **基本UIコンポーネント**
+   - Buttonバリアント
+   - Cardバリアント
+   - Inputバリアント
+   - Modalベース
 
-### Phase 3: Main Features (3-4 weeks)
-1. **Dashboard**
+### フェーズ3: メイン機能（3-4週間）
+1. **ダッシュボード**
    - Dashboard.tsx
-   - Summary statistics
-   - Empty and error states
+   - 統計サマリー
+   - 空・エラー状態
 
-2. **Connection Management**
+2. **コネクション管理**
    - ConnectionCard.tsx
    - ConnectionForm.tsx
-   - CRUD operations
+   - CRUD操作
 
-3. **Data Import**
+3. **データインポート**
    - DataImportModal.tsx
-   - 5-step wizard
-   - AI integration prompts
+   - 5ステップウィザード
+   - AI統合プロンプト
 
 ---
 
-## Validation Checklist
+## 検証チェックリスト
 
-### Design & UI
-- [ ] Clean, modern design concept consistency
-- [ ] Proper use of React Icons instead of emoji
-- [ ] Responsive design (mobile, tablet, desktop)
-- [ ] Consistent color palette usage
-- [ ] Proper typography hierarchy
-- [ ] Smooth animations and transitions
+### デザイン & UI
+- [ ] Kawaiiデザインコンセプトの一貫性
+- [ ] 絵文字の代わりにReact Iconsの適切な使用
+- [ ] レスポンシブデザイン（モバイル、タブレット、デスクトップ）
+- [ ] 一貫したカラーパレットの使用
+- [ ] 適切なタイポグラフィ階層
+- [ ] スムーズなアニメーションとトランジション
 
-### Functionality
-- [ ] All navigation flows work correctly
-- [ ] Form validation and error handling
-- [ ] Loading states for all async operations
-- [ ] Empty states for all data collections
-- [ ] Proper error recovery mechanisms
+### 機能性
+- [ ] すべてのナビゲーションフローが正しく動作
+- [ ] フォームバリデーションとエラーハンドリング
+- [ ] すべての非同期操作の読み込み状態
+- [ ] すべてのデータコレクションの空状態
+- [ ] 適切なエラー復旧メカニズム
 
-### Performance
-- [ ] Page load time < 3 seconds
-- [ ] Smooth 60fps animations
-- [ ] Optimized images and assets
-- [ ] Proper code splitting
-- [ ] Efficient bundle size
+### パフォーマンス
+- [ ] ページ読み込み時間 < 3秒
+- [ ] 60fpsのスムーズなアニメーション
+- [ ] 最適化された画像とアセット
+- [ ] 適切なコード分割
+- [ ] 効率的なバンドルサイズ
 
-### Accessibility
-- [ ] Proper ARIA labels
-- [ ] Keyboard navigation support
-- [ ] Screen reader compatibility
-- [ ] Color contrast compliance (WCAG AA)
-- [ ] Focus management
+### アクセシビリティ
+- [ ] 適切なARIAラベル
+- [ ] キーボードナビゲーションサポート
+- [ ] スクリーンリーダー互換性
+- [ ] カラーコントラスト準拠（WCAG AA）
+- [ ] フォーカス管理
 
-### Testing
-- [ ] Unit tests for all components
-- [ ] Integration tests for main flows
-- [ ] E2E tests for critical paths
-- [ ] Cross-browser compatibility
-- [ ] Mobile device testing
+### テスト
+- [ ] すべてのコンポーネントの単体テスト
+- [ ] メインフローの統合テスト
+- [ ] クリティカルパスのE2Eテスト
+- [ ] クロスブラウザ互換性
+- [ ] モバイルデバイステスト
 
 ---
 
-## Notes for Implementation
+## 実装のための注意事項
 
-### React Icons Migration
-- Replace all emoji usage with appropriate React Icons
-- Use consistent icon sizing (w-4 h-4 for inline, w-5 h-5 for buttons, w-8 h-8 for displays)
-- Maintain semantic meaning when choosing icons
-- Ensure icons have proper accessibility labels
+### React Icons移行
+- すべての絵文字使用を適切なReact Iconsに置き換える
+- 一貫したアイコンサイズの使用（インライン: w-4 h-4、ボタン: w-5 h-5、表示: w-8 h-8）
+- アイコン選択時のセマンティック意味の維持
+- アイコンの適切なアクセシビリティラベルの確保
 
-### Design System Usage
-- Follow the established color variables
-- Use consistent spacing and typography
-- Apply animations thoughtfully, not excessively
-- Maintain clean, professional appearance while keeping warmth
+### Kawaiiデザインシステム使用
+- 確立されたカラー変数に従う
+- 一貫したスペーシングとタイポグラフィの使用
+- アニメーションの思慮深い適用（過度ではなく）
+- 温かみを保ちながらかわいいプロフェッショナルな外観の維持
 
-### Performance Considerations
-- Lazy load components where appropriate
-- Optimize icon imports to reduce bundle size
-- Use CSS variables for dynamic theming
-- Implement proper loading and error states
+### パフォーマンス考慮事項
+- 適切な場所でのコンポーネント遅延読み込み
+- バンドルサイズ削減のためのアイコンインポート最適化
+- 動的テーマのためのCSS変数使用
+- 適切な読み込み・エラー状態の実装

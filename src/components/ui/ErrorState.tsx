@@ -13,7 +13,7 @@ export interface ErrorStateProps {
 }
 
 export const ErrorState: React.FC<ErrorStateProps> = ({
-  title = 'Something minor happened',
+  title = 'ちょっとした問題が発生しました',
   message,
   onRetry,
   type = 'error',
@@ -81,7 +81,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
           icon={RefreshCw}
           className="animate-pulse"
         >
-          Try Again
+          もう一度試す
         </Button>
       )}
     </div>

@@ -150,8 +150,8 @@ export function Dashboard({ userId }: DashboardProps) {
     return (
       <LoadingSpinner 
         fullScreen 
-        message="Analyzing love connections..."
-        submessage="Finding your perfect match"
+        message="恋愛コネクションを分析中..."
+        submessage="あなたの理想のマッチを見つけています"
         variant="heart"
         size="lg"
       />
@@ -162,7 +162,7 @@ export function Dashboard({ userId }: DashboardProps) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <ErrorState
-          title="Something minor happened"
+          title="ちょっとした問題が発生しました"
           message={error}
           onRetry={loadDashboardData}
         />
@@ -173,16 +173,16 @@ export function Dashboard({ userId }: DashboardProps) {
   if (!dashboardData || connections.length === 0) {
     return (
       <EmptyState
-        title="Start Your Love Journey"
-        description="Let Miru help you discover amazing connections and build meaningful relationships with AI-powered insights"
+        title="恋愛の旅を始めましょう"
+        description="MiruがAIの力で素晴らしいコネクションを発見し、意味のある関係を築くお手伝いをします"
         icon={Heart}
         primaryAction={{
-          label: "Add Manually",
+          label: "手動で追加",
           onClick: handleAddConnection,
           icon: Plus
         }}
         secondaryAction={{
-          label: "AI Bulk Import",
+          label: "AI一括インポート",
           onClick: () => setShowDataImportModal(true),
           icon: Download
         }}
@@ -211,10 +211,10 @@ export function Dashboard({ userId }: DashboardProps) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div className="space-y-3">
           <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-            Love Dashboard
+            恋愛ダッシュボード
           </h1>
           <p className="text-gray-700 text-lg font-medium">
-            Your romantic insights powered by AI
+            AIによる恋愛インサイト
           </p>
         </div>
         
@@ -224,14 +224,14 @@ export function Dashboard({ userId }: DashboardProps) {
             onClick={handleAddConnection}
             icon={Plus}
           >
-            <span className="hidden sm:inline">Add Manually</span>
+            <span className="hidden sm:inline">手動で追加</span>
           </Button>
           <Button
             variant="secondary"
             onClick={() => setShowDataImportModal(true)}
             icon={Download}
           >
-            <span className="hidden sm:inline">AI Import</span>
+            <span className="hidden sm:inline">AIインポート</span>
           </Button>
         </div>
       </div>
@@ -244,12 +244,12 @@ export function Dashboard({ userId }: DashboardProps) {
               <Users className="w-8 h-8 text-pink-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Connections</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">コネクション</p>
               <div className="flex items-baseline">
                 <p className="text-4xl font-extrabold text-gray-800">
                   {dashboardData.totalConnections}
                 </p>
-                <p className="ml-2 text-sm text-pink-400 font-medium">people</p>
+                <p className="ml-2 text-sm text-pink-400 font-medium">人</p>
               </div>
             </div>
           </div>
@@ -261,12 +261,12 @@ export function Dashboard({ userId }: DashboardProps) {
               <TrendingUp className="w-8 h-8 text-purple-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Active</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">アクティブ</p>
               <div className="flex items-baseline">
                 <p className="text-4xl font-extrabold text-gray-800">
                   {dashboardData.activeConnections}
                 </p>
-                <p className="ml-2 text-sm text-purple-400 font-medium">relationships</p>
+                <p className="ml-2 text-sm text-purple-400 font-medium">関係</p>
               </div>
             </div>
           </div>
@@ -278,12 +278,12 @@ export function Dashboard({ userId }: DashboardProps) {
               <Star className="w-8 h-8 text-yellow-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Average Score</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">平均スコア</p>
               <div className="flex items-baseline">
                 <p className="text-4xl font-extrabold text-gray-800">
                   {dashboardData.averageScore || 0}
                 </p>
-                <p className="ml-2 text-sm text-yellow-400 font-medium">points</p>
+                <p className="ml-2 text-sm text-yellow-400 font-medium">ポイント</p>
               </div>
             </div>
           </div>
@@ -295,10 +295,10 @@ export function Dashboard({ userId }: DashboardProps) {
               <Heart className="w-8 h-8 text-green-500" />
             </div>
             <div className="ml-5 flex-1">
-              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">Best Match</p>
+              <p className="text-sm font-semibold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">ベストマッチ</p>
               <div className="flex items-baseline">
                 <p className="text-4xl font-extrabold text-gray-800">
-                  {dashboardData.bestConnection ? 'Found' : 'None'}
+                  {dashboardData.bestConnection ? '見つかりました' : 'なし'}
                 </p>
               </div>
             </div>
@@ -312,7 +312,7 @@ export function Dashboard({ userId }: DashboardProps) {
           <div className="flex items-center gap-3 mb-4">
             <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-pulse"></div>
             <h2 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-              Most Promising Connection
+              最も有望なコネクション
             </h2>
           </div>
           <div className="flex items-center justify-between p-4 bg-pink-50 rounded-xl">
@@ -322,7 +322,7 @@ export function Dashboard({ userId }: DashboardProps) {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-gray-800">{dashboardData.bestConnection.nickname}</h3>
-                <p className="text-sm text-gray-600">Score: {connectionService.calculateRelationshipScore(dashboardData.bestConnection)} points</p>
+                <p className="text-sm text-gray-600">スコア: {connectionService.calculateRelationshipScore(dashboardData.bestConnection)} ポイント</p>
               </div>
             </div>
             <Heart className="w-8 h-8 text-pink-500 animate-pulse" />
@@ -333,7 +333,7 @@ export function Dashboard({ userId }: DashboardProps) {
       {/* Connections List */}
       <div>
         <h2 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-6">
-          Your Connections
+          あなたのコネクション
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {connections.map((connection, index) => (
@@ -353,7 +353,7 @@ export function Dashboard({ userId }: DashboardProps) {
       <Modal
         isOpen={showConnectionForm}
         onClose={handleFormCancel}
-        title={editingConnection ? `Edit ${editingConnection.nickname}` : 'Add New Connection'}
+        title={editingConnection ? `${editingConnection.nickname}を編集` : '新しいコネクションを追加'}
         variant="kawaii"
         className="max-w-2xl w-full max-h-[80vh] overflow-y-auto"
       >
