@@ -186,6 +186,32 @@ describe('ConnectionService', () => {
       await expect(service.updateConnection('test-1', updates))
         .rejects.toThrow('不正な文字列が含まれています')
     })
+
+    it('should work in demo mode when database is not available', async () => {
+      service = new ConnectionService(null)
+      const updates = { nickname: 'Demo Update' }
+      
+      const result = await service.updateConnection('1', updates)
+      
+      expect(result).toEqual(expect.objectContaining({
+        id: '1',
+        nickname: 'Demo Update',
+        user_id: 'demo-user-001'
+      }))
+    })
+
+    it('should handle database errors gracefully', async () => {
+      const updates = { nickname: 'Error Test' }
+      ;(db.updateConnection as jest.Mock).mockRejectedValueOnce(new Error('Database error'))
+      
+      const result = await service.updateConnection('1', updates)
+      
+      expect(result).toEqual(expect.objectContaining({
+        id: '1',
+        nickname: 'Error Test',
+        user_id: 'demo-user-001'
+      }))
+    })
   })
 
   describe('deleteConnection', () => {

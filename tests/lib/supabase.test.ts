@@ -24,6 +24,7 @@ jest.mock('@supabase/supabase-js', () => {
 // Mock console methods
 const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation()
 const mockConsoleError = jest.spyOn(console, 'error').mockImplementation()
+const mockConsoleInfo = jest.spyOn(console, 'info').mockImplementation()
 
 describe('Supabase Module', () => {
   let mockSupabaseClient: any
@@ -60,11 +61,13 @@ describe('Supabase Module', () => {
     process.env = originalEnv
     mockConsoleWarn.mockClear()
     mockConsoleError.mockClear()
+    mockConsoleInfo.mockClear()
   })
 
   afterAll(() => {
     mockConsoleWarn.mockRestore()
     mockConsoleError.mockRestore()
+    mockConsoleInfo.mockRestore()
   })
 
   describe('Module initialization', () => {
@@ -72,7 +75,9 @@ describe('Supabase Module', () => {
       const { supabase } = require('@/lib/supabase')
       const { createClient } = require('@supabase/supabase-js')
       
-      expect(createClient).toHaveBeenCalledWith('https://test.supabase.co', 'test-anon-key')
+      expect(createClient).toHaveBeenCalledWith('https://test.supabase.co', 'test-anon-key', expect.objectContaining({
+        auth: { persistSession: false }
+      }))
       expect(supabase).toBeDefined()
     })
 
@@ -99,8 +104,8 @@ describe('Supabase Module', () => {
       jest.resetModules()
       require('@/lib/supabase')
       
-      expect(mockConsoleWarn).toHaveBeenCalledWith(
-        'Supabase環境変数が設定されていません。NEXT_PUBLIC_SUPABASE_URLとNEXT_PUBLIC_SUPABASE_ANON_KEYを設定してください。'
+      expect(mockConsoleInfo).toHaveBeenCalledWith(
+        '🎯 Miruはデモモードで動作しています。Supabaseを設定するとフル機能が利用できます。'
       )
       
       // Clean up

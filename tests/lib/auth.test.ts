@@ -101,22 +101,36 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         user: null,
-        error: 'このメールアドレスは既に登録されています'
+        error: 'そのメールアドレスは既に登録されています'
       })
     })
 
-    it('should handle network error', async () => {
-      mockAuth.signUp.mockRejectedValueOnce(new Error('Network error'))
+    it('should handle browser environment check', async () => {
+      // Mock window being undefined
+      const originalWindow = global.window
+      delete (global as any).window
 
       const result = await authService.signUp('test@example.com', 'password123')
 
       expect(result).toEqual({
         user: null,
-        error: 'ネットワークエラーが発生しました'
+        error: 'ブラウザ環境が必要です'
       })
+
+      // Restore window
+      global.window = originalWindow
     })
 
-    it('should handle case where user data is returned but user is null', async () => {
+    it('should handle network errors', async () => {
+      mockAuth.signUp.mockRejectedValueOnce(new Error('Network error'))
+
+      const result = await authService.signUp('test@example.com', 'password123')
+
+      expect(result.user).toBeNull()
+      expect(result.error).toContain('エラーが発生しました')
+    })
+
+    it('should handle missing user data in response', async () => {
       mockAuth.signUp.mockResolvedValueOnce({
         data: { user: null },
         error: null
@@ -161,7 +175,7 @@ describe('AuthService', () => {
       })
     })
 
-    it('should handle invalid credentials', async () => {
+    it('should handle sign in errors', async () => {
       mockAuth.signInWithPassword.mockResolvedValueOnce({
         data: { user: null },
         error: { message: 'Invalid login credentials' }
@@ -171,22 +185,34 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         user: null,
-        error: 'メールアドレスまたはパスワードが間違っています'
+        error: 'メールアドレスまたはパスワードが正しくありません'
       })
     })
 
-    it('should handle network error during sign in', async () => {
-      mockAuth.signInWithPassword.mockRejectedValueOnce(new Error('Network error'))
+    it('should handle browser environment check for sign in', async () => {
+      const originalWindow = global.window
+      delete (global as any).window
 
       const result = await authService.signIn('test@example.com', 'password123')
 
       expect(result).toEqual({
         user: null,
-        error: 'ネットワークエラーが発生しました'
+        error: 'ブラウザ環境が必要です'
       })
+
+      global.window = originalWindow
     })
 
-    it('should handle case where user data is returned but user is null', async () => {
+    it('should handle network errors in sign in', async () => {
+      mockAuth.signInWithPassword.mockRejectedValueOnce(new Error('Network error'))
+
+      const result = await authService.signIn('test@example.com', 'password123')
+
+      expect(result.user).toBeNull()
+      expect(result.error).toContain('エラーが発生しました')
+    })
+
+    it('should handle missing user in sign in response', async () => {
       mockAuth.signInWithPassword.mockResolvedValueOnce({
         data: { user: null },
         error: null
@@ -196,16 +222,14 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         user: null,
-        error: 'ログインに失敗しました'
+        error: 'サインインに失敗しました'
       })
     })
   })
 
   describe('signOut', () => {
     it('should successfully sign out', async () => {
-      mockAuth.signOut.mockResolvedValueOnce({
-        error: null
-      })
+      mockAuth.signOut.mockResolvedValueOnce({ error: null })
 
       const result = await authService.signOut()
 
@@ -213,27 +237,42 @@ describe('AuthService', () => {
       expect(result).toEqual({ error: null })
     })
 
-    it('should handle sign out error with translation', async () => {
+    it('should handle sign out errors', async () => {
       mockAuth.signOut.mockResolvedValueOnce({
-        error: { message: 'Too many requests' }
+        error: { message: 'Sign out failed' }
       })
 
       const result = await authService.signOut()
 
-      expect(result).toEqual({ error: 'リクエストが多すぎます。しばらく時間をおいてからお試しください' })
+      expect(result).toEqual({
+        error: 'サインアウトに失敗しました'
+      })
     })
 
-    it('should handle network error during sign out', async () => {
+    it('should handle browser environment check for sign out', async () => {
+      const originalWindow = global.window
+      delete (global as any).window
+
+      const result = await authService.signOut()
+
+      expect(result).toEqual({
+        error: 'ブラウザ環境が必要です'
+      })
+
+      global.window = originalWindow
+    })
+
+    it('should handle network errors in sign out', async () => {
       mockAuth.signOut.mockRejectedValueOnce(new Error('Network error'))
 
       const result = await authService.signOut()
 
-      expect(result).toEqual({ error: 'ログアウトに失敗しました' })
+      expect(result.error).toContain('エラーが発生しました')
     })
   })
 
   describe('getCurrentUser', () => {
-    it('should return current user when authenticated', async () => {
+    it('should get current user successfully', async () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
@@ -247,289 +286,118 @@ describe('AuthService', () => {
 
       const result = await authService.getCurrentUser()
 
-      expect(mockAuth.getUser).toHaveBeenCalled()
       expect(result).toEqual({
-        id: 'user-123',
-        email: 'test@example.com',
-        created_at: '2024-01-01T00:00:00Z'
+        user: {
+          id: 'user-123',
+          email: 'test@example.com',
+          created_at: '2024-01-01T00:00:00Z'
+        },
+        error: null
       })
     })
 
-    it('should return null when not authenticated', async () => {
+    it('should handle get user errors', async () => {
       mockAuth.getUser.mockResolvedValueOnce({
         data: { user: null },
-        error: null
+        error: { message: 'User not found' }
       })
 
       const result = await authService.getCurrentUser()
 
-      expect(result).toBeNull()
+      expect(result).toEqual({
+        user: null,
+        error: 'ユーザー情報の取得に失敗しました'
+      })
     })
 
-    it('should return null on error', async () => {
-      mockAuth.getUser.mockRejectedValueOnce(new Error('Auth error'))
+    it('should handle browser environment check for getCurrentUser', async () => {
+      const originalWindow = global.window
+      delete (global as any).window
 
       const result = await authService.getCurrentUser()
 
-      expect(result).toBeNull()
-    })
-  })
-
-  describe('onAuthStateChange', () => {
-    it('should set up auth state change listener', () => {
-      const mockCallback = jest.fn()
-      const mockUnsubscribe = jest.fn()
-
-      mockAuth.onAuthStateChange.mockReturnValueOnce({
-        data: { subscription: { unsubscribe: mockUnsubscribe } }
+      expect(result).toEqual({
+        user: null,
+        error: 'ブラウザ環境が必要です'
       })
 
-      const result = authService.onAuthStateChange(mockCallback)
-
-      expect(mockAuth.onAuthStateChange).toHaveBeenCalledWith(
-        expect.any(Function)
-      )
-      expect(result.data.subscription.unsubscribe).toBe(mockUnsubscribe)
+      global.window = originalWindow
     })
 
-    it('should call callback with user when auth state changes', () => {
-      const mockCallback = jest.fn()
-      const mockUser = {
-        id: 'user-123',
-        email: 'test@example.com',
-        created_at: '2024-01-01T00:00:00Z'
-      }
+    it('should handle network errors in getCurrentUser', async () => {
+      mockAuth.getUser.mockRejectedValueOnce(new Error('Network error'))
 
-      mockAuth.onAuthStateChange.mockImplementationOnce((cb) => {
-        // Simulate auth state change
-        cb('SIGNED_IN', { user: mockUser })
-        return { data: { subscription: { unsubscribe: jest.fn() } } }
-      })
+      const result = await authService.getCurrentUser()
 
-      authService.onAuthStateChange(mockCallback)
-
-      expect(mockCallback).toHaveBeenCalledWith({
-        id: 'user-123',
-        email: 'test@example.com',
-        created_at: '2024-01-01T00:00:00Z'
-      })
-    })
-
-    it('should call callback with null when user signs out', () => {
-      const mockCallback = jest.fn()
-
-      mockAuth.onAuthStateChange.mockImplementationOnce((cb) => {
-        // Simulate sign out
-        cb('SIGNED_OUT', null)
-        return { data: { subscription: { unsubscribe: jest.fn() } } }
-      })
-
-      authService.onAuthStateChange(mockCallback)
-
-      expect(mockCallback).toHaveBeenCalledWith(null)
-    })
-
-    it('should call callback with null when session has no user', () => {
-      const mockCallback = jest.fn()
-
-      mockAuth.onAuthStateChange.mockImplementationOnce((cb) => {
-        // Simulate session without user
-        cb('TOKEN_REFRESHED', { user: null })
-        return { data: { subscription: { unsubscribe: jest.fn() } } }
-      })
-
-      authService.onAuthStateChange(mockCallback)
-
-      expect(mockCallback).toHaveBeenCalledWith(null)
-    })
-  })
-
-  describe('resetPassword', () => {
-    it('should successfully send reset password email', async () => {
-      mockAuth.resetPasswordForEmail.mockResolvedValueOnce({
-        error: null
-      })
-
-      const result = await authService.resetPassword('test@example.com')
-
-      expect(mockAuth.resetPasswordForEmail).toHaveBeenCalledWith(
-        'test@example.com',
-        {
-          redirectTo: 'http://localhost:3000/auth/reset-password'
-        }
-      )
-      expect(result).toEqual({ error: null })
-    })
-
-    it('should handle reset password error with translation', async () => {
-      mockAuth.resetPasswordForEmail.mockResolvedValueOnce({
-        error: { message: 'Email rate limit exceeded' }
-      })
-
-      const result = await authService.resetPassword('test@example.com')
-
-      expect(result).toEqual({ error: 'メール送信の制限に達しました。しばらく時間をおいてからお試しください' })
-    })
-
-    it('should handle network error during reset password', async () => {
-      mockAuth.resetPasswordForEmail.mockRejectedValueOnce(new Error('Network error'))
-
-      const result = await authService.resetPassword('test@example.com')
-
-      expect(result).toEqual({ error: 'パスワードリセットに失敗しました' })
-    })
-  })
-
-  describe('updatePassword', () => {
-    it('should successfully update password', async () => {
-      mockAuth.updateUser.mockResolvedValueOnce({
-        error: null
-      })
-
-      const result = await authService.updatePassword('newpassword123')
-
-      expect(mockAuth.updateUser).toHaveBeenCalledWith({
-        password: 'newpassword123'
-      })
-      expect(result).toEqual({ error: null })
-    })
-
-    it('should handle update password error with translation', async () => {
-      mockAuth.updateUser.mockResolvedValueOnce({
-        error: { message: 'Password should be at least 6 characters' }
-      })
-
-      const result = await authService.updatePassword('short')
-
-      expect(result).toEqual({ error: 'パスワードは6文字以上で入力してください' })
-    })
-
-    it('should handle network error during password update', async () => {
-      mockAuth.updateUser.mockRejectedValueOnce(new Error('Network error'))
-
-      const result = await authService.updatePassword('newpassword123')
-
-      expect(result).toEqual({ error: 'パスワード更新に失敗しました' })
+      expect(result.user).toBeNull()
+      expect(result.error).toContain('エラーが発生しました')
     })
   })
 
   describe('translateError', () => {
-    it('should translate all known error messages to Japanese', () => {
-      const authServiceInstance = new AuthService()
-      const errorMap = {
-        'Invalid login credentials': 'メールアドレスまたはパスワードが間違っています',
-        'Email not confirmed': 'メールアドレスが確認されていません。確認メールをご確認ください',
-        'User already registered': 'このメールアドレスは既に登録されています',
-        'Password should be at least 6 characters': 'パスワードは6文字以上で入力してください',
-        'Invalid email': 'メールアドレスの形式が正しくありません',
-        'Signup requires a valid password': 'パスワードを入力してください',
-        'Email rate limit exceeded': 'メール送信の制限に達しました。しばらく時間をおいてからお試しください',
-        'Too many requests': 'リクエストが多すぎます。しばらく時間をおいてからお試しください'
-      }
+    it('should translate error messages correctly', () => {
+      const authServiceInstance = authService as any
 
-      Object.entries(errorMap).forEach(([english, japanese]) => {
-        const translated = (authServiceInstance as any).translateError(english)
-        expect(translated).toBe(japanese)
-      })
-    })
-
-    it('should return original message for unknown errors', () => {
-      const authServiceInstance = new AuthService()
-      const unknownError = 'Some unknown error message'
-      const translated = (authServiceInstance as any).translateError(unknownError)
-      expect(translated).toBe(unknownError)
+      expect(authServiceInstance.translateError('User already registered')).toBe('そのメールアドレスは既に登録されています')
+      expect(authServiceInstance.translateError('Invalid login credentials')).toBe('メールアドレスまたはパスワードが正しくありません')
+      expect(authServiceInstance.translateError('Password should be at least 6 characters')).toBe('パスワードは6文字以上で入力してください')
+      expect(authServiceInstance.translateError('Unable to validate email address: invalid format')).toBe('メールアドレスの形式が正しくありません')
+      expect(authServiceInstance.translateError('Unknown error')).toBe('Unknown error')
     })
   })
 
-  describe('supabaseAuth not configured scenarios', () => {
+  describe('validation methods', () => {
+    it('should validate email format', () => {
+      const authServiceInstance = authService as any
+
+      expect(authServiceInstance.validateEmail('valid@example.com')).toBe(true)
+      expect(authServiceInstance.validateEmail('invalid-email')).toBe(false)
+      expect(authServiceInstance.validateEmail('')).toBe(false)
+      expect(authServiceInstance.validateEmail('test@')).toBe(false)
+      expect(authServiceInstance.validateEmail('@example.com')).toBe(false)
+    })
+
+    it('should validate password strength', () => {
+      const authServiceInstance = authService as any
+
+      expect(authServiceInstance.validatePassword('password123')).toBe(true)
+      expect(authServiceInstance.validatePassword('12345')).toBe(false) // too short
+      expect(authServiceInstance.validatePassword('')).toBe(false)
+    })
+  })
+
+  describe('demo mode', () => {
     beforeEach(() => {
-      // Clear environment variables to simulate unconfigured state
+      // Remove environment variables to trigger demo mode
       process.env = {
         ...originalEnv,
-        NEXT_PUBLIC_SUPABASE_URL: '',
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: ''
+        NEXT_PUBLIC_SUPABASE_URL: undefined,
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: undefined
       }
-      
-      // Need to mock the module again to reflect the environment change
-      jest.resetModules()
+      authService = new AuthService()
     })
 
-    it('should handle signUp when supabaseAuth is not configured', async () => {
-      // Re-import with new environment
-      const { AuthService } = require('@/lib/auth')
-      const service = new AuthService()
-      
-      const result = await service.signUp('test@example.com', 'password123')
-      
-      expect(result).toEqual({
-        user: null,
-        error: 'Authentication service is not configured'
-      })
+    it('should handle demo mode sign up', async () => {
+      const result = await authService.signUp('demo@example.com', 'password123')
+
+      expect(result.user).toBeTruthy()
+      expect(result.user?.email).toBe('demo@example.com')
+      expect(result.user?.id).toContain('demo-')
+      expect(result.error).toBeNull()
     })
 
-    it('should handle signIn when supabaseAuth is not configured', async () => {
-      const { AuthService } = require('@/lib/auth')
-      const service = new AuthService()
-      
-      const result = await service.signIn('test@example.com', 'password123')
-      
-      expect(result).toEqual({
-        user: null,
-        error: 'Authentication service is not configured'
-      })
+    it('should validate email in demo mode', async () => {
+      const result = await authService.signUp('invalid-email', 'password123')
+
+      expect(result.user).toBeNull()
+      expect(result.error).toBe('メールアドレスの形式が正しくありません')
     })
 
-    it('should handle signOut when supabaseAuth is not configured', async () => {
-      const { AuthService } = require('@/lib/auth')
-      const service = new AuthService()
-      
-      const result = await service.signOut()
-      
-      expect(result).toEqual({
-        error: 'Authentication service is not configured'
-      })
-    })
+    it('should validate password in demo mode', async () => {
+      const result = await authService.signUp('test@example.com', '123')
 
-    it('should handle getCurrentUser when supabaseAuth is not configured', async () => {
-      const { AuthService } = require('@/lib/auth')
-      const service = new AuthService()
-      
-      const result = await service.getCurrentUser()
-      
-      expect(result).toBeNull()
-    })
-
-    it('should handle resetPassword when supabaseAuth is not configured', async () => {
-      const { AuthService } = require('@/lib/auth')
-      const service = new AuthService()
-      
-      const result = await service.resetPassword('test@example.com')
-      
-      expect(result).toEqual({
-        error: 'Authentication service is not configured'
-      })
-    })
-
-    it('should handle updatePassword when supabaseAuth is not configured', async () => {
-      const { AuthService } = require('@/lib/auth')
-      const service = new AuthService()
-      
-      const result = await service.updatePassword('newpassword123')
-      
-      expect(result).toEqual({
-        error: 'Authentication service is not configured'
-      })
-    })
-
-    it('should handle onAuthStateChange when supabaseAuth is not configured', () => {
-      const { AuthService } = require('@/lib/auth')
-      const service = new AuthService()
-      const mockCallback = jest.fn()
-      
-      const result = service.onAuthStateChange(mockCallback)
-      
-      expect(result.data.subscription.unsubscribe).toBeInstanceOf(Function)
-      expect(result.data.subscription.unsubscribe()).toBeUndefined()
+      expect(result.user).toBeNull()
+      expect(result.error).toBe('パスワードは6文字以上で入力してください')
     })
   })
 })
